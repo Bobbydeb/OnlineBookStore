@@ -9,6 +9,7 @@
 </head>
 <body class="bg-light">
     <form id="form1" runat="server">
+        
         <asp:ScriptManager ID="ScriptManager1" runat="server" />
         <nav class="navbar navbar-expand-lg bg-white border-bottom">
             <div class="container">
@@ -17,6 +18,7 @@
         </nav>
 
         <div class="container py-4">
+            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="true"></asp:GridView>
             <div class="card shadow-sm">
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
