@@ -58,15 +58,15 @@ namespace OnlineBookStore
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string query = @"
-            SELECT TOP 10 
-                b.Title,
-                c.CategoryName,
-                b.Price,
-                cv.CoverUrl
-            FROM Book b
-            JOIN BookCategory c ON b.CategoryID = c.CategoryID
-            LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
-            ORDER BY b.Stock DESC;";   // หรือ ORDER BY NEWID() ถ้าอยากสุ่ม
+                    SELECT TOP 10 
+                    b.Title,
+                    c.CategoryName,
+                    b.Price,
+                    cv.CoverUrl
+                    FROM Book b
+                    JOIN BookCategory c ON b.CategoryID = c.CategoryID
+                    LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
+                    ORDER BY b.Stock DESC;";   // หรือ ORDER BY NEWID() ถ้าอยากสุ่ม
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {

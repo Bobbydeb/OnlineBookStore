@@ -58,10 +58,30 @@
 
         /* Content */
         main { padding: 20px 0; }
-        .section-title { font-size: 1.8rem; font-weight: bold; margin: 20px 0; color: #111; }
-        .book-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .book-card { background-color: #fff; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
-        .book-card:hover { transform: translateY(-4px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .section-title { font-size: 1.8rem; 
+                         font-weight: bold; 
+                         margin: 20px 0; 
+                         color: #111; 
+        }
+        .book-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; 
+        }
+        .book-card { 
+            background-color: #fff; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            display: flex; 
+            flex-direction: column;
+        }
+        .book-card:hover { 
+            transform: translateY(-4px);             
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
         /* แทนบรรทัดเดิม: .book-card img { width:100%; height:250px; ... } */
         .book-card img{
             width: 100%;
@@ -69,10 +89,25 @@
             height: auto;         /* ให้สูงตามอัตราส่วน */
             object-fit: cover;
             background: linear-gradient(135deg,#eee,#ccc);
-           }
-        .book-card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        }
+        .book-card-content { 
+            padding: 15px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
         .book-card-content div { margin-bottom: 10px; }
-        .book-title { font-size: 1rem; font-weight: 600; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 40px; line-height: 1.25; }
+        .book-title { font-size: 1rem; 
+                      font-weight: 600; 
+                      margin: 0; 
+                      display: -webkit-box; 
+                      -webkit-line-clamp: 2; 
+                      -webkit-box-orient: vertical; 
+                      overflow: hidden; 
+                      height: 40px; 
+                      line-height: 1.25; 
+        }
         .book-category { font-size: 0.85rem; color: #777; margin-top: 5px; }
         .book-price { font-size: 1.1rem; font-weight: bold; color: #d90000; margin-top: auto; }
 
@@ -127,7 +162,7 @@
                 </div>
                 <div class="header-icons">
                     <span>🛒 Cart</span>
-                    <span>👤 Login</span>
+                    <a href="loginpage.aspx"><span>👤 Login</span></a>
                 </div>
             </div>
         </header>
@@ -136,9 +171,8 @@
         <nav class="main-nav">
             <div class="container">
                 <ul>
-                    <li><a href="#">หน้าแรก</a></li>
- 
-                    <li><a href="#">หนังสือขายดี</a></li>
+                    <li><a href="mainpage.aspx">หน้าแรก</a></li>
+                    <li><a href="topSalePage.aspx">หนังสือขายดี</a></li>
 
                     <li class="dropdown">
                         <a href="#">หมวดหมู่ ▼</a>
@@ -169,6 +203,7 @@
         </nav>
 
         <main class="container">
+
             <h2 class="section-title">หนังสือแนะนำ</h2>
             <section class="book-grid">
                 <asp:Repeater ID="RepeaterBooks" runat="server">

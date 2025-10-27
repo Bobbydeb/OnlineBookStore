@@ -10,14 +10,16 @@ namespace OnlineBookStore
             string connStr = "Data Source=.;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
             string email = txtEmail.Text.Trim();
             string password = txtPassword.Text.Trim();
-
             string query =
-                "SELECT MemberID, FullName FROM Member " +
-                "WHERE Email = '" + email + "' AND Password = '" + password + "'";
+                "SELECT MemberID, FullName, Role FROM Member " +
+                "WHERE Email = @Email AND Password = @Password";
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Password", password);
+
                 conn.Open();
                 SqlDataReader dr = cmd.ExecuteReader();
 
@@ -25,7 +27,13 @@ namespace OnlineBookStore
                 {
                     Session["MemberID"] = dr["MemberID"];
                     Session["FullName"] = dr["FullName"];
-                    Response.Redirect("mainpage.aspx");
+                    Session["Role"] = dr["Role"];
+
+                    string role = dr["Role"].ToString().ToLower();
+                    if (role == "admin")
+                        Response.Redirect("adminDashboard.aspx");
+                    else
+                        Response.Redirect("mainpage.aspx");
                 }
                 else
                 {
@@ -33,5 +41,6 @@ namespace OnlineBookStore
                 }
             }
         }
+
     }
 }
