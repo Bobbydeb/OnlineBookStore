@@ -13,7 +13,6 @@ namespace OnlineBookStore
                 LoadBooks();
                 LoadTopBooks();
             }
-
         }
 
         private void LoadBooks()
@@ -26,9 +25,11 @@ namespace OnlineBookStore
                     SELECT TOP 10 
                         b.Title, 
                         c.CategoryName, 
-                        b.Price
+                        b.Price,
+                        ISNULL(cv.CoverUrl, 'https://via.placeholder.com/180x250.png?text=' + b.Title) AS CoverUrl
                     FROM Book b
                     JOIN BookCategory c ON b.CategoryID = c.CategoryID
+                    LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
                     ORDER BY NEWID();";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -38,19 +39,12 @@ namespace OnlineBookStore
                     DataTable dt = new DataTable();
                     dt.Load(dr);
 
-                    // เพิ่มคอลัมน์ CoverUrl สำหรับรูป placeholder
-                    dt.Columns.Add("CoverUrl", typeof(string));
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        string title = row["Title"].ToString();
-                        row["CoverUrl"] = "https://via.placeholder.com/180x250.png?text=" + Uri.EscapeDataString(title);
-                    }
-
                     RepeaterBooks.DataSource = dt;
                     RepeaterBooks.DataBind();
                 }
             }
         }
+
         private void LoadTopBooks()
         {
             string connStr = "Data Source=.;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
@@ -59,14 +53,14 @@ namespace OnlineBookStore
             {
                 string query = @"
                     SELECT TOP 10 
-                    b.Title,
-                    c.CategoryName,
-                    b.Price,
-                    cv.CoverUrl
+                        b.Title,
+                        c.CategoryName,
+                        b.Price,
+                        ISNULL(cv.CoverUrl, 'https://via.placeholder.com/180x250.png?text=' + b.Title) AS CoverUrl
                     FROM Book b
                     JOIN BookCategory c ON b.CategoryID = c.CategoryID
                     LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
-                    ORDER BY b.Stock DESC;";   // หรือ ORDER BY NEWID() ถ้าอยากสุ่ม
+                    ORDER BY b.Stock DESC;"; // หรือ ORDER BY NEWID() ถ้าอยากสุ่ม
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -74,13 +68,11 @@ namespace OnlineBookStore
                     SqlDataReader dr = cmd.ExecuteReader();
                     DataTable dt = new DataTable();
                     dt.Load(dr);
+
                     RepeaterTopBooks.DataSource = dt;
                     RepeaterTopBooks.DataBind();
-
                 }
             }
         }
-
-
     }
 }
