@@ -209,7 +209,7 @@
                 <asp:Repeater ID="RepeaterBooks" runat="server">
                     <ItemTemplate>
                         <div class="book-card">
-                            <img src="https://www.pickgamer.com/media/4753/Teamfight-Tactics-285x380.jpg" alt="Test Image" />
+                            <img src="https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/03_AcrossFire.jpg" alt="Test Image" />
 
                             <div class="book-card-content">
                                 <div>
