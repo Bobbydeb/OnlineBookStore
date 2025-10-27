@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace OnlineBookStore
 {
@@ -11,7 +7,23 @@ namespace OnlineBookStore
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // ถ้ายังไม่ได้ login ให้กลับไปหน้า login
+            if (Session["MemberID"] == null)
+            {
+                Response.Write("<script>alert('คุณยังไม่ได้ login');window.location='loginPage.aspx';</script>");
+                return;
+            }
 
+            // ถ้า login แล้ว แสดงชื่อ และสลับปุ่ม
+ 
+            btnLogin.Visible = false;
+            btnLogout.Visible = true;
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("mainpage.aspx");
         }
     }
 }

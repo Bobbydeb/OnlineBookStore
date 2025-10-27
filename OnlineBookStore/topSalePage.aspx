@@ -101,13 +101,7 @@
         .book-title {
             font-size: 1rem;
             font-weight: 600;
-            margin: 0;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            height: 40px;
-            line-height: 1.25;
+            margin: 0 0 6px 0;     /* ห่างด้านล่าง 6px */
         }
 
         .book-sold {
@@ -145,7 +139,7 @@
                     <input type="text" placeholder="ค้นหาหนังสือ...">
                 </div>
                 <div class="header-icons">
-                    <span>🛒 Cart</span>
+ 
                     <a href="loginpage.aspx"><span>👤 Login</span></a>
                 </div>
             </div>
@@ -174,11 +168,8 @@
                             <a href="#">Poetry / Drama</a>
                         </div>
                     </li>
-
-                    <li><a href="#">ผู้แต่ง</a></li>
-                    <li><a href="#">สำนักพิมพ์</a></li>
-                    <li><a href="#">บัญชีของฉัน</a></li>
-                    <li><a href="#">ตะกร้าสินค้า</a></li>
+                    <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
+                    <li><a href="myCartPage.aspx">ตะกร้าสินค้า</a></li>
                 </ul>
             </div>
         </nav>
@@ -196,6 +187,7 @@
                             <div class="book-card-content">
                                 <div>
                                     <h3 class="book-title"><%# Eval("Title") %></h3>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
                                 </div>
                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>

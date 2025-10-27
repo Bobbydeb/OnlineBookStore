@@ -17,13 +17,14 @@ namespace OnlineBookStore
 
         private void LoadBooks()
         {
-            string connStr = "Data Source=.;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
+            string connStr = "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string query = @"
                     SELECT TOP 10 
                         b.Title, 
+                        b.Edition,
                         c.CategoryName, 
                         b.Price,
                         ISNULL(cv.CoverUrl, 'https://via.placeholder.com/180x250.png?text=' + b.Title) AS CoverUrl
@@ -54,6 +55,7 @@ namespace OnlineBookStore
                 string query = @"
                     SELECT TOP 10 
                         b.Title,
+                        b.Edition,
                         c.CategoryName,
                         b.Price,
                         ISNULL(cv.CoverUrl, 'https://via.placeholder.com/180x250.png?text=' + b.Title) AS CoverUrl

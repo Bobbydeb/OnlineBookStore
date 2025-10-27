@@ -98,18 +98,26 @@
             justify-content: space-between; 
         }
         .book-card-content div { margin-bottom: 10px; }
-        .book-title { font-size: 1rem; 
-                      font-weight: 600; 
-                      margin: 0; 
-                      display: -webkit-box; 
-                      -webkit-line-clamp: 2; 
-                      -webkit-box-orient: vertical; 
-                      overflow: hidden; 
-                      height: 40px; 
-                      line-height: 1.25; 
+        .book-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 6px 0;     /* ห่างด้านล่าง 6px */
         }
-        .book-category { font-size: 0.85rem; color: #777; margin-top: 5px; }
-        .book-price { font-size: 1.1rem; font-weight: bold; color: #d90000; margin-top: auto; }
+
+        .book-edition,
+        .book-category {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 6px 0;         /* ห่างบน–ล่างเท่ากัน */
+        }
+
+        .book-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #d90000;
+            margin-top: 6px;       /* ระยะห่างเท่ากันกับส่วนบน */
+        }
+
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -161,7 +169,7 @@
                     <input type="text" placeholder="ค้นหาหนังสือ...">
                 </div>
                 <div class="header-icons">
-                    <span>🛒 Cart</span>
+ 
                     <a href="loginpage.aspx"><span>👤 Login</span></a>
                 </div>
             </div>
@@ -178,7 +186,7 @@
                         <a href="#">หมวดหมู่ ▼</a>
                         <div class="dropdown-content">
                             <a href="#">Fiction</a>
-                            <a href="#">Non-fiction</a>
+                            <a href="topSalePage.aspx">Non-fiction</a>
                             <a href="#">Children’s Books</a>
                             <a href="#">Education / Academic</a>
                             <a href="#">Comics / Graphic Novels / Manga</a>
@@ -191,12 +199,8 @@
                         </div>
                     </li>
 
-
-
-                    <li><a href="#">ผู้แต่ง</a></li>
-                    <li><a href="#">สำนักพิมพ์</a></li>
  
-                    <li><a href="#">บัญชีของฉัน</a></li>
+                    <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
                     <li><a href="#">ตะกร้าสินค้า</a></li>
                 </ul>
             </div>
@@ -213,6 +217,7 @@
                             <div class="book-card-content">
                                 <div>
                                     <h3 class="book-title"><%# Eval("Title") %></h3>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
                                 </div>
                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
@@ -231,6 +236,7 @@
                             <div class="book-card-content">
                                 <div>
                                     <h3 class="book-title"><%# Eval("Title") %></h3>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
                                 </div>
                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>

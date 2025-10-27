@@ -7,7 +7,7 @@ namespace OnlineBookStore
 {
     public partial class topSalePage : Page
     {
-        private readonly string connStr = "Data Source=.;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
+        private readonly string connStr = "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -52,15 +52,20 @@ namespace OnlineBookStore
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string query = @"
-            SELECT TOP 5 
-                B.BookID, B.Title, B.Price, SUM(OD.Quantity) AS TotalSold, 
-                ISNULL(C.CoverUrl, 'https://via.placeholder.com/180x250.png?text=' + B.Title) AS CoverUrl
-            FROM Book B
-            JOIN OrderDetail OD ON B.BookID = OD.BookID
-            LEFT JOIN Cover C ON B.CoverID = C.CoverID
-            WHERE B.CategoryID = @CategoryID
-            GROUP BY B.BookID, B.Title, B.Price, C.CoverUrl
-            ORDER BY TotalSold DESC;";
+                SELECT TOP 5 
+                    B.BookID, 
+                    B.Title, 
+                    B.Edition,
+                    B.Price, 
+                    SUM(OD.Quantity) AS TotalSold, 
+                    ISNULL(C.CoverUrl, 'https://via.placeholder.com/180x250.png?text=' + B.Title) AS CoverUrl
+                FROM Book B
+                JOIN OrderDetail OD ON B.BookID = OD.BookID
+                LEFT JOIN Cover C ON B.CoverID = C.CoverID
+                WHERE B.CategoryID = @CategoryID
+                GROUP BY B.BookID, B.Title, B.Edition, B.Price, C.CoverUrl
+                ORDER BY TotalSold DESC;";
+
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {

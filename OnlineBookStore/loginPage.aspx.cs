@@ -7,7 +7,7 @@ namespace OnlineBookStore
     {
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string connStr = "Data Source=.;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
+            string connStr = "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
             string email = txtEmail.Text.Trim();
             string password = txtPassword.Text.Trim();
             string query =
@@ -31,7 +31,7 @@ namespace OnlineBookStore
 
                     string role = dr["Role"].ToString().ToLower();
                     if (role == "admin")
-                        Response.Redirect("adminDashboard.aspx");
+                        Response.Redirect("adminPage.aspx");
                     else
                         Response.Redirect("mainpage.aspx");
                 }
