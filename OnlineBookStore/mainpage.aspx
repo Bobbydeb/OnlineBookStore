@@ -209,8 +209,7 @@
                 <asp:Repeater ID="RepeaterBooks" runat="server">
                     <ItemTemplate>
                         <div class="book-card">
-                            <img src="https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/03_AcrossFire.jpg" alt="Test Image" />
-
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' />
                             <div class="book-card-content">
                                 <div>
                                     <h3 class="book-title"><%# Eval("Title") %></h3>
