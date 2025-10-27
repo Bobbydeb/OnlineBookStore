@@ -52,14 +52,15 @@ namespace OnlineBookStore
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string query = @"
-                    SELECT TOP 5 
-                        B.BookID, B.Title, B.Price, SUM(OD.Quantity) AS TotalSold
-                    FROM Book B
-                    JOIN OrderDetail OD ON B.BookID = OD.BookID
-                    WHERE B.CategoryID = @CategoryID
-                    GROUP BY B.BookID, B.Title, B.Price
-                    ORDER BY TotalSold DESC;";
-
+            SELECT TOP 5 
+                B.BookID, B.Title, B.Price, SUM(OD.Quantity) AS TotalSold, 
+                ISNULL(C.CoverUrl, 'https://via.placeholder.com/180x250.png?text=' + B.Title) AS CoverUrl
+            FROM Book B
+            JOIN OrderDetail OD ON B.BookID = OD.BookID
+            LEFT JOIN Cover C ON B.CoverID = C.CoverID
+            WHERE B.CategoryID = @CategoryID
+            GROUP BY B.BookID, B.Title, B.Price, C.CoverUrl
+            ORDER BY TotalSold DESC;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -69,17 +70,11 @@ namespace OnlineBookStore
                     DataTable dt = new DataTable();
                     dt.Load(dr);
 
-                    dt.Columns.Add("CoverUrl", typeof(string));
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        string title = row["Title"].ToString();
-                        row["CoverUrl"] = "https://via.placeholder.com/180x250.png?text=" + Uri.EscapeDataString(title);
-                    }
-
                     repeater.DataSource = dt;
                     repeater.DataBind();
                 }
             }
         }
+
     }
 }
