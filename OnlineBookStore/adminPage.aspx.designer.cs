@@ -51,15 +51,6 @@ namespace OnlineBookStore
         protected global::System.Web.UI.UpdatePanel UpdatePanelBooks;
 
         /// <summary>
-        /// btnAddBook control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddBook;
-
-        /// <summary>
         /// GridViewBooks control.
         /// </summary>
         /// <remarks>
@@ -67,6 +58,87 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridViewBooks;
+
+        /// <summary>
+        /// UpdatePanelAddBook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanelAddBook;
+
+        /// <summary>
+        /// txtAddBookId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddBookId;
+
+        /// <summary>
+        /// txtAddBookIsbn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddBookIsbn;
+
+        /// <summary>
+        /// txtAddBookTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddBookTitle;
+
+        /// <summary>
+        /// txtAddBookPrice control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddBookPrice;
+
+        /// <summary>
+        /// txtAddBookStock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddBookStock;
+
+        /// <summary>
+        /// txtAddBookPubId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddBookPubId;
+
+        /// <summary>
+        /// txtAddBookCatId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddBookCatId;
+
+        /// <summary>
+        /// btnSaveBook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSaveBook;
 
         /// <summary>
         /// UpdatePanelAuthors control.
@@ -78,15 +150,6 @@ namespace OnlineBookStore
         protected global::System.Web.UI.UpdatePanel UpdatePanelAuthors;
 
         /// <summary>
-        /// btnAddAuthor control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddAuthor;
-
-        /// <summary>
         /// GridViewAuthors control.
         /// </summary>
         /// <remarks>
@@ -94,6 +157,51 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridViewAuthors;
+
+        /// <summary>
+        /// UpdatePanelAddAuthor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanelAddAuthor;
+
+        /// <summary>
+        /// txtAddAuthorId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddAuthorId;
+
+        /// <summary>
+        /// txtAddAuthorName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddAuthorName;
+
+        /// <summary>
+        /// txtAddAuthorEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddAuthorEmail;
+
+        /// <summary>
+        /// btnSaveAuthor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSaveAuthor;
 
         /// <summary>
         /// UpdatePanelPublishers control.
@@ -105,15 +213,6 @@ namespace OnlineBookStore
         protected global::System.Web.UI.UpdatePanel UpdatePanelPublishers;
 
         /// <summary>
-        /// btnAddPublisher control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddPublisher;
-
-        /// <summary>
         /// GridViewPublishers control.
         /// </summary>
         /// <remarks>
@@ -121,6 +220,60 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridViewPublishers;
+
+        /// <summary>
+        /// UpdatePanelAddPublisher control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanelAddPublisher;
+
+        /// <summary>
+        /// txtAddPublisherId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddPublisherId;
+
+        /// <summary>
+        /// txtAddPublisherName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddPublisherName;
+
+        /// <summary>
+        /// txtAddPublisherAddress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddPublisherAddress;
+
+        /// <summary>
+        /// txtAddPublisherPhone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddPublisherPhone;
+
+        /// <summary>
+        /// btnSavePublisher control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSavePublisher;
 
         /// <summary>
         /// UpdatePanelMembers control.
