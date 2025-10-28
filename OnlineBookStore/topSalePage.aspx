@@ -140,7 +140,12 @@
                 </div>
                 <div class="header-icons">
  
-                    <a href="loginpage.aspx"><span>👤 Login</span></a>
+                    <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx">
+                        👤 Login
+                    </asp:LinkButton>
+                    <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" ForeColor="Red" Visible="false">
+                        ⏻ Logout
+                    </asp:LinkButton>
                 </div>
             </div>
         </header>
@@ -169,7 +174,7 @@
                         </div>
                     </li>
                     <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
-                    <li><a href="myCartPage.aspx">ตะกร้าสินค้า</a></li>
+                    <li><a href="myCartPage.aspx">คอลเลคชั่นของฉัน</a></li>
                 </ul>
             </div>
         </nav>
@@ -206,8 +211,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -223,8 +230,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -240,8 +249,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -256,8 +267,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -272,8 +285,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -288,8 +303,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -304,8 +321,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -320,8 +339,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -336,8 +357,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>
@@ -352,9 +375,10 @@
                              <div class="book-card-content">
                                  <div>
                                      <div class="book-title"><%# Eval("Title") %></div>
+                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                      <div class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</div>
                                  </div>
-
+                                 <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                              </div>
                          </div>
                      </ItemTemplate>

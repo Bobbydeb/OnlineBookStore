@@ -11,6 +11,21 @@ namespace OnlineBookStore
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // --- 1. ส่วนที่เพิ่มเข้ามา ---
+            if (Session["MemberID"] != null)
+            {
+                // ถ้า login แล้ว ให้ซ่อนปุ่ม Login และแสดงปุ่ม Logout
+                btnLogin.Visible = false;
+                btnLogout.Visible = true;
+            }
+            else
+            {
+                // ถ้ายังไม่ได้ login (สถานะปกติ)
+                btnLogin.Visible = true;
+                btnLogout.Visible = false;
+            }
+            // --- จบส่วนที่เพิ่มเข้ามา ---
+
             if (!IsPostBack)
             {
                 LoadTopCate(1, RepeaterLoadTopCate1, LiteralCate1);
@@ -25,6 +40,12 @@ namespace OnlineBookStore
                 LoadTopCate(10, RepeaterLoadTopCate10, LiteralCate10);
                 LoadTopCate(11, RepeaterLoadTopCate11, LiteralCate11);
             }
+
+        }
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("topSalePage.aspx"); // หรือ mainpage.aspx
         }
 
         // เมธอดดึงชื่อหมวดหมู่จากตาราง BookCategory

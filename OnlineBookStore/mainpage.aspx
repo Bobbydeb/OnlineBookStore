@@ -169,8 +169,12 @@
                     <input type="text" placeholder="ค้นหาหนังสือ...">
                 </div>
                 <div class="header-icons">
- 
-                    <a href="loginpage.aspx"><span>👤 Login</span></a>
+                    <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx">
+                        👤 Login
+                    </asp:LinkButton>
+                    <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" ForeColor="Red" Visible="false">
+                        ⏻ Logout
+                    </asp:LinkButton>
                 </div>
             </div>
         </header>
@@ -201,7 +205,7 @@
 
  
                     <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
-                    <li><a href="#">ตะกร้าสินค้า</a></li>
+                    <li><a href="myCollectionPage.aspx">คอลเลคชั่นของฉัน</a></li>
                 </ul>
             </div>
         </nav>

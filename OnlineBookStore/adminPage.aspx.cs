@@ -862,6 +862,11 @@ namespace OnlineBookStore
             // we can just pass the string. If you used runat=server on the modal, you'd use modal.ClientID.
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "CloseModal", $"hideModal('{modalId}');", true);
         }
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("mainpage.aspx");
+        }
         // ===================================================================
 
         #endregion

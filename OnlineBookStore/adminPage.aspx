@@ -135,27 +135,7 @@
     </style>
 </head>
 <body class="bg-light">
-    <%-- ... (Your Navbar) ... --%>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"><i class="bi bi-shield-lock-fill"></i> Admin Panel</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-          
-           <div class="collapse navbar-collapse" id="adminNavbar">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Storefront</a>
-                    </li>
-        
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    
  
        <div id="messageBar" class="alert alert-dismissible fade" role="alert">
         <span id="messageText"></span>
@@ -163,6 +143,23 @@
     </div>
 
     <form id="form1" runat="server">
+        <%-- ... (Your Navbar) ... --%>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#"><i class="bi bi-shield-lock-fill"></i> Admin Panel</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+      
+                   <div class="collapse navbar-collapse" id="adminNavbar">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">                  
+                            <li class="nav-item">
+                                <asp:LinkButton ID="btnLogout" runat="server" CssClass="nav-link" OnClick="btnLogout_Click">Logout</asp:LinkButton>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <asp:HiddenField ID="hdnActiveTab" runat="server" ClientIDMode="Static" />
 
@@ -197,143 +194,120 @@
             <div class="tab-content mt-3">
 
                 <!-- ======================= BOOKS TAB ======================= -->
-                <!-- ======================= BOOKS TAB ======================= -->
-<div class="tab-pane fade show active" id="books" role="tabpanel" aria-labelledby="books-tab">
-
-    <!-- ========== ตารางหนังสือ ========== -->
-    <asp:UpdatePanel ID="UpdatePanelBooks" runat="server" UpdateMode="Conditional">
-        <ContentTemplate>
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h4 class="mb-0">จัดการหนังสือ</h4>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-end mb-3">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBookModal">
-                            <i class="bi bi-plus-circle"></i> เพิ่มหนังสือใหม่
-                        </button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <asp:GridView ID="GridViewBooks" runat="server"
-                            CssClass="table table-striped table-hover table-bordered"
-                            HeaderStyle-CssClass="table-primary"
-                            AutoGenerateColumns="false"
-                            AllowPaging="true" PageSize="10"
-                            DataKeyNames="BookID"
-                            PagerSettings-Position="TopAndBottom"
-                            PagerSettings-Mode="NumericFirstLast"
-                            PagerSettings-FirstPageText="&laquo;"
-                            PagerSettings-PreviousPageText="&lsaquo;"
-                            PagerSettings-NextPageText="&rsaquo;"
-                            PagerSettings-LastPageText="&raquo;"
-                            PagerSettings-PageButtonCount="5"
-                            PagerStyle-CssClass="gridview-pagination"
-                            OnPageIndexChanging="GridViewBooks_PageIndexChanging"
-                            OnRowEditing="GridView_RowEditing"
-                            OnRowCancelingEdit="GridView_RowCancelingEdit"
-                            OnRowUpdating="GridViewBooks_RowUpdating"
-                            OnRowDeleting="GridViewBooks_RowDeleting">
-                            <Columns>
-                                <asp:CommandField ShowEditButton="true" ShowDeleteButton="true" ShowCancelButton="true"
-                                    HeaderText="Actions" ItemStyle-Width="150px" />
-                                <asp:BoundField DataField="BookID" HeaderText="BookID" ReadOnly="true" ItemStyle-Width="80px" />
-                                <asp:BoundField DataField="ISBN" HeaderText="ISBN" ItemStyle-Width="130px" />
-                                <asp:BoundField DataField="Title" HeaderText="Title" />
-                                <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0:n2}"
-                                    ItemStyle-Width="100px" ItemStyle-HorizontalAlign="Right" />
-                                <asp:BoundField DataField="Stock" HeaderText="Stock"
-                                    ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Center" />
-                                <asp:BoundField DataField="PublisherID" HeaderText="PublisherID" ItemStyle-Width="80px" />
-                                <asp:BoundField DataField="CategoryID" HeaderText="CategoryID" ItemStyle-Width="80px" />
-                            </Columns>
-                            <HeaderStyle CssClass="table-primary" />
-                            <RowStyle VerticalAlign="Top" />
-                            <EditRowStyle BackColor="#f2f2f2" />
-                        </asp:GridView>
-                    </div>
-                </div>
-            </div>
-        </ContentTemplate>
- 
-        <Triggers>
-            <asp:AsyncPostBackTrigger ControlID="btnSaveBook" EventName="Click" />
-        </Triggers>
-    </asp:UpdatePanel>
-
-
-    <!-- ========== Modal เพิ่มหนังสือ ========== -->
-    <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <asp:UpdatePanel ID="UpdatePanelAddBook" runat="server" UpdateMode="Conditional">
-                    <ContentTemplate>
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addBookModalLabel"><i class="bi bi-book-fill"></i> เพิ่มหนังสือใหม่</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="<%= txtAddBookId.ClientID %>" class="form-label">BookID (รหัสหนังสือ)</label>
-                                    <asp:TextBox ID="txtAddBookId" runat="server" CssClass="form-control" placeholder="เช่น 1001"></asp:TextBox>
+                <div class="tab-pane fade show active" id="books" role="tabpanel" aria-labelledby="books-tab">
+                    
+                    <asp:UpdatePanel ID="UpdatePanelBooks" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-light">
+                                     <h4 class="mb-0">จัดการหนังสือ</h4>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="<%= txtAddBookIsbn.ClientID %>" class="form-label">ISBN (13 หลัก)</label>
-                                    <asp:TextBox ID="txtAddBookIsbn" runat="server" CssClass="form-control" MaxLength="13"></asp:TextBox>
-                                </div>
-                                <div class="col-12">
-                                    <label for="<%= txtAddBookTitle.ClientID %>" class="form-label">Title (ชื่อหนังสือ)</label>
-                                    <asp:TextBox ID="txtAddBookTitle" runat="server" CssClass="form-control"></asp:TextBox>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="<%= txtAddBookPrice.ClientID %>" class="form-label">Price (ราคา)</label>
-                                    <asp:TextBox ID="txtAddBookPrice" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="<%= txtAddBookStock.ClientID %>" class="form-label">Stock (จำนวนคงคลัง)</label>
-                                    <asp:TextBox ID="txtAddBookStock" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="<%= txtAddBookPubId.ClientID %>" class="form-label">PublisherID (รหัสสำนักพิมพ์)</label>
-                                    <asp:TextBox ID="txtAddBookPubId" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="<%= txtAddBookCatId.ClientID %>" class="form-label">CategoryID (รหัสประเภท)</label>
-                                    <asp:TextBox ID="txtAddBookCatId" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                                <div class="card-body">
+                                     <div class="d-flex justify-content-end mb-3">
+                                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                                            <i class="bi bi-plus-circle"></i> เพิ่มหนังสือใหม่
+                                        </button>
+                                    </div>
+                                    <div class="table-responsive">
+                                         <asp:GridView ID="GridViewBooks" runat="server"
+                                            CssClass="table table-striped table-hover table-bordered"
+                                            HeaderStyle-CssClass="table-primary"
+                                            AutoGenerateColumns="false"
+                                            AllowPaging="true" PageSize="10"
+                                            DataKeyNames="BookID"
+                                            PagerSettings-Position="TopAndBottom"
+                                            PagerSettings-Mode="NumericFirstLast"
+                                            PagerStyle-CssClass="gridview-pagination"
+                                            PagerSettings-FirstPageText="&laquo;"
+                                            PagerSettings-PreviousPageText="&lsaquo;" 
+                                            PagerSettings-NextPageText="&rsaquo;" 
+                                            PagerSettings-LastPageText="&raquo;" 
+                                            PagerSettings-PageButtonCount="5"
+                                            OnPageIndexChanging="GridViewBooks_PageIndexChanging"
+                                            OnRowEditing="GridView_RowEditing"
+                                            OnRowCancelingEdit="GridView_RowCancelingEdit"
+                                            OnRowUpdating="GridViewBooks_RowUpdating"
+                                            OnRowDeleting="GridViewBooks_RowDeleting">
+                                            <Columns>
+                                                 <asp:CommandField ShowEditButton="true" ShowDeleteButton="true" ShowCancelButton="true" 
+                                                    HeaderText="Actions" ItemStyle-Width="150px" ControlStyle-CssClass="gridview-command" />
+                                                 <asp:BoundField DataField="BookID" HeaderText="BookID" ReadOnly="true" ItemStyle-Width="80px" />
+                                                <asp:BoundField DataField="ISBN" HeaderText="ISBN" ItemStyle-Width="130px" />
+                                                <asp:BoundField DataField="Title" HeaderText="Title" />
+                                                <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0:n2}" ItemStyle-Width="100px" ItemStyle-HorizontalAlign="Right" />
+                                                <asp:BoundField DataField="Stock" HeaderText="Stock" ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Center" />
+                                                <asp:BoundField DataField="PublisherID" HeaderText="PublisherID" ItemStyle-Width="80px"  />
+                                                <asp:BoundField DataField="CategoryID" HeaderText="CategoryID" ItemStyle-Width="80px"  />
+                                            </Columns>
+                                            <PagerStyle CssClass="gridview-pagination" />
+                                            <HeaderStyle CssClass="table-primary" />
+                                            <RowStyle VerticalAlign="Top" />
+                                            <EditRowStyle BackColor="#f2f2f2" />
+                                         </asp:GridView>
+                                    </div>
                                 </div>
                             </div>
+                        </ContentTemplate>
+                        <%-- This Trigger makes the GRID refresh when the SAVE button (in the modal) is clicked --%>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="btnSaveBook" EventName="Click" />
+                        </Triggers>
+                    </asp:UpdatePanel>
+
+                    <%-- Book Modal (outside the grid's UpdatePanel) --%>
+                    <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <%-- ▼▼▼ ADDED UpdatePanel *INSIDE* the modal ▼▼▼ --%>
+                                <asp:UpdatePanel ID="UpdatePanelAddBook" runat="server" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addBookModalLabel"><i class="bi bi-book-fill"></i> เพิ่มหนังสือใหม่</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label for="<%= txtAddBookId.ClientID %>" class="form-label">BookID (รหัสหนังสือ)</label>
+                                                    <asp:TextBox ID="txtAddBookId" runat="server" CssClass="form-control" placeholder="เช่น 1001"></asp:TextBox>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="<%= txtAddBookIsbn.ClientID %>" class="form-label">ISBN (13 หลัก)</label>
+                                                    <asp:TextBox ID="txtAddBookIsbn" runat="server" CssClass="form-control" MaxLength="13"></asp:TextBox>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="<%= txtAddBookTitle.ClientID %>" class="form-label">Title (ชื่อหนังสือ)</label>
+                                                    <asp:TextBox ID="txtAddBookTitle" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="<%= txtAddBookPrice.ClientID %>" class="form-label">Price (ราคา)</label>
+                                                    <asp:TextBox ID="txtAddBookPrice" runat="server" CssClass="form-control" TextMode="Number" step="0.01"></asp:TextBox>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="<%= txtAddBookStock.ClientID %>" class="form-label">Stock (จำนวนคงคลัง)</label>
+                                                    <asp:TextBox ID="txtAddBookStock" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="<%= txtAddBookPubId.ClientID %>" class="form-label">PublisherID (รหัสสำนักพิมพ์)</label>
+                                                    <asp:TextBox ID="txtAddBookPubId" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="<%= txtAddBookCatId.ClientID %>" class="form-label">CategoryID (รหัสประเภท)</label>
+                                                    <asp:TextBox ID="txtAddBookCatId" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                            <asp:Button ID="btnSaveBook" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSaveBook_Click" />
+                                        </div>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                                <%-- ▲▲▲ END of new UpdatePanel ▲▲▲ --%>
+                            </div>
                         </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                            <asp:Button ID="btnSaveBook" runat="server"
-                                Text="บันทึก"
-                                CssClass="btn btn-primary"
-                                OnClick="btnSaveBook_Click" />
-                        </div>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- ========== ฟังก์ชัน JavaScript ที่ถูกเรียกจากฝั่ง C# ========== -->
-<script type="text/javascript">
-    function showMessage(msg, type) {
-        alert(msg);
-    }
-    function hideModal(id) {
-        const modal = bootstrap.Modal.getInstance(document.getElementById(id));
-        if (modal) { modal.hide(); }
-    }
-</script>
-
+                    </div>
+                </div>
 
                 <!-- ======================= AUTHORS TAB ======================= -->
                 <div class="tab-pane fade" id="authors" role="tabpanel" aria-labelledby="authors-tab">

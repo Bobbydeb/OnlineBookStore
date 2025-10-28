@@ -11,7 +11,7 @@ namespace OnlineBookStore
 {
 
 
-    public partial class mainpage
+    public partial class myCollectionPage
     {
 
         /// <summary>
@@ -42,21 +42,21 @@ namespace OnlineBookStore
         protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
-        /// RepeaterBooks control.
+        /// rptOrders control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater RepeaterBooks;
+        protected global::System.Web.UI.WebControls.Repeater rptOrders;
 
         /// <summary>
-        /// RepeaterTopBooks control.
+        /// rptMyBooks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater RepeaterTopBooks;
+        protected global::System.Web.UI.WebControls.Repeater rptMyBooks;
     }
 }

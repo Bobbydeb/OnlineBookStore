@@ -13,6 +13,30 @@ namespace OnlineBookStore
                 LoadBooks();
                 LoadTopBooks();
             }
+            // --- ส่วนที่เพิ่มเข้ามา ---
+            if (Session["MemberID"] != null)
+            {
+                // ถ้า login แล้ว ให้ซ่อนปุ่ม Login และแสดงปุ่ม Logout
+                btnLogin.Visible = false;
+                btnLogout.Visible = true;
+            }
+            else
+            {
+                // ถ้ายังไม่ได้ login (สถานะปกติ)
+                btnLogin.Visible = true;
+                btnLogout.Visible = false;
+            }
+            // --- จบส่วนที่เพิ่มเข้ามา ---
+
+ 
+        }
+
+        // --- เมธอดที่เพิ่มเข้ามา (คัดลอกจาก myAccountPage.aspx.cs) ---
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("mainpage.aspx");
+        
         }
 
         private void LoadBooks()
