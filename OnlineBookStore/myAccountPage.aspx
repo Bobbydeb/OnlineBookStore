@@ -23,7 +23,25 @@
         .main-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         .main-nav li a { padding: 6px 10px; font-size: 0.9rem; display: block; border-radius: 5px; transition: background-color 0.2s; color: #fff; }
         .main-nav li a:hover { background-color: #555; }
-        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: #444; min-width: 200px; border-radius: 6px; padding: 8px 0; box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
+
+        /* --- CSS ที่แก้ไข --- */
+        /* เพิ่ม position: relative; ให้กับ .dropdown ที่เป็นตัวแม่ */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content { 
+            display: none; 
+            position: absolute; 
+            top: 100%; /* ตำแหน่งนี้จะถูกต้องเมื่อ .dropdown เป็น relative */
+            left: 0; 
+            background-color: #444; 
+            min-width: 200px; 
+            border-radius: 6px; 
+            padding: 8px 0; 
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2); 
+            z-index: 1000; /* เพิ่ม z-index เพื่อให้แน่ใจว่าอยู่ข้างหน้า */
+        }
         .dropdown-content a { padding: 8px 14px; font-size: 0.9rem; display: block; color: #fff; }
         .dropdown-content a:hover { background-color: #555; }
         .dropdown:hover .dropdown-content { display: block; }
@@ -142,9 +160,7 @@
         <header class="top-header">
             <div class="container">
                 <div class="logo">MyBookstore</div>
-                <div class="search-bar">
-                    <input type="text" placeholder="ค้นหาหนังสือ...">
-                </div>
+                
                 <div class="header-icons">
                     <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx">
                         👤 Login
@@ -164,16 +180,23 @@
                     <li><a href="topSalePage.aspx">หนังสือขายดี</a></li>
                     <li class="dropdown">
                         <a href="#">หมวดหมู่ ▼</a>
-                        <div class="dropdown-content">
-                            <%-- Category links --%>
-                            <a href="#">Fiction</a>
-                            <a href="#">Non-fiction</a>
-                            <a href="#">Children’s Books</a>
-                            <a href="#">Education / Academic</a>
-                        </div>
+                        <ul class="dropdown-content">
+                            <li><a href="categoryPage.aspx?id=1">Fiction</a></li>
+                            <li><a href="categoryPage.aspx?id=2">Non-fiction</a></li>
+                            <li><a href="categoryPage.aspx?id=3">Children’s Books</a></li>
+                            <li><a href="categoryPage.aspx?id=4">Education / Academic</a></li>
+                            <li><a href="categoryPage.aspx?id=5">Comics / Graphic Novels / Manga</a></li>
+                            <li><a href="categoryPage.aspx?id=6">Art / Design / Photography</a></li>
+                            <li><a href="categoryPage.aspx?id=7">Religion / Spirituality</a></li>
+                            <li><a href="categoryPage.aspx?id=8">Science / Technology</a></li>
+                            <li><a href="categoryPage.aspx?id=9">Business / Economics</a></li>
+                            <li><a href="categoryPage.aspx?id=10">Cookbooks / Lifestyle</a></li>
+                            <li><a href="categoryPage.aspx?id=11">Poetry / Drama</a></li>
+                        </ul>
                     </li>
                     <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
                     <li><a href="myCollectionPage.aspx">คอลเลคชั่นของฉัน</a></li>
+                    <li><a href="reviewHistoryPage.aspx">ประวัติการรีวิวของฉัน</a></li>
                 </ul>
             </div>
         </nav>

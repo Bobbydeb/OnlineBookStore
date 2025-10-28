@@ -2,6 +2,9 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
+// [เพิ่ม] Import WebControls
+using System.Web.UI.WebControls;
+
 
 namespace OnlineBookStore
 {
@@ -48,6 +51,17 @@ namespace OnlineBookStore
             Response.Redirect("topSalePage.aspx"); // หรือ mainpage.aspx
         }
 
+        // [เพิ่ม] Event Handler สำหรับปุ่มค้นหา (เหมือน mainpage)
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            string query = txtSearch.Text.Trim();
+            if (!string.IsNullOrEmpty(query))
+            {
+                // ส่งต่อไปยังหน้า searchResultPage.aspx พร้อมกับคำค้นหา
+                Response.Redirect($"searchResultPage.aspx?query={Server.UrlEncode(query)}");
+            }
+        }
+
         // เมธอดดึงชื่อหมวดหมู่จากตาราง BookCategory
         private string GetCategoryName(int categoryId)
         {
@@ -79,7 +93,7 @@ namespace OnlineBookStore
                     B.Edition,
                     B.Price, 
                     SUM(OD.Quantity) AS TotalSold, 
-                    ISNULL(C.CoverUrl, 'https://via.placeholder.com/180x250.png?text=' + B.Title) AS CoverUrl
+                    ISNULL(C.CoverUrl, 'https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/00_DefaultBook.jpg') AS CoverUrl
                 FROM Book B
                 JOIN OrderDetail OD ON B.BookID = OD.BookID
                 LEFT JOIN Cover C ON B.CoverID = C.CoverID

@@ -34,14 +34,7 @@
         .main-nav li a:hover { background-color: #555; }
 
         /* --- CSS เฉพาะสำหรับหน้านี้ --- */
-        /* เน้นลิงก์หน้าปัจจุบันใน Nav (ถูกลบออกตามคำขอ) */
-        /*
-        .main-nav li a[href="myCollectionPage.aspx"] {
-            background-color: #007bff;
-            font-weight: 600;
-        }
-        */
-
+        
         /* Dropdown (from mainpage.aspx) - แก้ไขให้เฉพาะเจาะจงมากขึ้น */
         .main-nav li.dropdown { 
             position: relative; 
@@ -130,7 +123,7 @@
             font-size: 0.875rem;
         }
         
-        /* สีสถานะ */
+        /* สีสถานะ (ตรงกับที่ C# ส่งมา) */
         .status-yellow { background-color: #fefcbf; color: #92400e; }
         .status-blue { background-color: #dbeafe; color: #1e40af; }
         .status-green { background-color: #d1fae5; color: #065f46; }
@@ -155,9 +148,10 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        @media (min-width: 1024px) { /* 1 คอลัมน์บนจอใหญ่ (เพราะอยู่ในคอลัมน์ขวาแล้ว) */
+        @media (min-width: 1024px) { 
+            /* [แก้ไข] เปลี่ยนเป็น 2 คอลัมน์บนจอใหญ่ */
             .my-books-grid {
-                grid-template-columns: repeat(1, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
@@ -174,7 +168,8 @@
         }
         .book-card-my-collection img {
             width: 100%;
-            height: 12rem; /* 192px */
+            /* [แก้ไข] ใช้ aspect-ratio 2:3 */
+            aspect-ratio: 2 / 3;
             object-fit: cover;
             background: linear-gradient(135deg,#eee,#ccc);
         }
@@ -191,6 +186,21 @@
             margin-bottom: 0.5rem;
             margin-top: 0;
         }
+        
+        /* [เพิ่ม] สไตล์สำหรับรายละเอียดหนังสือ (Author, Category, Edition) */
+        .book-card-details-my-collection {
+            font-size: 0.875rem; /* 14px */
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+        .book-card-details-my-collection p {
+            margin: 0.25rem 0;
+        }
+        .book-card-details-my-collection strong {
+            color: #111;
+        }
+        /* [สิ้นสุด] */
+
 
         /* สไตล์ปุ่มรีวิว */
         .review-button {
@@ -235,16 +245,17 @@
         <header class="top-header">
             <div class="container">
                 <div class="logo">MyBookstore</div>
-                <div class="search-bar">
-                    <input type="text" placeholder="ค้นหาหนังสือ...">
-                </div>
                 <div class="header-icons">
                     <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx">
-                        👤 Login
+                        Login  
                     </asp:LinkButton>
                     <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" ForeColor="Red" Visible="false">
-                        ⏻ Logout
+                        Logout  
                     </asp:LinkButton>
+                    <a href="cartPage.aspx" class="cart-icon" title="ตะกร้าสินค้า" runat="server" id="cartLink">
+                        🛒
+                        <span runat="server" id="cartCount" class="cart-count">0</span>
+                    </a>
                 </div>
             </div>
         </header>
@@ -257,23 +268,23 @@
                     <li><a href="topSalePage.aspx">หนังสือขายดี</a></li>
                     <li class="dropdown">
                         <a href="#">หมวดหมู่ ▼</a>
-                        <!-- แก้ไขโครงสร้าง dropdown ให้ถูกต้อง (เป็น <ul>) -->
                         <ul class="dropdown-content">
-                            <li><a href="#">Fiction</a></li>
-                            <li><a href="topSalePage.aspx">Non-fiction</a></li>
-                            <li><a href="#">Children’s Books</a></li>
-                            <li><a href="#">Education / Academic</a></li>
-                            <li><a href="#">Comics / Graphic Novels / Manga</a></li>
-                            <li><a href="#">Art / Design / Photography</a></li>
-                            <li><a href="#">Religion / Spirituality</a></li>
-                            <li><a href="#">Science / Technology</a></li>
-                            <li><a href="#">Business / Economics</a></li>
-                            <li><a href="#">Cookbooks / Lifestyle</a></li>
-                            <li><a href="#">Poetry / Drama</a></li>
+                            <li><a href="categoryPage.aspx?id=1">Fiction</a></li>
+                            <li><a href="categoryPage.aspx?id=2">Non-fiction</a></li>
+                            <li><a href="categoryPage.aspx?id=3">Children’s Books</a></li>
+                            <li><a href="categoryPage.aspx?id=4">Education / Academic</a></li>
+                            <li><a href="categoryPage.aspx?id=5">Comics / Graphic Novels / Manga</a></li>
+                            <li><a href="categoryPage.aspx?id=6">Art / Design / Photography</a></li>
+                            <li><a href="categoryPage.aspx?id=7">Religion / Spirituality</a></li>
+                            <li><a href="categoryPage.aspx?id=8">Science / Technology</a></li>
+                            <li><a href="categoryPage.aspx?id=9">Business / Economics</a></li>
+                            <li><a href="categoryPage.aspx?id=10">Cookbooks / Lifestyle</a></li>
+                            <li><a href="categoryPage.aspx?id=11">Poetry / Drama</a></li>
                         </ul>
                     </li>
                     <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
                     <li><a href="myCollectionPage.aspx">คอลเลคชั่นของฉัน</a></li>
+                    <li><a href="reviewHistoryPage.aspx">ประวัติการรีวิวของฉัน</a></li>
                 </ul>
             </div>
         </nav>
@@ -302,7 +313,8 @@
                                 </div>
                                 
                                 <div class="order-book-list">
-                                    <h4 class="text-md font-semibold mb-2">รายการหนังสือ:</h4>
+                                    <!-- [แก้ไข] ลบคลาส Tailwind ที่ซ้ำซ้อนออก -->
+                                    <h4>รายการหนังสือ:</h4>
                                     <ul>
                                         <asp:Repeater ID="rptOrderBooks" runat="server">
                                             <ItemTemplate>
@@ -336,6 +348,12 @@
                                             <h3>
                                                 <asp:Label ID="lblBookTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Label>
                                             </h3>
+                                            <!-- [เพิ่ม] Details -->
+                                            <div class="book-card-details-my-collection">
+                                                <p><strong>ผู้แต่ง:</strong> <asp:Label ID="lblAuthors" runat="server"></asp:Label></p>
+                                                <p><strong>หมวดหมู่:</strong> <asp:Label ID="lblCategory" runat="server"></asp:Label></p>
+                                                <p><strong>Edition:</strong> <asp:Label ID="lblEdition" runat="server"></asp:Label></p>
+                                            </div>
                                         </div>
                                         <div>
                                             <asp:HyperLink ID="hlReview" runat="server" 
@@ -345,6 +363,7 @@
                                             <asp:Label ID="lblReviewStatus" runat="server" 
                                                 CssClass="review-status" 
                                                 Visible="false">
+                                            <!-- [แก้ไข] เปลี่ยนจาก </A:Label> เป็น </asp:Label> -->
                                             </asp:Label>
                                         </div>
                                     </div>
@@ -366,6 +385,4 @@
     </form>
 </body>
 </html>
-
-
 

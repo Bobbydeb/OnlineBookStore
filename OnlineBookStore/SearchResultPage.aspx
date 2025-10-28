@@ -1,12 +1,12 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="categoryPage.aspx.cs" Inherits="OnlineBookStore.categoryPage" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="searchResultPage.aspx.cs" Inherits="OnlineBookStore.searchResultPage" %>
 
 <!DOCTYPE html>
 <html lang="th">
 <head runat="server">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หมวดหมู่หนังสือ</title>
-    <!-- ใช้ CSS ชุดเดียวกับ mainpage.aspx -->
+    <title>ผลการค้นหา</title>
+    <!-- คัดลอก CSS จาก mainpage.aspx มาใช้เพื่อให้หน้าตาเหมือนกัน -->
     <style>
         body { font-family: Arial, sans-serif; margin: 0; background-color: #f0f2f5; color: #333; }
         a { text-decoration: none; color: inherit; }
@@ -17,6 +17,7 @@
         .top-header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: bold; color: #d90000; }
         
+        /* CSS สำหรับ Search Bar */
         .search-bar { flex-grow: 1; margin: 0 20px; display: flex; }
         .search-input { 
             width: 100%; 
@@ -37,6 +38,7 @@
             font-size: 0.9rem;
         }
         .search-button:hover { background-color: #e0e0e0; }
+        
         .header-icons { display: flex; gap: 15px; font-size: 0.95rem; }
 
         /* Nav */
@@ -47,17 +49,36 @@
         .main-nav li a { padding: 6px 10px; font-size: 0.9rem; display: block; border-radius: 5px; transition: background-color 0.2s; color: #fff; }
         .main-nav li a:hover { background-color: #555; }
 
-        /* Dropdown */
+        /* Dropdown (CSS ที่ถูกต้องชุดเดียว) */
         .main-nav li.dropdown { position: relative; } 
-        .main-nav .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: #444; min-width: 200px; border-radius: 6px; padding: 8px 0; box-shadow: 0 6px 16px rgba(0,0,0,0.2); z-index: 999; }
-        .main-nav .dropdown-content li a { padding: 8px 14px; font-size: 0.9rem; display: block; color: #fff; }
+        .main-nav .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;               
+            left: 0;
+            background-color: #444;
+            min-width: 200px;
+            border-radius: 6px;
+            padding: 8px 0;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+        .main-nav .dropdown-content li a {
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            display: block;
+            color: #fff;
+        }
         .main-nav .dropdown-content li a:hover { background-color: #555; }
-        .main-nav li.dropdown:hover .dropdown-content { display: block; }
+        .main-nav li.dropdown:hover .dropdown-content { display: block; } 
 
         /* Content */
         main { padding: 20px 0; }
         .section-title { font-size: 1.8rem; font-weight: bold; margin: 20px 0; color: #111; }
+        .search-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; }
+        .search-title span { color: #d90000; font-style: italic; }
         
+        /* Book Grid (auto-fill) */
         .book-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
@@ -89,7 +110,7 @@
         .book-edition, .book-category { font-size: 0.9rem; color: #666; margin: 6px 0; }
         .book-price { font-size: 1.1rem; font-weight: bold; color: #d90000; margin-top: 6px; }
         
-        /* No results panel (เหมือน searchResultPage) */
+        /* No results panel */
         .no-items-panel {
             border: 1px dashed #e2e8f0;
             border-radius: 0.5rem;
@@ -99,7 +120,7 @@
             background-color: #fafafa;
         }
 
-        /* CSS สำหรับ Pagination (จากครั้งก่อน) */
+        /* CSS สำหรับ Pagination (เหมือน categoryPage) */
         .pagination-container { 
             display: flex; 
             justify-content: center; 
@@ -176,14 +197,13 @@
         <!-- Navigation bar -->
         <nav class="main-nav">
             <div class="container">
-                 <ul>
+                <ul>
                     <li><a href="mainpage.aspx">หน้าแรก</a></li>
                     <li><a href="topSalePage.aspx">หนังสือขายดี</a></li>
-
-                    <li class="dropdown">
+                     <li class="dropdown">
                         <a href="#">หมวดหมู่ ▼</a>
                         <ul class="dropdown-content">
-                            <!-- อัปเดตลิงก์ที่นี่ด้วย (เหมือน mainpage) -->
+                            <!-- [แก้ไข] อัปเดตลิงก์ที่นี่ด้วย (เหมือน mainpage) -->
                             <li><a href="categoryPage.aspx?id=1">Fiction</a></li>
                             <li><a href="categoryPage.aspx?id=2">Non-fiction</a></li>
                             <li><a href="categoryPage.aspx?id=3">Children’s Books</a></li>
@@ -197,7 +217,6 @@
                             <li><a href="categoryPage.aspx?id=11">Poetry / Drama</a></li>
                         </ul>
                     </li>
- 
                     <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
                     <li><a href="myCollectionPage.aspx">คอลเลคชั่นของฉัน</a></li>
                     <li><a href="reviewHistoryPage.aspx">ประวัติการรีวิวของฉัน</a></li>
@@ -207,12 +226,16 @@
 
         <!-- Main Content -->
         <main class="container">
-            <h1 class="section-title">
-                หมวดหมู่: <asp:Literal ID="litCategoryName" runat="server" Text="กำลังโหลด..." />
+            <h1 class="search-title">ผลการค้นหาสำหรับ: 
+                <span><asp:Literal ID="litSearchQuery" runat="server" /></span>
             </h1>
             
+            <asp:Panel runat="server" ID="pnlNoResults" Visible="false" CssClass="no-items-panel" Style="margin-bottom: 20px;">
+                ไม่พบหนังสือที่ตรงกับคำค้นหาของคุณ
+            </asp:Panel>
+
             <section class="book-grid">
-                <asp:Repeater ID="rptCategoryBooks" runat="server">
+                <asp:Repeater ID="rptSearchResults" runat="server">
                     <ItemTemplate>
                         <div class="book-card">
                             <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' />
@@ -228,15 +251,13 @@
                     </ItemTemplate>
                 </asp:Repeater>
             </section>
-            
+
             <!-- Pagination Controls (จากครั้งก่อน) -->
             <asp:Panel runat="server" ID="pnlPager" Visible="false">
                 <nav aria-label="Page navigation" class="pagination-container">
                     <ul class="pagination">
-                        <!-- ตัวเลขหน้าจะถูกสร้างที่นี่โดย Repeater -->
                         <asp:Repeater ID="rptPager" runat="server" OnItemDataBound="rptPager_ItemDataBound">
                             <ItemTemplate>
-                                <!-- เราใช้ <li> ธรรมดาที่มร runat=server เพื่อให้เข้าถึงจาก C# ได้ -->
                                 <li runat="server" id="liPageItem" class="page-item">
                                     <asp:HyperLink ID="hlPageLink" runat="server" CssClass="page-link"></asp:HyperLink>
                                 </li>
@@ -246,10 +267,6 @@
                 </nav>
             </asp:Panel>
             <!-- [สิ้นสุด] Pagination Controls -->
-
-            <asp:Panel runat="server" ID="pnlNoBooks" Visible="false" CssClass="no-items-panel" Style="margin-top: 20px;">
-                ไม่พบหนังสือในหมวดหมู่นี้
-            </asp:Panel>
 
         </main>
 

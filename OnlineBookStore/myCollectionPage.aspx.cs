@@ -17,11 +17,9 @@ namespace OnlineBookStore
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // ถ้ายังไม่ได้ login ให้กลับไปหน้า login
             if (Session["MemberID"] == null)
             {
-                // ใช้ Response.Redirect แทน Response.Write + script เพื่อความปลอดภัยและเสถียรภาพ
-                Response.Redirect("loginPage.aspx");
+                Response.Write("<script>alert('กรุณาทำการ login ก่อนเข้าใช้หน้านี้');window.location='loginPage.aspx';</script>");
                 return;
             }
 
@@ -107,7 +105,7 @@ namespace OnlineBookStore
         }
 
         /// <summary>
-        /// โหลดเฉพาะหนังสือที่ Member เป็นเจ้าของ (จาก Order ที่มีสถานะ 'Delivered')
+        /// โหลดเฉพาะหนังสือที่ Member เป็นเจ้าของ (จาก Order ที่มีสถานะ 'Completed')
         /// </summary>
         private void LoadMyBooks()
         {
@@ -116,15 +114,25 @@ namespace OnlineBookStore
 
             using (SqlConnection con = new SqlConnection(connStr))
             {
-                // **ข้อควรระวัง:** สถานะ 'Delivered' เป็นการสมมติ, 
-                // กรุณาเปลี่ยนเป็นสถานะที่ถูกต้อง (เช่น 'จัดส่งแล้ว', 'Completed') ตามที่คุณใช้จริงในระบบ
+                // [แก้ไข] เพิ่มการดึง Edition, CategoryName, และ Authors
                 string query = @"
-                    SELECT DISTINCT b.BookID, b.Title, c.CoverUrl
+                    SELECT DISTINCT 
+                        b.BookID, b.Title, b.Edition, 
+                        c.CoverUrl, 
+                        bc.CategoryName,
+                        (SELECT STUFF(
+                            (SELECT ', ' + a.AuthorName
+                             FROM Author a
+                             JOIN BookAuthor ba ON a.AuthorID = ba.AuthorID
+                             WHERE ba.BookID = b.BookID
+                             FOR XML PATH('')),
+                            1, 2, '')) AS Authors
                     FROM Book b
                     LEFT JOIN Cover c ON b.CoverID = c.CoverID
+                    LEFT JOIN BookCategory bc ON b.CategoryID = bc.CategoryID
                     JOIN OrderDetail od ON b.BookID = od.BookID
                     JOIN OrderTable ot ON od.OrderID = ot.OrderID
-                    WHERE ot.MemberID = @MemberID AND ot.Status = 'Delivered'";
+                    WHERE ot.MemberID = @MemberID AND ot.Status = 'Completed'";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -176,6 +184,18 @@ namespace OnlineBookStore
                     hlReview.Visible = true; // แสดงปุ่มเขียนรีวิว
                     lblReviewStatus.Visible = false;
                 }
+
+                // [เพิ่ม] Find Controls for new labels
+                Label lblAuthors = (Label)e.Item.FindControl("lblAuthors");
+                Label lblCategory = (Label)e.Item.FindControl("lblCategory");
+                Label lblEdition = (Label)e.Item.FindControl("lblEdition");
+
+                // [เพิ่ม] Set text for new labels, handling nulls
+                lblAuthors.Text = (drv["Authors"] == DBNull.Value || string.IsNullOrEmpty(drv["Authors"].ToString()))
+                                    ? "ไม่ระบุ"
+                                    : drv["Authors"].ToString();
+                lblCategory.Text = drv["CategoryName"] == DBNull.Value ? "ไม่ระบุ" : drv["CategoryName"].ToString();
+                lblEdition.Text = drv["Edition"] == DBNull.Value ? "N/A" : drv["Edition"].ToString();
             }
         }
 
@@ -209,22 +229,24 @@ namespace OnlineBookStore
         /// </summary>
         protected string GetStatusClass(string status)
         {
+            // [แก้ไข] เปลี่ยน return value ให้ตรงกับ CSS Class ใน .aspx
             switch (status.ToLower())
             {
                 case "pending":
                 case "รอดำเนินการ":
-                    return "bg-yellow-200 text-yellow-800";
+                    return "status-yellow";
                 case "processing":
                 case "กำลังเตรียมจัดส่ง":
-                    return "bg-blue-200 text-blue-800";
+                    return "status-blue";
                 case "delivered":
                 case "จัดส่งแล้ว":
-                    return "bg-green-200 text-green-800";
+                case "completed": // [แก้ไข] เพิ่ม case 'completed'
+                    return "status-green";
                 case "cancelled":
                 case "ยกเลิก":
-                    return "bg-red-200 text-red-800";
+                    return "status-red";
                 default:
-                    return "bg-gray-200 text-gray-800";
+                    return "status-gray";
             }
         }
 
@@ -235,3 +257,4 @@ namespace OnlineBookStore
         }
     }
 }
+

@@ -15,8 +15,30 @@
         .top-header { background-color: #fff; padding: 10px 0; border-bottom: 1px solid #ddd; }
         .top-header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: bold; color: #d90000; }
-        .search-bar { flex-grow: 1; margin: 0 20px; }
-        .search-bar input { width: 100%; max-width: 400px; padding: 8px 40px 8px 12px; border: 1px solid #ccc; border-radius: 20px; }
+        
+        /* [แก้ไข] CSS สำหรับ Search Bar */
+        .search-bar { flex-grow: 1; margin: 0 20px; display: flex; }
+        .search-input { /* ใช้แทน input เดิม */
+            width: 100%; 
+            max-width: 400px; 
+            padding: 8px 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 20px 0 0 20px; /* ด้านซ้ายโค้ง */
+            border-right: none;
+            /* ทำให้ font-size และ family ตรงกับปุ่ม */
+            font-size: 1rem; 
+            font-family: Arial, sans-serif;
+        }
+        .search-button { /* ปุ่มค้นหา */
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 0 20px 20px 0; /* ด้านขวาโค้ง */
+            background-color: #f0f0f0;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .search-button:hover { background-color: #e0e0e0; }
+
         .header-icons { display: flex; gap: 15px; font-size: 0.95rem; }
 
         /* Nav */
@@ -33,9 +55,9 @@
         .main-nav li a { padding: 6px 10px; font-size: 0.9rem; display: block; border-radius: 5px; transition: background-color 0.2s; color: #fff; }
         .main-nav li a:hover { background-color: #555; }
 
-        /* Dropdown */
-        .dropdown { position: relative; }
-        .dropdown-content {
+        /* Dropdown (CSS ที่ถูกต้องชุดเดียว) */
+        .main-nav li.dropdown { position: relative; } /* ทำให้เจาะจงมากขึ้น */
+        .main-nav .dropdown-content {
             display: none;
             position: absolute;
             top: 100%;               
@@ -47,14 +69,14 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.2);
             z-index: 999;
         }
-        .dropdown-content li a {
+        .main-nav .dropdown-content li a {
             padding: 8px 14px;
             font-size: 0.9rem;
             display: block;
             color: #fff;
         }
-        .dropdown-content li a:hover { background-color: #555; }
-        .dropdown:hover .dropdown-content { display: block; }
+        .main-nav .dropdown-content li a:hover { background-color: #555; }
+        .main-nav li.dropdown:hover .dropdown-content { display: block; } /* ทำให้เจาะจงมากขึ้น */
 
         /* Content */
         main { padding: 20px 0; }
@@ -82,7 +104,6 @@
             transform: translateY(-4px);             
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
         }
-        /* แทนบรรทัดเดิม: .book-card img { width:100%; height:250px; ... } */
         .book-card img{
             width: 100%;
             aspect-ratio: 2 / 3;  /* 2:3 */
@@ -122,40 +143,13 @@
         /* Responsive */
         @media (max-width: 768px) {
             .main-nav ul { gap: 8px; }
-            .book-card img { height: 200px; }
         }
         @media (max-width: 480px) {
             .header-icons { font-size: 0.85rem; }
             .book-title { font-size: 0.9rem; }
         }
-            .dropdown {
-            position: relative;
-            display: inline-block;
-        }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #333;
-            min-width: 200px;
-            z-index: 1;
-            border-radius: 5px;
-        }
-
-        .dropdown-content a {
-            color: white;
-            padding: 10px 12px;
-            display: block;
-            text-align: left;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #555;
-        }
+        /* [ลบ] CSS Dropdown ที่ซ้ำซ้อนทั้งชุดที่อยู่ตรงนี้ออกไป */
 
     </style>
 </head>
@@ -166,15 +160,20 @@
             <div class="container">
                 <div class="logo">MyBookstore</div>
                 <div class="search-bar">
-                    <input type="text" placeholder="ค้นหาหนังสือ...">
+                    <asp:TextBox ID="txtSearch" runat="server" placeholder="ค้นหาหนังสือ..." CssClass="search-input"></asp:TextBox>
+                    <asp:Button ID="btnSearch" runat="server" Text="ค้นหา" OnClick="btnSearch_Click" CssClass="search-button" />
                 </div>
                 <div class="header-icons">
                     <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx">
-                        👤 Login
+                        Login  
                     </asp:LinkButton>
                     <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" ForeColor="Red" Visible="false">
-                        ⏻ Logout
+                        Logout  
                     </asp:LinkButton>
+                    <a href="cartPage.aspx" class="cart-icon" title="ตะกร้าสินค้า" runat="server" id="cartLink">
+                        🛒
+                        <span runat="server" id="cartCount" class="cart-count">0</span>
+                    </a>
                 </div>
             </div>
         </header>
@@ -188,24 +187,25 @@
 
                     <li class="dropdown">
                         <a href="#">หมวดหมู่ ▼</a>
-                        <div class="dropdown-content">
-                            <a href="#">Fiction</a>
-                            <a href="topSalePage.aspx">Non-fiction</a>
-                            <a href="#">Children’s Books</a>
-                            <a href="#">Education / Academic</a>
-                            <a href="#">Comics / Graphic Novels / Manga</a>
-                            <a href="#">Art / Design / Photography</a>
-                            <a href="#">Religion / Spirituality</a>
-                            <a href="#">Science / Technology</a>
-                            <a href="#">Business / Economics</a>
-                            <a href="#">Cookbooks / Lifestyle</a>
-                            <a href="#">Poetry / Drama</a>
-                        </div>
+                        <ul class="dropdown-content">
+                            <li><a href="categoryPage.aspx?id=1">Fiction</a></li>
+                            <li><a href="categoryPage.aspx?id=2">Non-fiction</a></li>
+                            <li><a href="categoryPage.aspx?id=3">Children’s Books</a></li>
+                            <li><a href="categoryPage.aspx?id=4">Education / Academic</a></li>
+                            <li><a href="categoryPage.aspx?id=5">Comics / Graphic Novels / Manga</a></li>
+                            <li><a href="categoryPage.aspx?id=6">Art / Design / Photography</a></li>
+                            <li><a href="categoryPage.aspx?id=7">Religion / Spirituality</a></li>
+                            <li><a href="categoryPage.aspx?id=8">Science / Technology</a></li>
+                            <li><a href="categoryPage.aspx?id=9">Business / Economics</a></li>
+                            <li><a href="categoryPage.aspx?id=10">Cookbooks / Lifestyle</a></li>
+                            <li><a href="categoryPage.aspx?id=11">Poetry / Drama</a></li>
+                        </ul>
                     </li>
 
  
                     <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
                     <li><a href="myCollectionPage.aspx">คอลเลคชั่นของฉัน</a></li>
+                    <li><a href="reviewHistoryPage.aspx">ประวัติการรีวิวของฉัน</a></li>
                 </ul>
             </div>
         </nav>
@@ -254,3 +254,4 @@
     </form>
 </body>
 </html>
+

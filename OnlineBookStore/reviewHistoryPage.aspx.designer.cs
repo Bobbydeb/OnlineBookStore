@@ -11,7 +11,7 @@ namespace OnlineBookStore
 {
 
 
-    public partial class myCollectionPage
+    public partial class reviewHistoryPage
     {
 
         /// <summary>
@@ -60,21 +60,12 @@ namespace OnlineBookStore
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl cartCount;
 
         /// <summary>
-        /// rptOrders control.
+        /// rptMyReviews control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptOrders;
-
-        /// <summary>
-        /// rptMyBooks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptMyBooks;
+        protected global::System.Web.UI.WebControls.Repeater rptMyReviews;
     }
 }

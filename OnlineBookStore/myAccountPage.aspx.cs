@@ -15,7 +15,7 @@ namespace OnlineBookStore
             // ถ้ายังไม่ได้ login ให้กลับไปหน้า login
             if (Session["MemberID"] == null)
             {
-                Response.Write("<script>alert('คุณยังไม่ได้ login');window.location='loginPage.aspx';</script>");
+                Response.Write("<script>alert('กรุณาทำการ login ก่อนเข้าใช้หน้านี้');window.location='loginPage.aspx';</script>");
                 return;
             }
 

@@ -11,7 +11,7 @@ namespace OnlineBookStore
 {
 
 
-    public partial class myCollectionPage
+    public partial class searchResultPage
     {
 
         /// <summary>
@@ -22,6 +22,24 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+
+        /// <summary>
+        /// txtSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+
+        /// <summary>
+        /// btnSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
         /// btnLogin control.
@@ -60,21 +78,48 @@ namespace OnlineBookStore
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl cartCount;
 
         /// <summary>
-        /// rptOrders control.
+        /// litSearchQuery control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptOrders;
+        protected global::System.Web.UI.WebControls.Literal litSearchQuery;
 
         /// <summary>
-        /// rptMyBooks control.
+        /// pnlNoResults control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptMyBooks;
+        protected global::System.Web.UI.WebControls.Panel pnlNoResults;
+
+        /// <summary>
+        /// rptSearchResults control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptSearchResults;
+
+        /// <summary>
+        /// pnlPager control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPager;
+
+        /// <summary>
+        /// rptPager control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptPager;
     }
 }

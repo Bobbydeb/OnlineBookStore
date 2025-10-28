@@ -122,9 +122,10 @@
     <Content Include="Global.asax" />
     <Content Include="loginPage.aspx" />
     <Content Include="mainpage.aspx" />
-    <Content Include="MonthlySales.aspx" />
     <Content Include="myAccountPage.aspx" />
     <Content Include="myCollectionPage.aspx" />
+    <Content Include="reviewHistoryPage.aspx" />
+    <Content Include="reviewPage.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -180,6 +181,7 @@
     <Content Include="Scripts\WebForms\WebForms.js" />
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
+    <Content Include="SearchResultPage.aspx" />
     <Content Include="Site.Master" />
     <Content Include="topSalePage.aspx" />
     <Content Include="ViewSwitcher.ascx" />
@@ -221,13 +223,6 @@
     <Compile Include="mainpage.aspx.designer.cs">
       <DependentUpon>mainpage.aspx</DependentUpon>
     </Compile>
-    <Compile Include="MonthlySales.aspx.cs">
-      <DependentUpon>MonthlySales.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="MonthlySales.aspx.designer.cs">
-      <DependentUpon>MonthlySales.aspx</DependentUpon>
-    </Compile>
     <Compile Include="myAccountPage.aspx.cs">
       <DependentUpon>myAccountPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -243,6 +238,27 @@
       <DependentUpon>myCollectionPage.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="reviewHistoryPage.aspx.cs">
+      <DependentUpon>reviewHistoryPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reviewHistoryPage.aspx.designer.cs">
+      <DependentUpon>reviewHistoryPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reviewPage.aspx.cs">
+      <DependentUpon>reviewPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reviewPage.aspx.designer.cs">
+      <DependentUpon>reviewPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SearchResultPage.aspx.cs">
+      <DependentUpon>SearchResultPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SearchResultPage.aspx.designer.cs">
+      <DependentUpon>SearchResultPage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
