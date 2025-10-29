@@ -5,185 +5,423 @@
 <head runat="server">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>หนังสือขายดี | MyBookstore</title>
+    <title>Bestsellers | The Red Bookmark</title>
+    <!-- Minimalist Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons for UI -->
+    <script src="https://unpkg.com/feather-icons"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background-color: #f0f2f5; color: #333; }
-        a { text-decoration: none; color: inherit; }
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-
-        /* Header */
-        .top-header { background-color: #fff; padding: 10px 0; border-bottom: 1px solid #ddd; }
-        .top-header .container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: #d90000; }
+        /* --- [NEW] Modern Red/Black Theme --- */
         
-        .search-bar { flex-grow: 1; margin: 0 20px; display: flex; }
+        :root {
+            --color-red-deep: #b30000;
+            --color-red-vibrant: #e60000;
+            --color-black: #1a1a1a;
+            --color-white: #ffffff;
+            --color-gray-light: #f7f7f7;
+            --color-gray-medium: #e0e0e0;
+            --color-gray-dark: #555;
+            --font-primary: 'Inter', sans-serif;
+            --shadow-soft: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-medium: 0 8px 20px rgba(0,0,0,0.1);
+            --border-radius-main: 8px;
+            --border-radius-large: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body { 
+            font-family: var(--font-primary); 
+            margin: 0; 
+            background-color: var(--color-white); 
+            color: var(--color-black);
+            line-height: 1.6;
+        }
+
+        a { 
+            text-decoration: none; 
+            color: var(--color-red-vibrant);
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: var(--color-red-deep);
+        }
+
+        .container { 
+            width: 90%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+
+        /* --- Header --- */
+        .top-header { 
+            background-color: var(--color-white); 
+            padding: 1.5rem 0; 
+            border-bottom: 1px solid var(--color-gray-medium); 
+            position: sticky;
+            top: 0;
+            background: var(--color-white);
+            z-index: 900;
+        }
+        .top-header .container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 1.5rem;
+        }
+        .logo { 
+            font-size: 2rem; 
+            font-weight: 700; 
+            color: var(--color-red-vibrant); 
+            flex-shrink: 0;
+        }
+        
+        .search-bar { 
+            flex-grow: 1; 
+            display: flex; 
+            max-width: 500px;
+            position: relative;
+        }
         .search-input { 
             width: 100%; 
-            max-width: 400px; 
-            padding: 8px 12px; 
-            border: 1px solid #ccc; 
-            border-radius: 20px 0 0 20px; 
-            border-right: none;
+            padding: 12px 20px; 
+            padding-right: 50px; /* Space for button */
+            border: 1px solid var(--color-gray-medium); 
+            border-radius: 25px;
             font-size: 1rem; 
-            font-family: Arial, sans-serif;
+            font-family: var(--font-primary);
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
-        .search-button { 
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 0 20px 20px 0; 
-            background-color: #f0f0f0;
-            cursor: pointer;
-            font-size: 0.9rem;
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-red-vibrant);
+            box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
         }
-        .search-button:hover { background-color: #e0e0e0; }
         
-        .header-icons { display: flex; gap: 15px; font-size: 0.95rem; }
-        
-        /* [เพิ่ม] CSS ตะกร้า (จาก mainpage) */
-        .cart-count {
-            display: inline;
-            color: white;
-            background-color: #d90000;
+        /* Updated Button Style */
+        .search-button {
+            position: absolute;
+            right: 6px;
+            top: 6px;
+            height: 38px;
+            width: 38px;
+            border: none;
             border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 0.8rem;
+            background-color: var(--color-red-vibrant);
+            color: var(--color-white);
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        .search-button:hover { 
+            background-color: var(--color-red-deep); 
+        }
+        .search-button i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .header-icons { 
+            display: flex; 
+            gap: 1.5rem; 
+            font-size: 0.95rem; 
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .header-icons .asp-link {
+            font-weight: 500;
+            color: var(--color-black);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--color-gray-medium);
+            transition: all 0.3s;
+        }
+        .header-icons .asp-link:hover {
+            background: var(--color-gray-light);
+            border-color: var(--color-gray-dark);
+        }
+        .header-icons .asp-link-logout {
+            border-color: var(--color-red-vibrant);
+            color: var(--color-red-vibrant);
+        }
+        .header-icons .asp-link-logout:hover {
+            background: var(--color-red-vibrant);
+            color: var(--color-white);
+        }
+
+        .cart-link {
+            position: relative;
+            color: var(--color-black);
+        }
+        .cart-link i {
+            width: 28px;
+            height: 28px;
+        }
+        
+        .cart-count {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background-color: var(--color-red-vibrant);
+            border-radius: 50%;
+            padding: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            min-width: 20px;
+            height: 20px;
+            line-height: 1;
+            border: 2px solid var(--color-white);
         }
         .cart-count.empty {
             display: none;
         }
 
-        /* Navbar */
+        /* --- Main Nav --- */
         .main-nav {
-            background-color: #333;
-            color: #fff;
-            padding: 6px 0;
+            background-color: var(--color-black);
+            color: var(--color-white);
+            padding: 0;
             position: relative;
             z-index: 10;
         }
-        .main-nav .container { display: flex; justify-content: center; align-items: center; }
-        .main-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-        .main-nav li { position: relative; }
-        .main-nav li a { padding: 6px 10px; font-size: 0.9rem; display: block; border-radius: 5px; transition: background-color 0.2s; color: #fff; }
-        .main-nav li a:hover { background-color: #555; }
+        .main-nav .container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .main-nav ul { 
+            list-style: none; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            gap: 0; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+        .main-nav li { 
+            position: relative; 
+        }
+        .main-nav li a { 
+            padding: 1rem 1.5rem; 
+            font-size: 0.9rem; 
+            display: block; 
+            transition: background-color 0.3s, color 0.3s; 
+            color: var(--color-white);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .main-nav li a:hover,
+        .main-nav li.dropdown:hover > a { 
+            background-color: var(--color-red-vibrant); 
+            color: var(--color-white);
+        }
 
-        .main-nav li.dropdown { position: relative; } 
+        /* Dropdown */
+        .main-nav li.dropdown { position: relative; }
         .main-nav .dropdown-content {
             display: none;
             position: absolute;
-            top: 100%;
+            top: 100%;               
             left: 0;
-            background-color: #444;
-            min-width: 200px;
-            border-radius: 6px;
-            padding: 8px 0;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            background-color: var(--color-black);
+            min-width: 250px;
+            border-radius: 0 0 var(--border-radius-main) var(--border-radius-main);
+            padding: 0.5rem 0;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
             z-index: 999;
+            border-top: 2px solid var(--color-red-vibrant);
         }
         .main-nav .dropdown-content li a {
-            color: #fff;
-            padding: 8px 14px;
-            display: block;
+            padding: 0.75rem 1.5rem;
             font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: normal;
+            display: block;
+            color: var(--color-white);
         }
-        .main-nav .dropdown-content li a:hover { background-color: #555; }
-        .main-nav li.dropdown:hover .dropdown-content { display: block; } 
-
-        /* Content */
-        main { padding: 20px 0; }
-        h2 { text-align: center; font-size: 1.8rem; font-weight: bold; margin: 30px 0 20px; }
-        .category-title { text-align: left; font-size: 1.25rem; font-weight: 600; margin: 40px 0 25px 5px; }
-
-        .book-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+        .main-nav .dropdown-content li a:hover { 
+            background-color: var(--color-red-vibrant); 
+        }
+        .main-nav li.dropdown:hover .dropdown-content { 
+            display: block; 
         }
 
-        /* [แก้ไข] CSS การ์ด (เหมือน mainpage) */
-        .book-card {
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
+        /* --- Content --- */
+        main { 
+            padding: 3rem 0; 
+            background-color: var(--color-white);
+        }
+        /* Style for main page title */
+        .page-title { 
+            font-size: 2rem; 
+            font-weight: 700; 
+            margin-bottom: 2.5rem; 
+            color: var(--color-black); 
+            text-align: center;
+            position: relative;
+        }
+        .page-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--color-red-vibrant);
+            margin: 0.5rem auto 0;
+        }
+        /* Style for category titles */
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-black);
+            margin: 3rem 0 1.5rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--color-gray-medium);
+        }
+
+        .book-grid { 
+            display: grid; 
+            /* [EDIT] Reduced min-width to fit 5 columns and reduced gap */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 1.5rem; 
+        }
+        .book-card { 
+            background-color: var(--color-white); 
+            border: 1px solid var(--color-gray-medium);
+            border-radius: var(--border-radius-main); 
+            overflow: hidden; 
+            box-shadow: var(--shadow-soft); 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            display: flex; 
             flex-direction: column;
         }
-        .book-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .book-card:hover { 
+            transform: translateY(-5px);             
+            box-shadow: var(--shadow-medium); 
         }
-
+        .book-cover-link {
+            display: block;
+            position: relative;
+            background: var(--color-gray-light);
+        }
         .book-card img {
             width: 100%;
-            aspect-ratio: 2 / 3; 
+            aspect-ratio: 2 / 3;
             height: auto;
             object-fit: cover;
-            background: linear-gradient(135deg, #eee, #ccc);
+            border-bottom: 1px solid var(--color-gray-medium);
         }
-
-        .book-card-content {
-            padding: 15px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
+        .book-card-content { 
+            padding: 1rem; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
             justify-content: space-between;
         }
-        .book-card-content div { margin-bottom: 10px; }
-
+        .book-card-content div:first-child {
+             margin-bottom: 1rem;
+        }
         .book-title {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            margin: 0 0 6px 0;     
+            margin: 0 0 6px 0;
+            color: var(--color-black);
+            /* Limit to 2 lines */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 2.2em; /* 1.1em * 2 lines */
+        }
+        .book-title.js-open-modal:hover {
+            color: var(--color-red-vibrant);
+            text-decoration: none;
         }
         
         .book-author {
-            font-size: 0.85rem;
-            color: #555;
-            margin: 6px 0;
+            font-size: 0.9rem;
+            color: var(--color-gray-dark);
+            margin: 4px 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .book-edition,
-        .book-category { /* [เพิ่ม] .book-category */
-            font-size: 0.9rem;
-            color: #666;
-            margin: 6px 0;
-        }
-
-        .book-sold {
+        .book-category {
             font-size: 0.85rem;
             color: #777;
-            margin-top: 5px;
+            margin: 4px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .book-category {
+            color: var(--color-red-vibrant);
+            font-weight: 500;
+        }
+        /* [NEW] Style for Total Sold */
+        .book-sold {
+            font-size: 0.85rem;
+            color: var(--color-gray-dark);
+            font-weight: 500;
+            margin-top: 4px;
         }
 
         .book-price {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #d90000;
-            margin-top: 6px; /* [แก้ไข] ใช้ margin-top แทน auto */
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-red-vibrant);
+            margin-top: 0.5rem;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-nav ul { gap: 8px; }
+        /* --- Add to Cart Button (in Repeater) --- */
+        .btn-add-cart {
+            background-color: var(--color-red-vibrant);
+            color: var(--color-white);
+            border: none;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: var(--border-radius-main);
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            margin-top: 10px;
         }
-        @media (max-width: 480px) {
-            .header-icons { font-size: 0.85rem; }
-            .book-title { font-size: 0.9rem; }
+        .btn-add-cart:hover { 
+            background-color: var(--color-red-deep); 
+            transform: translateY(-2px);
+        }
+        .btn-add-cart:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
-        /* --- [เพิ่ม] CSS Modal ทั้งหมดจาก mainpage.aspx --- */
+        /* --- Modal Styles --- */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -198,40 +436,40 @@
             transition: opacity 0.3s;
         }
         .modal-content {
-            background: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--border-radius-large);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             z-index: 1001;
             width: 90%;
-            max-width: 600px; 
-            transform: translateY(-50px);
+            max-width: 800px; /* Wider modal */
+            transform: scale(0.95);
             transition: transform 0.3s ease-out;
             position: relative;
         }
         .modal-overlay.show .modal-content {
-            transform: translateY(0);
+            transform: scale(1);
         }
         .modal-close {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            color: #aaa;
+            top: 15px;
+            right: 20px;
+            font-size: 32px;
+            font-weight: 300;
+            color: var(--color-gray-dark);
             cursor: pointer;
             line-height: 1;
         }
-        .modal-close:hover { color: #333; }
+        .modal-close:hover { color: var(--color-black); }
         
         .modal-body {
             display: flex;
             flex-direction: column;
-            gap: 20px; 
-            margin-top: 15px;
+            gap: 2rem; 
+            margin-top: 1.5rem;
         }
 
-        @media (min-width: 500px) {
+        @media (min-width: 600px) {
              .modal-body {
                 flex-direction: row;
              }
@@ -239,24 +477,23 @@
 
         .modal-book-cover {
             width: 100%;
-            max-width: 200px;
+            max-width: 250px;
             height: auto;
             aspect-ratio: 2 / 3;
             object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #eee;
+            border-radius: var(--border-radius-main);
+            border: 1px solid var(--color-gray-medium);
             flex-shrink: 0; 
             margin: 0 auto;
+            box-shadow: var(--shadow-medium);
         }
 
-        @media (min-width: 500px) {
+        @media (min-width: 600px) {
              .modal-book-cover {
-                width: 200px;
-                height: 300px;
+                width: 250px;
                 margin: 0;
              }
         }
-
 
         .modal-details {
             flex-grow: 1; 
@@ -264,89 +501,171 @@
 
         .modal-details h3 {
             margin-top: 0;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-black);
+            line-height: 1.3;
         }
         .modal-details p {
             margin: 6px 0;
         }
         .modal-book-price {
-            font-size: 1.4rem; 
-            font-weight: bold; 
-            color: #d90000;
-            margin-top: 10px;
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            color: var(--color-red-vibrant);
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         .modal-book-meta {
-             font-size: 0.9rem;
-             color: #555;
-             margin: 10px 0;
-             border-top: 1px solid #f0f0f0;
-             padding-top: 10px;
+             font-size: 1rem;
+             color: var(--color-gray-dark);
+             margin: 1rem 0;
+             border-top: 1px solid var(--color-gray-light);
+             padding-top: 1rem;
         }
         .modal-book-meta span {
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+        }
+        .modal-book-meta span strong {
+            color: var(--color-black);
+            font-weight: 600;
         }
 
         .modal-review-summary {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #f0f0f0;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-gray-light);
+            display: flex;
+            align-items: center;
         }
         .modal-review-summary .stars {
             font-size: 1.2rem;
-            color: #f59e0b; /* สีเหลือง */
+            color: #f59e0b; /* Yellow for stars */
+            letter-spacing: 1px;
         }
         .modal-review-summary .stars .no-rating {
-            color: #ccc;
+            color: var(--color-gray-medium);
         }
         .modal-review-summary .review-count {
             font-size: 0.9rem;
-            color: #666;
-            margin-left: 8px;
+            color: var(--color-gray-dark);
+            margin-left: 0.75rem;
         }
 
         .modal-footer {
             text-align: right;
-            padding-top: 20px; 
-            margin-top: 20px;
-            border-top: 1px solid #eee;
+            padding-top: 1.5rem; 
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--color-gray-medium);
         }
-        .modal-btn-add {
-            background-color: #d90000;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .modal-btn-add:hover { background-color: #b00000; }
-        .modal-btn-add:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
+
         .modal-btn-cancel {
-            background-color: #f0f0f0;
-            color: #333;
-            border: 1px solid #ccc;
+            background-color: var(--color-gray-light);
+            color: var(--color-black);
+            border: 1px solid var(--color-gray-medium);
             padding: 10px 20px;
             font-size: 1rem;
-            border-radius: 5px;
+            font-weight: 600;
+            border-radius: var(--border-radius-main);
             cursor: pointer;
             margin-right: 10px;
+            transition: all 0.3s;
         }
-        .modal-btn-cancel:hover { background-color: #e0e0e0; }
-        .js-open-modal {
-            cursor: pointer;
+        .modal-btn-cancel:hover { 
+            background-color: var(--color-gray-medium); 
+            border-color: var(--color-gray-dark);
         }
-        .js-open-modal:hover {
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .top-header .container {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .logo {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+            .search-bar {
+                order: 3;
+                width: 100%;
+                max-width: 100%;
+                margin-top: 1rem;
+            }
+            .header-icons {
+                order: 2;
+            }
         }
-        .book-title.js-open-modal:hover {
-            text-decoration: underline; 
+        
+        @media (max-width: 768px) {
+            .main-nav ul { 
+                gap: 0; 
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+            }
+            .main-nav li a {
+                padding: 0.75rem 1rem;
+            }
+            .main-nav .dropdown-content {
+                position: static;
+                display: none; /* JS would be needed to toggle this on mobile */
+                background-color: #333; /* Darker sub-menu */
+                box-shadow: none;
+                border-radius: 0;
+                border-top: none;
+            }
+            .main-nav li.dropdown:hover .dropdown-content { 
+                display: none; /* Disable hover on mobile */
+            }
+             .main-nav li.dropdown:hover > a { 
+                background-color: var(--color-black); /* Reset hover */
+            }
+            .main-nav li.dropdown a:hover {
+                background-color: var(--color-red-vibrant);
+            }
+            .book-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+                /* [EDIT] Matched gap reduction */
+                gap: 1rem;
+            }
         }
-        /* --- [จบ] CSS Modal --- */
+
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+            }
+            .header-icons {
+                gap: 1rem;
+            }
+            .book-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            }
+            .book-title {
+                font-size: 0.95rem;
+            }
+            .book-price {
+                font-size: 1.1rem;
+            }
+            .btn-add-cart {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            .modal-content {
+                padding: 1rem;
+            }
+            .modal-body {
+                gap: 1.5rem;
+            }
+            .modal-details h3 {
+                font-size: 1.5rem;
+            }
+            .modal-book-price {
+                font-size: 1.5rem;
+            }
+        }
 
     </style>
 </head>
@@ -354,31 +673,30 @@
 <body>
     <form id="form1" runat="server">
         
-        <!-- [ลบ] ScriptManager และ HiddenField -->
-        <%-- <asp:ScriptManager ID="ScriptManager1" runat="server" /> --%>
-        <%-- <asp:HiddenField ID="isUserLoggedIn" runat="server" Value="false" /> --%>
-
-
         <!-- Header -->
         <header class="top-header">
             <div class="container">
-                <div class="logo">MyBookstore</div>
+                <div class="logo">The Red Bookmark</div>
                 <div class="search-bar">
-                    <asp:TextBox ID="txtSearch" runat="server" placeholder="ค้นหาหนังสือ..." CssClass="search-input"></asp:TextBox>
-                    <asp:Button ID="btnSearch" runat="server" Text="ค้นหา" OnClick="btnSearch_Click" CssClass="search-button" />
+                    <asp:TextBox ID="txtSearch" runat="server" placeholder="Search for books, authors, or ISBN..." CssClass="search-input"></asp:TextBox>
+                    <!-- [FIX] Changed to LinkButton to allow nested icon -->
+                    <asp:LinkButton ID="btnSearch" runat="server" OnClick="btnSearch_Click" CssClass="search-button">
+                         <i data-feather="search"></i>
+                    </asp:LinkButton>
                 </div>
                 <div class="header-icons">
-                    <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx">
+                    <!-- [NEW] Added CSS classes for styling -->
+                    <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx" CssClass="asp-link">
                         Login
                     </asp:LinkButton>
-                    <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" ForeColor="Red" Visible="false">
+                    <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" Visible="false" CssClass="asp-link asp-link-logout">
                         Logout
                     </asp:LinkButton>
                     
-                    <!-- [เพิ่ม] ไอคอนตะกร้า จาก mainpage.aspx -->
-                    <a href="cartPage.aspx" class="cart-icon" title="ตะกร้าสินค้า" runat="server" id="cartLink">
-                        🛒
-                        <span runat="server" id="cartCount" class="cart-count">0</span>
+                    <!-- [NEW] Updated cart icon -->
+                    <a href="cartPage.aspx" class="cart-link" title="ตะกร้าสินค้า" runat="server" id="cartLink">
+                        <i data-feather="shopping-cart"></i>
+                        <span runat="server" id="cartCount" class="cart-count empty">0</span>
                     </a>
                 </div>
             </div>
@@ -388,11 +706,11 @@
         <nav class="main-nav">
             <div class="container">
                 <ul>
-                    <li><a href="mainpage.aspx">หน้าแรก</a></li>
-                    <li><a href="topSalePage.aspx">หนังสือขายดี</a></li>
+                    <li><a href="mainpage.aspx">Home</a></li>
+                    <li><a href="topSalePage.aspx">Bestsellers</a></li>
 
                     <li class="dropdown">
-                        <a href="#">หมวดหมู่ ▼</a>
+                        <a href="#">Genres ▼</a>
                         <ul class="dropdown-content">
                             <li><a href="categoryPage.aspx?id=1">Fiction</a></li>
                             <li><a href="categoryPage.aspx?id=2">Non-fiction</a></li>
@@ -407,25 +725,20 @@
                             <li><a href="categoryPage.aspx?id=11">Poetry / Drama</a></li>
                         </ul>
                     </li>
-                    <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
-                    <li><a href="myCollectionPage.aspx">คอลเลคชั่นของฉัน</a></li>
-                    <li><a href="reviewHistoryPage.aspx">ประวัติการรีวิวของฉัน</a></li>
+                    <li><a href="myAccountPage.aspx">My Account</a></li>
+                    <li><a href="myCollectionPage.aspx">My Collection</a></li>
+                    <li><a href="reviewHistoryPage.aspx">Review History</a></li>
                 </ul>
             </div>
         </nav>
 
         <!-- Main Content -->
         <main class="container">
-            <h2>หนังสือขายดี 5 อันดับแรกของแต่ละหมวดหมู่</h2>
+            <h2 class="page-title">Top 5 Bestsellers By Category</h2>
 
-             <!-- [ลบ] C# Helper Function 'GetBookCardTemplate' -->
-            <%-- <script runat="server"> ... </script> --%>
-
-            <%-- [แก้ไข] Repeater ทั้ง 11 ตัว --%>
-
+            <%-- Repeater Template --%>
             <asp:Literal ID="LiteralCate1" runat="server"></asp:Literal>
             <div class="book-grid">
-                <!-- [แก้ไข] เพิ่ม OnItemCommand และเปลี่ยน ItemTemplate -->
                 <asp:Repeater ID="RepeaterLoadTopCate1" runat="server" OnItemCommand="Repeater_ItemCommand">
                     <ItemTemplate>
                         <div class="book-card"
@@ -439,7 +752,11 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <!-- [NEW] Cover link style -->
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -447,18 +764,17 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <!-- [NEW] Button class -->
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -481,7 +797,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -489,18 +808,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -523,7 +840,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -531,18 +851,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -565,7 +883,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -573,18 +894,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -606,7 +925,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -614,18 +936,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -647,7 +967,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -655,18 +978,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -688,7 +1009,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -696,18 +1020,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -729,7 +1051,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -737,18 +1062,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -770,7 +1093,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -778,18 +1104,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -811,7 +1135,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -819,18 +1146,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -852,7 +1177,10 @@
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
                             
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
                             
                             <div class="book-card-content">
                                 <div>
@@ -860,18 +1188,16 @@
                                         <%# Eval("Title") %>
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                    <p class="book-sold">Sold: <%# Eval("TotalSold") %></p>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
                                     <asp:Button ID="btnAddToCart" runat="server" 
-                                        Text="เพิ่มลงตะกร้า" 
+                                        Text="Add to Cart" 
                                         CommandName="AddToCart" 
                                         CommandArgument='<%# Eval("BookID") %>' 
-                                        CssClass="modal-btn-add" 
-                                        style="width: 100%; margin-top: 10px;" />
+                                        CssClass="btn-add-cart" />
                                 </div>
                             </div>
                         </div>
@@ -880,13 +1206,10 @@
              </div>
         </main>
 
-        <!-- [ลบ] Modal เก่า (addToCartModal และ infoModal) -->
-        
-        <!-- [เพิ่ม] Book Detail Modal (เหมือน mainpage) -->
+        <!-- [NEW] Book Detail Modal (Restyled) -->
         <div id="bookDetailModal" class="modal-overlay"> 
             <div class="modal-content">
                 <span class="modal-close" onclick="closeBookDetailModal()">&times;</span> 
-                <h2 style="margin-top:0;">รายละเอียดหนังสือ</h2> 
                 
                 <div class="modal-body">
                     <img id="modalBookCover" src="" alt="Book Cover" class="modal-book-cover" />
@@ -900,24 +1223,29 @@
                         </div>
 
                         <div id="modalBookReviews" class="modal-review-summary">
+                            <!-- JS will populate this -->
                         </div>
 
                         <p id="modalBookPrice" class="modal-book-price">฿0.00</p>
+                        
                     </div>
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="modal-btn-cancel" onclick="closeBookDetailModal()">ปิด</button>
+                    <button type="button" class="modal-btn-cancel" onclick="closeBookDetailModal()">Close</button>
                 </div>
             </div>
         </div>
-        <!-- [จบ] Modal -->
+        <!-- [End] Modal -->
 
     </form>
 
-    <!-- [แก้ไข] JavaScript ทั้งหมด (ยกมา mainpage) -->
+    <!-- [NEW] JavaScript -->
     <script type="text/javascript">
-        // Get modal elements
+        // --- Feather Icons ---
+        feather.replace();
+
+        // --- Modal JavaScript ---
         const modal = document.getElementById('bookDetailModal');
         const modalBookCover = document.getElementById('modalBookCover');
         const modalBookTitle = document.getElementById('modalBookTitle');
@@ -935,24 +1263,22 @@
             let stars = '';
             for (let i = 1; i <= 5; i++) {
                 if (rating >= i) {
-                    stars += '★';
+                    stars += '★'; // Full star
                 } else if (rating >= (i - 0.5)) {
-                    stars += '★';
+                    stars += '★'; // Using full star for .5 for simplicity
                 } else {
-                    stars += '☆';
+                    stars += '☆'; // Empty star
                 }
             }
             return stars;
         }
 
-        // ปรับปรุงฟังก์ชัน openBookDetailModal
+        // Open modal function
         function openBookDetailModal(clickedElement) {
 
-            // 1. ค้นหา .book-card
             const cardElement = clickedElement.closest('.book-card');
             if (!cardElement) return;
 
-            // 2. ดึงข้อมูลจาก data attributes
             const title = cardElement.getAttribute('data-title');
             const price = cardElement.getAttribute('data-price');
             const cover = cardElement.getAttribute('data-cover');
@@ -970,25 +1296,29 @@
                 reviewCount = 0;
             }
 
-            // 3. Populate modal
+            // Populate modal
             modalBookCover.src = cover;
             modalBookCover.alt = title;
+            modalBookCover.onerror = function () {
+                this.onerror = null;
+                this.src = 'https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';
+            };
             modalBookTitle.textContent = title;
             modalBookPrice.textContent = '฿' + price;
 
-            modalBookAuthors.textContent = 'โดย: ' + (authors && authors !== 'N/A' ? authors : 'ไม่ระบุผู้แต่ง');
-            modalBookEdition.textContent = 'Edition: ' + (edition ? edition : 'N/A');
-            modalBookCategory.textContent = 'หมวดหมู่: ' + (category ? category : 'N/A');
+            modalBookAuthors.innerHTML = '<strong>Author:</strong> ' + (authors && authors !== 'N/A' ? authors : 'Unknown');
+            modalBookEdition.innerHTML = '<strong>Edition:</strong> ' + (edition ? edition : 'N/A');
+            modalBookCategory.innerHTML = '<strong>Genre:</strong> ' + (category ? category : 'N/A');
 
             if (reviewCount > 0 && avgRating > 0) {
                 const stars = generateStarRating(avgRating);
                 modalBookReviews.innerHTML =
                     `<span class="stars">${stars}</span>` +
-                    `<span class="review-count">(${avgRating.toFixed(1)} จาก ${reviewCount} รีวิว)</span>`;
+                    `<span class="review-count">(${avgRating.toFixed(1)} based on ${reviewCount} reviews)</span>`;
             } else {
                 modalBookReviews.innerHTML =
                     `<span class="stars no-rating">☆☆☆☆☆</span>` +
-                    `<span class="review-count">(ยังไม่มีรีวิว)</span>`;
+                    `<span class="review-count">(No reviews yet)</span>`;
             }
 
             // Show modal
@@ -1002,9 +1332,9 @@
 
         // Add click event listeners
         document.addEventListener('DOMContentLoaded', function () {
-            // [แก้ไข] เปลี่ยน Selector เป็น .js-open-modal
             document.querySelectorAll('.js-open-modal').forEach(element => {
-                element.addEventListener('click', function () {
+                element.addEventListener('click', function (e) {
+                    e.preventDefault();
                     openBookDetailModal(this);
                 });
             });
@@ -1018,8 +1348,8 @@
             }
         });
 
-        // [ลบ] JavaScript ของ infoModal
     </script>
 
 </body>
 </html>
+

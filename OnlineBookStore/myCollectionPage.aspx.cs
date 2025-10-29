@@ -62,12 +62,28 @@ namespace OnlineBookStore
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                // Find controls
                 Repeater rptOrderBooks = (Repeater)e.Item.FindControl("rptOrderBooks");
+                Panel pnlOrderBooksContainer = (Panel)e.Item.FindControl("pnlOrderBooksContainer"); // Find the panel by its new ID
                 DataRowView drv = (DataRowView)e.Item.DataItem;
                 int orderID = Convert.ToInt32(drv["OrderID"]);
 
-                rptOrderBooks.DataSource = GetBooksByOrderID(orderID);
+                // Get data
+                DataTable booksData = GetBooksByOrderID(orderID);
+
+                // Bind inner repeater
+                rptOrderBooks.DataSource = booksData;
                 rptOrderBooks.DataBind();
+
+                // Set panel visibility based on if there are books
+                if (booksData != null && booksData.Rows.Count > 0)
+                {
+                    pnlOrderBooksContainer.Visible = true;
+                }
+                else
+                {
+                    pnlOrderBooksContainer.Visible = false;
+                }
             }
         }
 

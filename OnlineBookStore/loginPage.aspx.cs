@@ -37,7 +37,7 @@ namespace OnlineBookStore
                 }
                 else
                 {
-                    lblMessage.Text = "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+                    lblMessage.Text = "Email or Password is not correct";
                 }
             }
         }

@@ -9,11 +9,69 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
     
     <style>
-        /* ... (All your existing styles are correct) ... */
+        /* ▼▼▼ NEW COLOR PALETTE ▼▼▼ */
+        :root {
+            --bookstore-primary: #C70039; /* Ruby Red */
+            --bookstore-primary-hover: #A3002D; /* Darker Ruby */
+            --bookstore-accent-gold: #D4AF37; 
+            --bookstore-accent-gold-hover: #B8860B;
+            --bookstore-charcoal: #343A40;
+            --bookstore-light-gray: #F8F9FA;
+            --bookstore-white: #FFFFFF;
+            --bookstore-danger: #dc3545;
+            --bookstore-danger-hover: #c82333;
+            --bookstore-success: #28a745;
+            --bookstore-success-hover: #218838;
+            --bookstore-secondary: #6c757d;
+            --bookstore-secondary-hover: #5c636a;
+        }
+
+        body {
+            background-color: var(--bookstore-light-gray); /* Use light gray neutral */
+        }
+        
+        /* --- Navigation --- */
+        .navbar-dark.bg-dark {
+             background-color: var(--bookstore-charcoal) !important;
+        }
+
+        .footer.bg-dark {
+             background-color: var(--bookstore-charcoal) !important;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--bookstore-secondary);
+        }
+        .nav-tabs .nav-link.active,
+        .nav-tabs .nav-item.show .nav-link {
+            color: var(--bookstore-primary);
+            background-color: var(--bookstore-white);
+            border-color: #dee2e6 #dee2e6 var(--bookstore-white);
+        }
+        .nav-tabs .nav-link:hover,
+        .nav-tabs .nav-link:focus {
+             border-color: #e9ecef #e9ecef #dee2e6;
+             color: var(--bookstore-primary-hover);
+        }
+
+
+        /* --- Buttons --- */
+        .btn-primary {
+            background-color: var(--bookstore-primary);
+            border-color: var(--bookstore-primary);
+            color: var(--bookstore-white);
+        }
+        .btn-primary:hover {
+            background-color: var(--bookstore-primary-hover);
+            border-color: var(--bookstore-primary-hover);
+            color: var(--bookstore-white);
+        }
+
+        /* --- GridView Styles --- */
         .table-primary th {
-            color: #fff;
-            background-color: #0d6efd;
-            border-color: #0d6efd;
+            color: var(--bookstore-white);
+            background-color: var(--bookstore-primary);
+            border-color: var(--bookstore-primary);
         }
         .gridview-pagination table {
             border-collapse: collapse;
@@ -30,22 +88,22 @@
             padding: 0.375rem 0.75rem;
             margin-left: -1px; /* Collapses borders */
             line-height: 1.25;
-            color: #0d6efd;
-            background-color: #fff;
+            color: var(--bookstore-primary); /* Use primary color for links */
+            background-color: var(--bookstore-white);
             border: 1px solid #dee2e6;
             text-decoration: none;
             transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
         }
         .gridview-pagination span {
             z-index: 3;
-            color: #fff;
-            background-color: #0d6efd;
-            border-color: #0d6efd;
+            color: var(--bookstore-white);
+            background-color: var(--bookstore-primary); /* Use primary color for active page */
+            border-color: var(--bookstore-primary);
             cursor: default;
         }
         .gridview-pagination a:hover {
             z-index: 2;
-            color: #0a58ca;
+            color: var(--bookstore-primary-hover);
             background-color: #e9ecef;
             border-color: #dee2e6;
         }
@@ -80,38 +138,36 @@
             font-size: .875rem;
             border-radius: 0.2rem;
             text-decoration: none;
+            color: var(--bookstore-white); /* Default to white text */
         }
         .table-responsive a[href*="Edit"] {
-            color: #fff;
-            background-color: #6c757d;
-            border-color: #6c757d;
+            background-color: var(--bookstore-secondary);
+            border-color: var(--bookstore-secondary);
         }
         .table-responsive a[href*="Edit"]:hover {
-            background-color: #5c636a;
+            background-color: var(--bookstore-secondary-hover);
         }
         .table-responsive a[href*="Delete"] {
-            color: #fff;
-            background-color: #dc3545;
-            border-color: #dc3545;
+            background-color: var(--bookstore-danger);
+            border-color: var(--bookstore-danger);
         }
          .table-responsive a[href*="Delete"]:hover {
-            background-color: #c82333;
+            background-color: var(--bookstore-danger-hover);
         }
         .table-responsive a[href*="Update"] {
-            color: #fff;
-            background-color: #28a745;
-            border-color: #28a745;
+            background-color: var(--bookstore-success);
+            border-color: var(--bookstore-success);
         }
         .table-responsive a[href*="Update"]:hover {
-            background-color: #218838;
+            background-color: var(--bookstore-success-hover);
         }
         .table-responsive a[href*="Cancel"] {
-            color: #fff;
-            background-color: #ffc107;
-            border-color: #ffc107;
+            color: var(--bookstore-charcoal); /* Gold needs dark text */
+            background-color: var(--bookstore-accent-gold);
+            border-color: var(--bookstore-accent-gold);
         }
         .table-responsive a[href*="Cancel"]:hover {
-            background-color: #e0a800;
+            background-color: var(--bookstore-accent-gold-hover);
         }
         .table-responsive input[type="text"] {
             width: 100%;
@@ -132,9 +188,8 @@
         .form-label {
             font-weight: 500;
         }
-        /* ▼▼▼ ADDED VALIDATOR STYLE ▼▼▼ */
         .validator-error {
-            color: #dc3545; /* Bootstrap's danger color */
+            color: var(--bookstore-danger); /* Use danger color */
             font-size: 0.875em;
             display: block;
             margin-top: 0.25rem;
@@ -823,4 +878,3 @@
     </script>
 </body>
 </html>
-

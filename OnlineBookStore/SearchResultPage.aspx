@@ -5,167 +5,195 @@
 <head runat="server">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ผลการค้นหา</title>
-    <!-- คัดลอก CSS จาก mainpage.aspx มาใช้เพื่อให้หน้าตาเหมือนกัน -->
+    <title>Search Results | The Red Bookmark</title> <!-- Changed Title -->
+    <!-- Minimalist Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Feather Icons for UI -->
+    <script src="https://unpkg.com/feather-icons"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background-color: #f0f2f5; color: #333; }
-        a { text-decoration: none; color: inherit; }
+        /* --- [NEW] Modern Red/Black Theme --- */
+        :root {
+            --color-red-deep: #b30000;
+            --color-red-vibrant: #e60000;
+            --color-black: #1a1a1a;
+            --color-white: #ffffff;
+            --color-gray-light: #f7f7f7;
+            --color-gray-medium: #e0e0e0;
+            --color-gray-dark: #555;
+            --font-primary: 'Inter', sans-serif;
+            --shadow-soft: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-medium: 0 8px 20px rgba(0,0,0,0.1);
+            --border-radius-main: 8px;
+            --border-radius-large: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-primary);
+            margin: 0;
+            background-color: var(--color-white); /* White background for content pages */
+            color: var(--color-black);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--color-red-vibrant);
+            transition: color 0.3s;
+        }
+        a:hover { color: var(--color-red-deep); }
+
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
 
-        /* Header */
-        .top-header { background-color: #fff; padding: 10px 0; border-bottom: 1px solid #ddd; }
-        .top-header .container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: #d90000; }
-        
-        /* CSS สำหรับ Search Bar */
-        .search-bar { flex-grow: 1; margin: 0 20px; display: flex; }
-        .search-input { 
-            width: 100%; 
-            max-width: 400px; 
-            padding: 8px 12px; 
-            border: 1px solid #ccc; 
-            border-radius: 20px 0 0 20px; 
-            border-right: none;
-            font-size: 1rem; 
-            font-family: Arial, sans-serif;
+        /* --- Header --- */
+        .top-header {
+            background-color: var(--color-white);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--color-gray-medium);
+            position: sticky; top: 0; background: var(--color-white); z-index: 900;
         }
-        .search-button { 
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 0 20px 20px 0; 
-            background-color: #f0f0f0;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .search-button:hover { background-color: #e0e0e0; }
-        
-        .header-icons { display: flex; gap: 15px; font-size: 0.95rem; }
+        .top-header .container { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .logo { font-size: 2rem; font-weight: 700; color: var(--color-red-vibrant); flex-shrink: 0; margin-right: auto; }
+        .logo a { color: inherit; }
+        .logo a:hover { color: var(--color-red-deep); }
 
-        /* Nav */
-        .main-nav { background-color: #333; color: #fff; padding: 6px 0; position: relative; z-index: 10; }
+        /* Search Bar Styles */
+        .search-bar { display: flex; align-items: center; background: var(--color-white); border: 1px solid var(--color-gray-medium); border-radius: 20px; overflow: hidden; width: 100%; max-width: 450px; order: 3; margin: 1rem auto 0; }
+         @media (min-width: 900px) { .search-bar { order: 2; width: auto; flex-grow: 1; margin: 0 1.5rem; } .top-header .container { flex-wrap: nowrap; } .logo { margin-right: 0; } }
+        .search-input { border: none; padding: 0.7rem 1.2rem; font-size: 0.95rem; flex-grow: 1; background: transparent; color: var(--color-black); font-family: var(--font-primary); }
+         .search-input:focus { outline: none; }
+        .search-button { background: transparent; border: none; padding: 0.7rem 1.2rem; cursor: pointer; display: flex; align-items: center; color: var(--color-gray-dark); transition: color 0.3s; }
+        .search-button:hover { color: var(--color-red-vibrant); }
+        .search-button i { width: 20px; height: 20px; }
+
+        /* Header Icons */
+        .header-icons { display: flex; gap: 1.5rem; font-size: 0.95rem; align-items: center; flex-shrink: 0; order: 2; }
+        @media (min-width: 900px) { .header-icons { order: 3; } }
+        .header-icons .asp-link { font-weight: 500; color: var(--color-black); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-gray-medium); transition: all 0.3s; font-size: 0.95rem; text-decoration: none; }
+        .header-icons .asp-link:hover { background: var(--color-gray-light); border-color: var(--color-gray-dark); color: var(--color-black); }
+        .header-icons .asp-link-logout { border-color: var(--color-red-vibrant); color: var(--color-red-vibrant) !important; }
+        .header-icons .asp-link-logout:hover { background: var(--color-red-vibrant); color: var(--color-white) !important; }
+        .cart-link { position: relative; color: var(--color-black); }
+        .cart-link i { width: 28px; height: 28px; }
+        .cart-count { display: flex; align-items: center; justify-content: center; color: white; background-color: var(--color-red-vibrant); border-radius: 50%; padding: 2px; font-size: 0.75rem; font-weight: 600; position: absolute; top: -8px; right: -10px; min-width: 20px; height: 20px; line-height: 1; border: 2px solid var(--color-white); }
+        .cart-count.empty { display: none; }
+
+        /* --- Main Nav --- */
+        .main-nav { background-color: var(--color-black); color: var(--color-white); padding: 0; position: relative; z-index: 10; }
         .main-nav .container { display: flex; justify-content: center; align-items: center; }
-        .main-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .main-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 0; flex-wrap: wrap; justify-content: center; }
         .main-nav li { position: relative; }
-        .main-nav li a { padding: 6px 10px; font-size: 0.9rem; display: block; border-radius: 5px; transition: background-color 0.2s; color: #fff; }
-        .main-nav li a:hover { background-color: #555; }
+        .main-nav li a { padding: 1rem 1.5rem; font-size: 0.9rem; display: block; transition: background-color 0.3s, color 0.3s; color: var(--color-white); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .main-nav li a:hover, .main-nav li.dropdown:hover > a { background-color: var(--color-red-vibrant); color: var(--color-white); }
+        .main-nav li.dropdown { position: relative; }
+        .main-nav .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: var(--color-black); min-width: 250px; border-radius: 0 0 var(--border-radius-main) var(--border-radius-main); padding: 0.5rem 0; box-shadow: 0 8px 16px rgba(0,0,0,0.3); z-index: 999; border-top: 2px solid var(--color-red-vibrant); }
+        .main-nav .dropdown-content li a { padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 500; text-transform: none; letter-spacing: normal; display: block; color: var(--color-white); }
+        .main-nav .dropdown-content li a:hover { background-color: var(--color-red-vibrant); }
+        .main-nav li.dropdown:hover .dropdown-content { display: block; }
 
-        /* Dropdown (CSS ที่ถูกต้องชุดเดียว) */
-        .main-nav li.dropdown { position: relative; } 
-        .main-nav .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;               
-            left: 0;
-            background-color: #444;
-            min-width: 200px;
-            border-radius: 6px;
-            padding: 8px 0;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-            z-index: 999;
-        }
-        .main-nav .dropdown-content li a {
-            padding: 8px 14px;
-            font-size: 0.9rem;
-            display: block;
-            color: #fff;
-        }
-        .main-nav .dropdown-content li a:hover { background-color: #555; }
-        .main-nav li.dropdown:hover .dropdown-content { display: block; } 
+        /* --- Content --- */
+        main { padding: 3rem 0; }
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 2.5rem; color: var(--color-black); text-align: center; position: relative; }
+         .section-title::after { content: ''; display: block; width: 60px; height: 3px; background-color: var(--color-red-vibrant); margin: 0.5rem auto 0; }
+        .search-title { font-size: 1.6rem; font-weight: 600; margin-bottom: 2rem; color: var(--color-black); text-align: center;}
+        .search-title span { color: var(--color-red-vibrant); font-style: italic; font-weight: 700; }
 
-        /* Content */
-        main { padding: 20px 0; }
-        .section-title { font-size: 1.8rem; font-weight: bold; margin: 20px 0; color: #111; }
-        .search-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; }
-        .search-title span { color: #d90000; font-style: italic; }
-        
-        /* Book Grid (auto-fill) */
-        .book-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-            gap: 20px; 
+        /* Book Grid (Adjusted for 5 columns) */
+        .book-grid {
+            display: grid;
+            /* Changed minmax to 200px and gap to 1.5rem to fit 5 */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
         }
+        .book-card { background-color: var(--color-white); border: 1px solid var(--color-gray-medium); border-radius: var(--border-radius-main); overflow: hidden; box-shadow: var(--shadow-soft); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+        .book-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-medium); }
+        .book-cover-link { display: block; position: relative; background: var(--color-gray-light); }
+        .book-card img { width: 100%; aspect-ratio: 2 / 3; height: auto; object-fit: cover; border-bottom: 1px solid var(--color-gray-medium); }
+        .book-card-content { padding: 1rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .book-card-content div:first-child { margin-bottom: 1rem; }
+        .book-title { font-size: 1.05rem; font-weight: 600; margin: 0 0 6px 0; color: var(--color-black); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: 2.2em; }
+        .book-title.js-open-modal:hover { color: var(--color-red-vibrant); text-decoration: none; }
+        .book-author { font-size: 0.9rem; color: var(--color-gray-dark); margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .book-category { font-size: 0.85rem; color: var(--color-red-vibrant); font-weight: 500; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .book-edition { font-size: 0.85rem; color: #777; margin: 4px 0; }
+        .book-price { font-size: 1.25rem; font-weight: 700; color: var(--color-red-vibrant); margin-top: 0.5rem; }
 
-        /* [แก้ไข] เพิ่ม transition และ :hover effect */
-        .book-card { 
-            background-color: #fff; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 8px; 
-            overflow: hidden; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-            display: flex; 
-            flex-direction: column;
-            /* [เพิ่ม] เพิ่ม transition properties */
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .book-card:hover { 
-            /* [เพิ่ม] เพิ่ม hover effect */
-            transform: translateY(-4px);             
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-        }
+        /* Add to Cart Button */
+        .btn-add-cart { background-color: var(--color-red-vibrant); color: var(--color-white); border: none; padding: 12px 20px; font-size: 0.95rem; font-weight: 600; border-radius: var(--border-radius-main); cursor: pointer; transition: background-color 0.3s, transform 0.2s; width: 100%; margin-top: 10px; }
+        .btn-add-cart:hover { background-color: var(--color-red-deep); transform: translateY(-2px); }
+        .btn-add-cart:disabled { background-color: #ccc; cursor: not-allowed; }
 
-        .book-card img{ width: 100%; aspect-ratio: 2 / 3; height: auto; object-fit: cover; background: linear-gradient(135deg,#eee,#ccc); }
-        .book-card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .book-card-content div { margin-bottom: 10px; }
-        .book-title { font-size: 1rem; font-weight: 600; margin: 0 0 6px 0; }
-        .book-edition, .book-category { font-size: 0.9rem; color: #666; margin: 6px 0; }
-        .book-price { font-size: 1.1rem; font-weight: bold; color: #d90000; margin-top: 6px; }
-        
         /* No results panel */
-        .no-items-panel {
-            border: 1px dashed #e2e8f0;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            text-align: center;
-            color: #6b7280;
-            background-color: #fafafa;
-        }
+        .no-items-panel { border: 2px dashed var(--color-gray-medium); border-radius: var(--border-radius-large); padding: 2rem; text-align: center; color: var(--color-gray-dark); background-color: var(--color-white); font-size: 1.1rem; }
 
-        /* CSS สำหรับ Pagination (เหมือน categoryPage) */
-        .pagination-container { 
-            display: flex; 
-            justify-content: center; 
-            margin-top: 2rem; 
-        }
-        .pagination { 
-            list-style: none; 
-            display: flex; 
-            padding: 0; 
-            margin: 0; 
-            border-radius: 0.375rem; /* 6px */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
-            overflow: hidden; /* ทำให้ขอบมนสวยงาม */
-        }
-        .page-item { } /* <li> */
-        .page-link { /* <a> */
-            display: block; 
-            padding: 0.75rem 1rem; /* 12px 16px */
-            color: #d90000; /* สีแดงหลัก */
-            text-decoration: none; 
-            background-color: #fff;
-            border: 1px solid #ddd;
-            transition: background-color 0.2s;
-            font-weight: 600;
-        }
-        .page-item:not(:first-child) .page-link { 
-            border-left: 0; 
-        }
-        .page-item.active .page-link {
-            z-index: 2;
-            color: #fff;
-            background-color: #d90000;
-            border-color: #d90000;
-        }
-        .page-link:hover {
-             background-color: #f7f7f7;
-        }
-        .page-item.active .page-link:hover {
-             background-color: #d90000;
-        }
-        .page-link:disabled,
-        .page-item.active .page-link {
-            pointer-events: none; /* ปิดการคลิกหน้าปัจจุบัน */
-        }
+        /* Pagination Styles (copied from categoryPage) */
+        .pagination-container { display: flex; justify-content: center; margin-top: 3rem; }
+        .pagination { list-style: none; display: flex; padding: 0; margin: 0; border-radius: 25px; box-shadow: var(--shadow-soft); overflow: hidden; background-color: var(--color-white); border: 1px solid var(--color-gray-medium); }
+        .page-item { }
+        .page-link { display: block; padding: 0.75rem 1.25rem; color: var(--color-black); text-decoration: none; background-color: transparent; transition: background-color 0.3s, color 0.3s; font-weight: 600; border-left: 1px solid var(--color-gray-medium); }
+        .page-item:first-child .page-link { border-left: none; }
+        .page-item.active .page-link { z-index: 2; color: var(--color-white); background-color: var(--color-red-vibrant); }
+        .page-link:hover { background-color: var(--color-gray-light); color: var(--color-red-vibrant); }
+        .page-item.active .page-link:hover { background-color: var(--color-red-deep); color: var(--color-white); }
+        .page-link:disabled, .page-item.active .page-link { pointer-events: none; }
 
+        /* --- Modal Styles (copied from mainpage) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0s 0.3s; }
+        .modal-overlay.show { opacity: 1; visibility: visible; transition: opacity 0.3s; }
+        .modal-content { background: var(--color-white); padding: 2rem; border-radius: var(--border-radius-large); box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 1001; width: 90%; max-width: 800px; transform: scale(0.95); transition: transform 0.3s ease-out; position: relative; }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 32px; font-weight: 300; color: var(--color-gray-dark); cursor: pointer; line-height: 1; }
+        .modal-close:hover { color: var(--color-black); }
+        .modal-body { display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem; }
+        @media (min-width: 600px) { .modal-body { flex-direction: row; } }
+        .modal-book-cover { width: 100%; max-width: 250px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: var(--border-radius-main); border: 1px solid var(--color-gray-medium); flex-shrink: 0; margin: 0 auto; box-shadow: var(--shadow-medium); }
+        @media (min-width: 600px) { .modal-book-cover { width: 250px; margin: 0; } }
+        .modal-details { flex-grow: 1; }
+        .modal-details h3 { margin-top: 0; font-size: 1.8rem; font-weight: 700; color: var(--color-black); line-height: 1.3; }
+        .modal-details p { margin: 6px 0; }
+        .modal-book-price { font-size: 1.8rem; font-weight: 700; color: var(--color-red-vibrant); margin-top: 1.5rem; margin-bottom: 1.5rem; }
+        .modal-book-meta { font-size: 1rem; color: var(--color-gray-dark); margin: 1rem 0; border-top: 1px solid var(--color-gray-light); padding-top: 1rem; }
+        .modal-book-meta span { display: block; margin-bottom: 6px; }
+        .modal-book-meta span strong { color: var(--color-black); font-weight: 600; }
+        .modal-review-summary { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-gray-light); display: flex; align-items: center; }
+        .modal-review-summary .stars { font-size: 1.2rem; color: #f59e0b; letter-spacing: 1px; }
+        .modal-review-summary .stars .no-rating { color: var(--color-gray-medium); }
+        .modal-review-summary .review-count { font-size: 0.9rem; color: var(--color-gray-dark); margin-left: 0.75rem; }
+        .modal-footer { text-align: right; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px solid var(--color-gray-medium); }
+        .modal-btn-cancel { background-color: var(--color-gray-light); color: var(--color-black); border: 1px solid var(--color-gray-medium); padding: 10px 20px; font-size: 1rem; font-weight: 600; border-radius: var(--border-radius-main); cursor: pointer; margin-right: 10px; transition: all 0.3s; }
+        .modal-btn-cancel:hover { background-color: var(--color-gray-medium); border-color: var(--color-gray-dark); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-nav ul { gap: 0; flex-direction: column; width: 100%; text-align: center; }
+            .main-nav li a { padding: 0.75rem 1rem; }
+            .main-nav .dropdown-content { position: static; display: none; background-color: #333; box-shadow: none; border-radius: 0; border-top: none; }
+            .main-nav li.dropdown:hover .dropdown-content { display: none; }
+            .main-nav li.dropdown:hover > a { background-color: var(--color-black); }
+            .main-nav li.dropdown a:hover { background-color: var(--color-red-vibrant); }
+            .book-grid {
+                 /* Match 5 columns adjustments */
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .container { width: 95%; }
+            .header-icons { gap: 1rem; }
+             /* Match 5 columns adjustments */
+            .book-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+            .book-title { font-size: 0.95rem; }
+            .book-price { font-size: 1.1rem; }
+            .btn-add-cart { padding: 10px; font-size: 0.85rem; }
+            .modal-content { padding: 1rem; }
+            .modal-body { gap: 1.5rem; }
+            .modal-details h3 { font-size: 1.5rem; }
+            .modal-book-price { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -174,21 +202,23 @@
         <!-- Header -->
         <header class="top-header">
             <div class="container">
-                <div class="logo">MyBookstore</div>
-                <div class="search-bar">
-                    <asp:TextBox ID="txtSearch" runat="server" placeholder="ค้นหาหนังสือ..." CssClass="search-input"></asp:TextBox>
-                    <asp:Button ID="btnSearch" runat="server" Text="ค้นหา" OnClick="btnSearch_Click" CssClass="search-button" />
+                <div class="logo"><a href="mainpage.aspx">The Red Bookmark</a></div>
+                 <div class="search-bar">
+                    <asp:TextBox ID="txtSearch" runat="server" placeholder="Search for books, authors..." CssClass="search-input"></asp:TextBox>
+                    <asp:LinkButton ID="btnSearch" runat="server" OnClick="btnSearch_Click" CssClass="search-button">
+                         <i data-feather="search"></i>
+                    </asp:LinkButton>
                 </div>
                 <div class="header-icons">
-                    <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx">
-                        Login  
+                    <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx" CssClass="asp-link">
+                        Login
                     </asp:LinkButton>
-                    <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" ForeColor="Red" Visible="false">
-                        Logout  
+                    <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" Visible="false" CssClass="asp-link asp-link-logout">
+                        Logout
                     </asp:LinkButton>
-                    <a href="cartPage.aspx" class="cart-icon" title="ตะกร้าสินค้า" runat="server" id="cartLink">
-                        🛒
-                        <span runat="server" id="cartCount" class="cart-count">0</span>
+                    <a href="cartPage.aspx" class="cart-link" title="Shopping Cart" runat="server" id="cartLink">
+                        <i data-feather="shopping-cart"></i>
+                        <span runat="server" id="cartCount" class="cart-count empty">0</span>
                     </a>
                 </div>
             </div>
@@ -196,63 +226,87 @@
 
         <!-- Navigation bar -->
         <nav class="main-nav">
-            <div class="container">
+             <div class="container">
                 <ul>
-                    <li><a href="mainpage.aspx">หน้าแรก</a></li>
-                    <li><a href="topSalePage.aspx">หนังสือขายดี</a></li>
-                     <li class="dropdown">
-                        <a href="#">หมวดหมู่ ▼</a>
+                    <li><a href="mainpage.aspx">Home</a></li>
+                    <li><a href="topSalePage.aspx">Bestsellers</a></li>
+                    <li class="dropdown">
+                        <a href="#">Genres ▼</a>
                         <ul class="dropdown-content">
-                            <!-- [แก้ไข] อัปเดตลิงก์ที่นี่ด้วย (เหมือน mainpage) -->
-                            <li><a href="categoryPage.aspx?id=1">Fiction</a></li>
-                            <li><a href="categoryPage.aspx?id=2">Non-fiction</a></li>
-                            <li><a href="categoryPage.aspx?id=3">Children’s Books</a></li>
-                            <li><a href="categoryPage.aspx?id=4">Education / Academic</a></li>
-                            <li><a href="categoryPage.aspx?id=5">Comics / Graphic Novels / Manga</a></li>
-                            <li><a href="categoryPage.aspx?id=6">Art / Design / Photography</a></li>
-                            <li><a href="categoryPage.aspx?id=7">Religion / Spirituality</a></li>
-                            <li><a href="categoryPage.aspx?id=8">Science / Technology</a></li>
-                            <li><a href="categoryPage.aspx?id=9">Business / Economics</a></li>
-                            <li><a href="categoryPage.aspx?id=10">Cookbooks / Lifestyle</a></li>
-                            <li><a href="categoryPage.aspx?id=11">Poetry / Drama</a></li>
+                           <li><a href="categoryPage.aspx?id=1">Fiction</a></li>
+                           <li><a href="categoryPage.aspx?id=2">Non-fiction</a></li>
+                           <li><a href="categoryPage.aspx?id=3">Children’s Books</a></li>
+                           <li><a href="categoryPage.aspx?id=4">Education / Academic</a></li>
+                           <li><a href="categoryPage.aspx?id=5">Comics / Graphic Novels / Manga</a></li>
+                           <li><a href="categoryPage.aspx?id=6">Art / Design / Photography</a></li>
+                           <li><a href="categoryPage.aspx?id=7">Religion / Spirituality</a></li>
+                           <li><a href="categoryPage.aspx?id=8">Science / Technology</a></li>
+                           <li><a href="categoryPage.aspx?id=9">Business / Economics</a></li>
+                           <li><a href="categoryPage.aspx?id=10">Cookbooks / Lifestyle</a></li>
+                           <li><a href="categoryPage.aspx?id=11">Poetry / Drama</a></li>
                         </ul>
                     </li>
-                    <li><a href="myAccountPage.aspx">บัญชีของฉัน</a></li>
-                    <li><a href="myCollectionPage.aspx">คอลเลคชั่นของฉัน</a></li>
-                    <li><a href="reviewHistoryPage.aspx">ประวัติการรีวิวของฉัน</a></li>
+                    <li><a href="myAccountPage.aspx">My Account</a></li>
+                    <li><a href="myCollectionPage.aspx">My Collection</a></li>
+                    <li><a href="reviewHistoryPage.aspx">Review History</a></li>
                 </ul>
             </div>
         </nav>
 
         <!-- Main Content -->
         <main class="container">
-            <h1 class="search-title">ผลการค้นหาสำหรับ: 
+            <h1 class="search-title">Search Results for:
                 <span><asp:Literal ID="litSearchQuery" runat="server" /></span>
             </h1>
-            
+
             <asp:Panel runat="server" ID="pnlNoResults" Visible="false" CssClass="no-items-panel" Style="margin-bottom: 20px;">
-                ไม่พบหนังสือที่ตรงกับคำค้นหาของคุณ
+                No books found matching your search term. Please try again.
             </asp:Panel>
 
             <section class="book-grid">
-                <asp:Repeater ID="rptSearchResults" runat="server">
+                <asp:Repeater ID="rptSearchResults" runat="server" OnItemCommand="Repeater_ItemCommand"> <%-- Added ItemCommand --%>
                     <ItemTemplate>
-                        <div class="book-card">
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' />
+                        <%-- Updated book card structure to match mainpage --%>
+                        <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>" <%-- Added Authors --%>
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>" <%-- Added Rating --%>
+                            data-review-count="<%# Eval("ReviewCount") %>"> <%-- Added Review Count --%>
+
+                            <a href="javascript:void(0);" class="book-cover-link js-open-modal">
+                                <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>'
+                                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover';" />
+                            </a>
+
                             <div class="book-card-content">
                                 <div>
-                                    <h3 class="book-title"><%# Eval("Title") %></h3>
-                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <%-- Removed Edition from display, but kept in data-* --%>
                                 </div>
-                                <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server"
+                                        Text="Add to Cart"
+                                        CommandName="AddToCart"
+                                        CommandArgument='<%# Eval("BookID") %>'
+                                        CssClass="btn-add-cart" />
+                                </div>
                             </div>
                         </div>
                     </ItemTemplate>
                 </asp:Repeater>
             </section>
 
-            <!-- Pagination Controls (จากครั้งก่อน) -->
+            <!-- Pagination Controls -->
             <asp:Panel runat="server" ID="pnlPager" Visible="false">
                 <nav aria-label="Page navigation" class="pagination-container">
                     <ul class="pagination">
@@ -266,11 +320,100 @@
                     </ul>
                 </nav>
             </asp:Panel>
-            <!-- [สิ้นสุด] Pagination Controls -->
 
         </main>
 
+         <!-- Book Detail Modal -->
+        <div id="bookDetailModal" class="modal-overlay">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeBookDetailModal()">&times;</span>
+
+                <div class="modal-body">
+                    <img id="modalBookCover" src="" alt="Book Cover" class="modal-book-cover" />
+                    <div class="modal-details">
+                        <h3 id="modalBookTitle">Book Title</h3>
+
+                        <div class="modal-book-meta">
+                            <span id="modalBookAuthors"></span>
+                            <span id="modalBookEdition"></span>
+                            <span id="modalBookCategory"></span>
+                        </div>
+
+                        <div id="modalBookReviews" class="modal-review-summary">
+                            <!-- JS will populate this -->
+                        </div>
+
+                        <p id="modalBookPrice" class="modal-book-price">฿0.00</p>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="modal-btn-cancel" onclick="closeBookDetailModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
     </form>
+    <!-- JavaScript for Icons & Modal -->
+    <script type="text/javascript">
+        // --- Feather Icons ---
+        feather.replace();
+
+        // --- Modal JavaScript (copied from mainpage) ---
+        const modal = document.getElementById('bookDetailModal');
+        const modalBookCover = document.getElementById('modalBookCover');
+        const modalBookTitle = document.getElementById('modalBookTitle');
+        const modalBookPrice = document.getElementById('modalBookPrice');
+        const modalBookAuthors = document.getElementById('modalBookAuthors');
+        const modalBookEdition = document.getElementById('modalBookEdition');
+        const modalBookCategory = document.getElementById('modalBookCategory');
+        const modalBookReviews = document.getElementById('modalBookReviews');
+
+        function generateStarRating(rating) {
+            rating = Math.round(rating * 2) / 2; let stars = '';
+            for (let i = 1; i <= 5; i++) { stars += (rating >= i ? '★' : (rating >= (i - 0.5) ? '★' : '☆')); }
+            return stars;
+        }
+
+        function openBookDetailModal(clickedElement) {
+            const cardElement = clickedElement.closest('.book-card'); if (!cardElement) return;
+            const title = cardElement.getAttribute('data-title');
+            const price = cardElement.getAttribute('data-price');
+            const cover = cardElement.getAttribute('data-cover');
+            const authors = cardElement.getAttribute('data-authors');
+            const edition = cardElement.getAttribute('data-edition');
+            const category = cardElement.getAttribute('data-category');
+            let avgRating = parseFloat(cardElement.getAttribute('data-avg-rating')); if (isNaN(avgRating)) avgRating = 0;
+            let reviewCount = parseInt(cardElement.getAttribute('data-review-count'), 10); if (isNaN(reviewCount)) reviewCount = 0;
+
+            modalBookCover.src = cover; modalBookCover.alt = title;
+            modalBookCover.onerror = function () { this.onerror = null; this.src = 'https://placehold.co/400x600/eeeeee/cccccc?text=No+Cover'; };
+            modalBookTitle.textContent = title; modalBookPrice.textContent = '฿' + price;
+            modalBookAuthors.innerHTML = '<strong>Author:</strong> ' + (authors && authors !== 'N/A' ? authors : 'Unknown');
+            modalBookEdition.innerHTML = '<strong>Edition:</strong> ' + (edition ? edition : 'N/A');
+            modalBookCategory.innerHTML = '<strong>Genre:</strong> ' + (category ? category : 'N/A');
+
+            if (reviewCount > 0 && avgRating > 0) {
+                const stars = generateStarRating(avgRating);
+                modalBookReviews.innerHTML = `<span class="stars">${stars}</span><span class="review-count">(${avgRating.toFixed(1)} based on ${reviewCount} reviews)</span>`;
+            } else {
+                modalBookReviews.innerHTML = `<span class="stars no-rating">☆☆☆☆☆</span><span class="review-count">(No reviews yet)</span>`;
+            }
+            modal.classList.add('show');
+        }
+
+        function closeBookDetailModal() { modal.classList.remove('show'); }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.js-open-modal').forEach(element => {
+                element.addEventListener('click', function (e) { e.preventDefault(); openBookDetailModal(this); });
+            });
+        });
+
+        modal.addEventListener('click', function (e) { if (e.target === modal) closeBookDetailModal(); });
+
+    </script>
 </body>
 </html>
 
