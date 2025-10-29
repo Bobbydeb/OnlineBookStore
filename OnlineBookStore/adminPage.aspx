@@ -115,7 +115,7 @@
         }
         .table-responsive input[type="text"] {
             width: 100%;
-            max-width: 250px; /* Adjust as needed */
+            min-width: 150px; /* Adjust as needed */
             padding: 0.25rem;
             font-size: 0.9rem;
             box-sizing: border-box; /* Important */
@@ -131,6 +131,13 @@
         }
         .form-label {
             font-weight: 500;
+        }
+        /* ▼▼▼ ADDED VALIDATOR STYLE ▼▼▼ */
+        .validator-error {
+            color: #dc3545; /* Bootstrap's danger color */
+            font-size: 0.875em;
+            display: block;
+            margin-top: 0.25rem;
         }
     </style>
 </head>
@@ -238,6 +245,7 @@
                                                 <asp:BoundField DataField="Stock" HeaderText="Stock" ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Center" />
                                                 <asp:BoundField DataField="PublisherID" HeaderText="PublisherID" ItemStyle-Width="80px"  />
                                                 <asp:BoundField DataField="CategoryID" HeaderText="CategoryID" ItemStyle-Width="80px"  />
+                                                <asp:BoundField DataField="CoverUrl" HeaderText="Image URL" />
                                             </Columns>
                                             <PagerStyle CssClass="gridview-pagination" />
                                             <HeaderStyle CssClass="table-primary" />
@@ -258,7 +266,6 @@
                     <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
-                                <%-- ▼▼▼ ADDED UpdatePanel *INSIDE* the modal ▼▼▼ --%>
                                 <asp:UpdatePanel ID="UpdatePanelAddBook" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
                                         <div class="modal-header">
@@ -270,40 +277,60 @@
                                                 <div class="col-md-6">
                                                     <label for="<%= txtAddBookId.ClientID %>" class="form-label">BookID (รหัสหนังสือ)</label>
                                                     <asp:TextBox ID="txtAddBookId" runat="server" CssClass="form-control" placeholder="เช่น 1001"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="rfvBookId" runat="server" ErrorMessage="กรุณากรอก BookID" ControlToValidate="txtAddBookId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookId" runat="server" ErrorMessage="BookID ต้องเป็นตัวเลข" ControlToValidate="txtAddBookId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="<%= txtAddBookIsbn.ClientID %>" class="form-label">ISBN (13 หลัก)</label>
                                                     <asp:TextBox ID="txtAddBookIsbn" runat="server" CssClass="form-control" MaxLength="13"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="rfvBookIsbn" runat="server" ErrorMessage="กรุณากรอก ISBN" ControlToValidate="txtAddBookIsbn" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:RegularExpressionValidator ID="revBookIsbn" runat="server" ErrorMessage="ISBN ต้องเป็นตัวเลข 13 หลัก" ControlToValidate="txtAddBookIsbn" ValidationExpression="^\d{13}$" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RegularExpressionValidator>
                                                 </div>
                                                 <div class="col-12">
                                                     <label for="<%= txtAddBookTitle.ClientID %>" class="form-label">Title (ชื่อหนังสือ)</label>
                                                     <asp:TextBox ID="txtAddBookTitle" runat="server" CssClass="form-control"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="rfvBookTitle" runat="server" ErrorMessage="กรุณากรอกชื่อหนังสือ" ControlToValidate="txtAddBookTitle" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="<%= txtAddBookPrice.ClientID %>" class="form-label">Price (ราคา)</label>
                                                     <asp:TextBox ID="txtAddBookPrice" runat="server" CssClass="form-control" TextMode="Number" step="0.01"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="rfvBookPrice" runat="server" ErrorMessage="กรุณากรอกราคา" ControlToValidate="txtAddBookPrice" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookPriceType" runat="server" ErrorMessage="ราคาต้องเป็นตัวเลข" ControlToValidate="txtAddBookPrice" Operator="DataTypeCheck" Type="Currency" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
+                                                    <asp:RangeValidator ID="rvBookPrice" runat="server" ErrorMessage="ราคาต้องไม่ติดลบ" ControlToValidate="txtAddBookPrice" MinimumValue="0" MaximumValue="999999" Type="Currency" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RangeValidator>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="<%= txtAddBookStock.ClientID %>" class="form-label">Stock (จำนวนคงคลัง)</label>
                                                     <asp:TextBox ID="txtAddBookStock" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="rfvBookStock" runat="server" ErrorMessage="กรุณากรอกจำนวน" ControlToValidate="txtAddBookStock" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookStock" runat="server" ErrorMessage="Stock ต้องเป็นตัวเลข" ControlToValidate="txtAddBookStock" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
+                                                    <asp:RangeValidator ID="rvBookStock" runat="server" ErrorMessage="Stock ต้องไม่ติดลบ" ControlToValidate="txtAddBookStock" MinimumValue="0" MaximumValue="99999" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RangeValidator>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="<%= txtAddBookPubId.ClientID %>" class="form-label">PublisherID (รหัสสำนักพิมพ์)</label>
                                                     <asp:TextBox ID="txtAddBookPubId" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="rfvBookPubId" runat="server" ErrorMessage="กรุณากรอก PublisherID" ControlToValidate="txtAddBookPubId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookPubId" runat="server" ErrorMessage="PublisherID ต้องเป็นตัวเลข" ControlToValidate="txtAddBookPubId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="<%= txtAddBookCatId.ClientID %>" class="form-label">CategoryID (รหัสประเภท)</label>
                                                     <asp:TextBox ID="txtAddBookCatId" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="rfvBookCatId" runat="server" ErrorMessage="กรุณากรอก CategoryID" ControlToValidate="txtAddBookCatId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookCatId" runat="server" ErrorMessage="CategoryID ต้องเป็นตัวเลข" ControlToValidate="txtAddBookCatId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <label for="<%= txtAddBookImageUrl.ClientID %>" class="form-label">Image URL (ลิงก์รูปภาพ)</label>
+                                                    <asp:TextBox ID="txtAddBookImageUrl" runat="server" CssClass="form-control" TextMode="Url" placeholder="https://example.com/image.jpg"></asp:TextBox>
+                                                    <%-- ไม่บังคับ --%>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                            <asp:Button ID="btnSaveBook" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSaveBook_Click" />
+                                            <%-- ▼▼▼ MODIFIED Button ▼▼▼ --%>
+                                            <asp:Button ID="btnSaveBook" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSaveBook_Click" ValidationGroup="AddBookValidation" />
                                         </div>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
-                                <%-- ▲▲▲ END of new UpdatePanel ▲▲▲ --%>
                             </div>
                         </div>
                     </div>
@@ -358,7 +385,6 @@
                                  </div>
                             </div>
                         </ContentTemplate>
-                        <%-- This Trigger makes the GRID refresh when the SAVE button (in the modal) is clicked --%>
                         <Triggers>
                             <asp:AsyncPostBackTrigger ControlID="btnSaveAuthor" EventName="Click" />
                         </Triggers>
@@ -368,7 +394,6 @@
                     <div class="modal fade" id="addAuthorModal" tabindex="-1" aria-labelledby="addAuthorModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <%-- ▼▼▼ ADDED UpdatePanel *INSIDE* the modal ▼▼▼ --%>
                                 <asp:UpdatePanel ID="UpdatePanelAddAuthor" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
                                         <div class="modal-header">
@@ -379,23 +404,27 @@
                                             <div class="mb-3">
                                                 <label for="<%= txtAddAuthorId.ClientID %>" class="form-label">AuthorID (รหัสผู้แต่ง)</label>
                                                 <asp:TextBox ID="txtAddAuthorId" runat="server" CssClass="form-control" placeholder="เช่น 2001"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="rfvAuthorId" runat="server" ErrorMessage="กรุณากรอก AuthorID" ControlToValidate="txtAddAuthorId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RequiredFieldValidator>
+                                                <asp:CompareValidator ID="cvAuthorId" runat="server" ErrorMessage="AuthorID ต้องเป็นตัวเลข" ControlToValidate="txtAddAuthorId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:CompareValidator>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="<%= txtAddAuthorName.ClientID %>" class="form-label">Author Name (ชื่อผู้แต่ง)</label>
                                                 <asp:TextBox ID="txtAddAuthorName" runat="server" CssClass="form-control"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="rfvAuthorName" runat="server" ErrorMessage="กรุณากรอกชื่อผู้แต่ง" ControlToValidate="txtAddAuthorName" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RequiredFieldValidator>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="<%= txtAddAuthorEmail.ClientID %>" class="form-label">Email</label>
                                                 <asp:TextBox ID="txtAddAuthorEmail" runat="server" CssClass="form-control" TextMode="Email"></asp:TextBox>
+                                                <asp:RegularExpressionValidator ID="revAuthorEmail" runat="server" ErrorMessage="รูปแบบ Email ไม่ถูกต้อง" ControlToValidate="txtAddAuthorEmail" ValidationExpression="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RegularExpressionValidator>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                            <asp:Button ID="btnSaveAuthor" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSaveAuthor_Click" />
+                                            <%-- ▼▼▼ MODIFIED Button ▼▼▼ --%>
+                                            <asp:Button ID="btnSaveAuthor" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSaveAuthor_Click" ValidationGroup="AddAuthorValidation" />
                                         </div>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
-                                <%-- ▲▲▲ END of new UpdatePanel ▲▲▲ --%>
                             </div>
                         </div>
                     </div>
@@ -446,12 +475,11 @@
                                             <PagerStyle CssClass="gridview-pagination" />
                                             <HeaderStyle CssClass="table-primary" />
                                             <EditRowStyle BackColor="#f2f2f2" />
-                                         </asp:GridView>
+                                         </asp:GridView> 
                                     </div>
                                 </div>
                             </div>
                         </ContentTemplate>
-                        <%-- This Trigger makes the GRID refresh when the SAVE button (in the modal) is clicked --%>
                         <Triggers>
                             <asp:AsyncPostBackTrigger ControlID="btnSavePublisher" EventName="Click" />
                         </Triggers>
@@ -461,7 +489,6 @@
                     <div class="modal fade" id="addPublisherModal" tabindex="-1" aria-labelledby="addPublisherModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <%-- ▼▼▼ ADDED UpdatePanel *INSIDE* the modal ▼▼▼ --%>
                                 <asp:UpdatePanel ID="UpdatePanelAddPublisher" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
                                         <div class="modal-header">
@@ -472,10 +499,13 @@
                                             <div class="mb-3">
                                                 <label for="<%= txtAddPublisherId.ClientID %>" class="form-label">PublisherID (รหัสสำนักพิมพ์)</label>
                                                 <asp:TextBox ID="txtAddPublisherId" runat="server" CssClass="form-control" placeholder="เช่น 3001"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="rfvPubId" runat="server" ErrorMessage="กรุณากรอก PublisherID" ControlToValidate="txtAddPublisherId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:RequiredFieldValidator>
+                                                <asp:CompareValidator ID="cvPubId" runat="server" ErrorMessage="PublisherID ต้องเป็นตัวเลข" ControlToValidate="txtAddPublisherId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:CompareValidator>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="<%= txtAddPublisherName.ClientID %>" class="form-label">Publisher Name (ชื่อสำนักพิมพ์)</label>
                                                 <asp:TextBox ID="txtAddPublisherName" runat="server" CssClass="form-control"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="rfvPubName" runat="server" ErrorMessage="กรุณากรอกชื่อสำนักพิมพ์" ControlToValidate="txtAddPublisherName" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:RequiredFieldValidator>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="<%= txtAddPublisherAddress.ClientID %>" class="form-label">Address (ที่อยู่)</label>
@@ -488,11 +518,11 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                            <asp:Button ID="btnSavePublisher" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSavePublisher_Click" />
+                                            <%-- ▼▼▼ MODIFIED Button ▼▼▼ --%>
+                                            <asp:Button ID="btnSavePublisher" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSavePublisher_Click" ValidationGroup="AddPublisherValidation" />
                                         </div>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
-                                <%-- ▲▲▲ END of new UpdatePanel ▲▲▲ --%>
                             </div>
                         </div>
                     </div>

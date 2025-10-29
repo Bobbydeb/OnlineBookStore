@@ -3,16 +3,20 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-// Imports ที่ไม่จำเป็น (Services, Serialization, Linq, Generic.Collections) ถูกลบออกแล้ว
+// [เพิ่ม] Imports ที่จำเป็น
+using System.Diagnostics;
+using System.Web;
+
 
 namespace OnlineBookStore
 {
-    // (คลาส CartItem ถูกย้ายไป cartPage.aspx.cs แล้ว)
-
     public partial class topSalePage : Page
     {
-        // เปลี่ยนเป็น static readonly เพื่อให้ WebMethod (ซึ่งเป็น static) สามารถเรียกใช้ได้
-        private static readonly string connStr = "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
+        // [แก้ไข] เปลี่ยนเป็น private instance method เหมือน mainpage
+        private string GetConnectionString()
+        {
+            return "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -22,20 +26,22 @@ namespace OnlineBookStore
                 // ถ้า login แล้ว
                 btnLogin.Visible = false;
                 btnLogout.Visible = true;
-                isUserLoggedIn.Value = "true"; // อัปเดต HiddenField
+                // [ลบ] isUserLoggedIn.Value = "true";
             }
             else
             {
                 // ถ้ายังไม่ได้ login
                 btnLogin.Visible = true;
                 btnLogout.Visible = false;
-                isUserLoggedIn.Value = "false"; // อัปเดต HiddenField
+                // [ลบ] isUserLoggedIn.Value = "false";
             }
             // --- จบส่วนแก้ไข ---
 
             if (!IsPostBack)
             {
-                // [ลบ] UpdateCartIconCount();
+                // [เพิ่ม] โหลดจำนวนตะกร้า
+                LoadCartCount();
+
                 LoadTopCate(1, RepeaterLoadTopCate1, LiteralCate1);
                 LoadTopCate(2, RepeaterLoadTopCate2, LiteralCate2);
                 LoadTopCate(3, RepeaterLoadTopCate3, LiteralCate3);
@@ -48,19 +54,12 @@ namespace OnlineBookStore
                 LoadTopCate(10, RepeaterLoadTopCate10, LiteralCate10);
                 LoadTopCate(11, RepeaterLoadTopCate11, LiteralCate11);
             }
-
-        } // <--- [ !! แก้ไข !! ] เพิ่มวงเล็บปีกกา } ที่หายไป เพื่อปิด Page_Load
-
-
-        // --- [ !! ลบ !! ] ---
-        // [WebMethod(EnableSession = true)] ... AddToCart(...)
-        // ... โค้ด WebMethod ทั้งหมดถูกลบ ...
-        // --- [จบ] WebMethod ---
-
+        }
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
+            Session.Abandon(); // [แก้ไข] ใช้ Abandon
             Response.Redirect("mainpage.aspx");
         }
 
@@ -75,7 +74,7 @@ namespace OnlineBookStore
 
         private string GetCategoryName(int categoryId)
         {
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(GetConnectionString())) // [แก้ไข]
             {
                 string query = "SELECT CategoryName FROM BookCategory WHERE CategoryID = @CategoryID";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -88,16 +87,12 @@ namespace OnlineBookStore
             }
         }
 
-        // [ลบ] เมธอดสำหรับอัปเดตไอคอนตะกร้า
-        // private void UpdateCartIconCount() { ... }
-
-
         private void LoadTopCate(int categoryId, System.Web.UI.WebControls.Repeater repeater, System.Web.UI.WebControls.Literal literalTitle)
         {
             string categoryName = GetCategoryName(categoryId);
             literalTitle.Text = $"<div class='category-title'>หมวดหมู่ : {categoryName}</div>";
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(GetConnectionString())) // [แก้ไข]
             {
                 // (Query เหมือนเดิม)
                 string query = @"
@@ -152,5 +147,215 @@ namespace OnlineBookStore
             }
         }
 
+        // --- [เพิ่ม] โค้ดทั้งหมดจาก mainpage.aspx.cs สำหรับตะกร้า ---
+
+        // [เพิ่ม] Event Handler สำหรับปุ่มใน Repeater (จะใช้ชื่อนี้กับ Repeater ทั้ง 11 ตัว)
+        protected void Repeater_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "AddToCart")
+            {
+                // 1. ตรวจสอบการ Login
+                if (Session["MemberID"] == null)
+                {
+                    Response.Redirect("loginPage.aspx?returnUrl=topSalePage.aspx"); // [แก้ไข] returnUrl
+                    return;
+                }
+
+                int memberId = Convert.ToInt32(Session["MemberID"]);
+                int bookId = Convert.ToInt32(e.CommandArgument);
+                int quantity = 1; // ค่าเริ่มต้น 1
+
+                Debug.WriteLine($"Repeater AddToCart called: BookID={bookId}, MemberID={memberId}");
+
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                    {
+                        conn.Open();
+                        Debug.WriteLine("Database connection opened.");
+
+                        // 2. ค้นหา หรือ สร้าง CartID
+                        int cartId = GetOrCreateCartId(memberId, conn);
+                        Debug.WriteLine($"CartID: {cartId}");
+
+                        if (cartId == 0)
+                        {
+                            Debug.WriteLine("AddToCart Error: Failed to get or create CartID.");
+                            return;
+                        }
+
+                        // 3. ตรวจสอบว่ามีสินค้านี้ในตะกร้าหรือยัง
+                        string checkQuery = "SELECT Quantity FROM CartItem WHERE CartID = @CartID AND BookID = @BookID";
+                        int currentQuantity = 0;
+                        bool itemExists = false;
+
+                        using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                        {
+                            checkCmd.Parameters.AddWithValue("@CartID", cartId);
+                            checkCmd.Parameters.AddWithValue("@BookID", bookId);
+                            object result = checkCmd.ExecuteScalar();
+                            if (result != null && result != DBNull.Value)
+                            {
+                                currentQuantity = Convert.ToInt32(result);
+                                itemExists = true;
+                                Debug.WriteLine($"Item exists in cart. Current quantity: {currentQuantity}");
+                            }
+                        }
+
+                        // 4. เพิ่ม หรือ อัปเดต สินค้า
+                        if (itemExists)
+                        {
+                            string updateQuery = "UPDATE CartItem SET Quantity = Quantity + @Quantity WHERE CartID = @CartID AND BookID = @BookID";
+                            using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
+                            {
+                                updateCmd.Parameters.AddWithValue("@Quantity", quantity);
+                                updateCmd.Parameters.AddWithValue("@CartID", cartId);
+                                updateCmd.Parameters.AddWithValue("@BookID", bookId);
+                                updateCmd.ExecuteNonQuery();
+                            }
+                        }
+                        else
+                        {
+                            string insertQuery = "INSERT INTO CartItem (CartID, BookID, Quantity) VALUES (@CartID, @BookID, @Quantity)";
+                            using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                            {
+                                insertCmd.Parameters.AddWithValue("@CartID", cartId);
+                                insertCmd.Parameters.AddWithValue("@BookID", bookId);
+                                insertCmd.Parameters.AddWithValue("@Quantity", quantity);
+                                insertCmd.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in AddToCart (Repeater): {ex.Message}");
+                }
+                finally
+                {
+                    // 5. อัปเดตตัวเลขบนตะกร้า (Header)
+                    LoadCartCount();
+                }
+            }
+        }
+
+
+        // [เพิ่ม] Helper: ค้นหา หรือ สร้าง CartID (Non-Static)
+        private int GetOrCreateCartId(int memberId, SqlConnection conn)
+        {
+            int cartId = 0;
+            string query = "SELECT CartID FROM Cart WHERE MemberID = @MemberID";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@MemberID", memberId);
+                object result = cmd.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                {
+                    cartId = Convert.ToInt32(result);
+                }
+                else
+                {
+                    string insertQuery = "INSERT INTO Cart (MemberID, CreatedDate) OUTPUT INSERTED.CartID VALUES (@MemberID, GETDATE())";
+                    using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                    {
+                        insertCmd.Parameters.AddWithValue("@MemberID", memberId);
+                        cartId = (int)insertCmd.ExecuteScalar();
+                    }
+                }
+            }
+            return cartId;
+        }
+
+        // [เพิ่ม] Helper: ค้นหา CartID (สำหรับ Page_Load, ไม่สร้างใหม่)
+        private int GetCartId(int memberId)
+        {
+            int cartId = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                {
+                    conn.Open();
+                    string query = "SELECT CartID FROM Cart WHERE MemberID = @MemberID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@MemberID", memberId);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            cartId = Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in GetCartId (Page_Load): {ex.Message}");
+            }
+            return cartId;
+        }
+
+
+        // [เพิ่ม] Helper: ดึงจำนวนสินค้ารวมในตะกร้า (Non-Static)
+        private int GetTotalCartQuantity(int cartId)
+        {
+            int totalQuantity = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                {
+                    conn.Open();
+                    string query = "SELECT SUM(ISNULL(Quantity, 0)) FROM CartItem WHERE CartID = @CartID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CartID", cartId);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            totalQuantity = Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in GetTotalCartQuantity (instance): {ex.Message}");
+            }
+            return totalQuantity;
+        }
+
+        // [เพิ่ม] เมธอดสำหรับโหลดจำนวนสินค้าในตะกร้า (หลัก)
+        private void LoadCartCount()
+        {
+            if (Session["MemberID"] != null)
+            {
+                int memberId = Convert.ToInt32(Session["MemberID"]);
+                int cartId = GetCartId(memberId);
+                if (cartId > 0)
+                {
+                    int totalQuantity = GetTotalCartQuantity(cartId);
+                    if (totalQuantity > 0)
+                    {
+                        cartCount.InnerText = totalQuantity.ToString();
+                        cartCount.Attributes["class"] = "cart-count";
+                    }
+                    else
+                    {
+                        cartCount.InnerText = "0";
+                        cartCount.Attributes["class"] = "cart-count empty";
+                    }
+                }
+                else
+                {
+                    cartCount.InnerText = "0";
+                    cartCount.Attributes["class"] = "cart-count empty";
+                }
+            }
+            else
+            {
+                cartCount.InnerText = "0";
+                cartCount.Attributes["class"] = "cart-count empty";
+            }
+        }
+        // --- [จบ] โค้ดที่เพิ่มจาก mainpage.aspx.cs ---
     }
 }

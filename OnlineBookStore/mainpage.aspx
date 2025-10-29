@@ -16,23 +16,21 @@
         .top-header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: bold; color: #d90000; }
         
-        /* [แก้ไข] CSS สำหรับ Search Bar */
         .search-bar { flex-grow: 1; margin: 0 20px; display: flex; }
-        .search-input { /* ใช้แทน input เดิม */
+        .search-input { 
             width: 100%; 
             max-width: 400px; 
             padding: 8px 12px; 
             border: 1px solid #ccc; 
-            border-radius: 20px 0 0 20px; /* ด้านซ้ายโค้ง */
+            border-radius: 20px 0 0 20px;
             border-right: none;
-            /* ทำให้ font-size และ family ตรงกับปุ่ม */
             font-size: 1rem; 
             font-family: Arial, sans-serif;
         }
-        .search-button { /* ปุ่มค้นหา */
+        .search-button {
             padding: 8px 12px;
             border: 1px solid #ccc;
-            border-radius: 0 20px 20px 0; /* ด้านขวาโค้ง */
+            border-radius: 0 20px 20px 0;
             background-color: #f0f0f0;
             cursor: pointer;
             font-size: 0.9rem;
@@ -40,7 +38,6 @@
         .search-button:hover { background-color: #e0e0e0; }
 
         .header-icons { display: flex; gap: 15px; font-size: 0.95rem; }
-        /* [เพิ่ม] CSS สำหรับ Cart Count */
         .cart-count {
             display: inline;
             color: white;
@@ -59,7 +56,7 @@
             background-color: #333;
             color: #fff;
             padding: 6px 0;
-            position: relative;   /* จุดอ้างอิงของ dropdown */
+            position: relative;
             z-index: 10;
         }
         .main-nav .container { display: flex; justify-content: center; align-items: center; }
@@ -68,8 +65,8 @@
         .main-nav li a { padding: 6px 10px; font-size: 0.9rem; display: block; border-radius: 5px; transition: background-color 0.2s; color: #fff; }
         .main-nav li a:hover { background-color: #555; }
 
-        /* Dropdown (CSS ที่ถูกต้องชุดเดียว) */
-        .main-nav li.dropdown { position: relative; } /* ทำให้เจาะจงมากขึ้น */
+        /* Dropdown */
+        .main-nav li.dropdown { position: relative; }
         .main-nav .dropdown-content {
             display: none;
             position: absolute;
@@ -89,7 +86,7 @@
             color: #fff;
         }
         .main-nav .dropdown-content li a:hover { background-color: #555; }
-        .main-nav li.dropdown:hover .dropdown-content { display: block; } /* ทำให้เจาะจงมากขึ้น */
+        .main-nav li.dropdown:hover .dropdown-content { display: block; }
 
         /* Content */
         main { padding: 20px 0; }
@@ -119,8 +116,8 @@
         }
         .book-card img{
             width: 100%;
-            aspect-ratio: 2 / 3;  /* 2:3 */
-            height: auto;         /* ให้สูงตามอัตราส่วน */
+            aspect-ratio: 2 / 3;
+            height: auto;
             object-fit: cover;
             background: linear-gradient(135deg,#eee,#ccc);
         }
@@ -135,15 +132,13 @@
         .book-title {
             font-size: 1rem;
             font-weight: 600;
-            margin: 0 0 6px 0;     /* ห่างด้านล่าง 6px */
+            margin: 0 0 6px 0;
         }
         
-        /* [เพิ่ม] CSS สำหรับ Author */
         .book-author {
             font-size: 0.85rem;
             color: #555;
             margin: 6px 0;
-            /* กรณีชื่อยาวมาก */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -153,14 +148,14 @@
         .book-category {
             font-size: 0.9rem;
             color: #666;
-            margin: 6px 0;         /* ห่างบน–ล่างเท่ากัน */
+            margin: 6px 0;
         }
 
         .book-price {
             font-size: 1.1rem;
             font-weight: bold;
             color: #d90000;
-            margin-top: 6px;       /* ระยะห่างเท่ากันกับส่วนบน */
+            margin-top: 6px;
         }
 
 
@@ -173,7 +168,7 @@
             .book-title { font-size: 0.9rem; }
         }
 
-        /* --- [แก้ไข] Modal Styles (ปรับปรุงใหม่) --- */
+        /* --- [แก้ไข] Modal Styles (สำหรับดูรายละเอียด) --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -201,10 +196,10 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             z-index: 1001;
             width: 90%;
-            max-width: 600px; /* [ขยาย] ขยายความกว้างเพื่อรองรับข้อมูล */
+            max-width: 600px; 
             transform: translateY(-50px);
             transition: transform 0.3s ease-out;
-            position: relative; /* สำหรับปุ่ม close */
+            position: relative;
         }
         .modal-overlay.show .modal-content {
             transform: translateY(0);
@@ -221,30 +216,29 @@
         }
         .modal-close:hover { color: #333; }
         
-        /* [แก้ไข] modal-body */
         .modal-body {
             display: flex;
-            flex-direction: column; /* [เปลี่ยน] เป็นแนวตั้งสำหรับจอเล็ก */
+            flex-direction: column;
             gap: 20px; 
             margin-top: 15px;
         }
 
-        @media (min-width: 500px) { /* [เพิ่ม] เมื่อจอใหญ่ขึ้น ให้กลับเป็นแนวนอน */
+        @media (min-width: 500px) {
              .modal-body {
                 flex-direction: row;
              }
         }
 
         .modal-book-cover {
-            width: 100%; /* [เปลี่ยน] */
-            max-width: 200px; /* [เพิ่ม] */
-            height: auto; /* [เปลี่ยน] */
+            width: 100%;
+            max-width: 200px;
+            height: auto;
             aspect-ratio: 2 / 3;
             object-fit: cover;
             border-radius: 4px;
             border: 1px solid #eee;
             flex-shrink: 0; 
-            margin: 0 auto; /* [เพิ่ม] จัดกลางในจอเล็ก */
+            margin: 0 auto;
         }
 
         @media (min-width: 500px) {
@@ -260,8 +254,7 @@
             flex-grow: 1; 
         }
 
-        /* [เพิ่ม] CSS สำหรับรายละเอียด (ผู้แต่ง, edition, etc.) */
-        .modal-details h3 { /* Title */
+        .modal-details h3 {
             margin-top: 0;
             font-size: 1.6rem;
         }
@@ -282,11 +275,10 @@
              padding-top: 10px;
         }
         .modal-book-meta span {
-            display: block; /* [เปลี่ยน] ให้แสดงคนละบรรทัด */
-            margin-bottom: 4px; /* [เพิ่ม] */
+            display: block;
+            margin-bottom: 4px;
         }
 
-        /* [เพิ่ม] CSS สำหรับ Review */
         .modal-review-summary {
             margin-top: 10px;
             padding-top: 10px;
@@ -305,51 +297,14 @@
             margin-left: 8px;
         }
 
-
-        .modal-quantity-section {
-             margin-top: 20px;
-             padding-top: 20px;
-             border-top: 1px solid #f0f0f0;
-        }
-
-        .modal-quantity {
-            width: 70px; 
-            padding: 8px; 
-            font-size: 1rem; 
-            border-radius: 4px; 
-            border: 1px solid #ccc; 
-            margin-left: 10px; /* [เพิ่ม] */
-            box-sizing: border-box; 
-        }
-
         .modal-footer {
             text-align: right;
             padding-top: 20px; 
-            margin-top: 20px; /* [เพิ่ม] */
+            margin-top: 20px;
             border-top: 1px solid #eee;
         }
-        
-        /* [เพิ่ม] CSS สำหรับ Modal Message */
-        #modalMessage {
-            font-size: 0.9rem;
-            padding: 10px;
-            border-radius: 5px;
-            display: none; /* ซ่อนไว้ก่อน */
-            margin-top: 10px;
-            text-align: left;
-        }
-        #modalMessage.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        #modalMessage.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
 
-
+        /* [เพิ่ม] CSS สำหรับปุ่ม Add to Cart (ดึงมาจาก Modal เดิม) */
         .modal-btn-add {
             background-color: #d90000;
             color: white;
@@ -377,13 +332,18 @@
             border-radius: 5px;
             cursor: pointer;
             margin-right: 10px;
-            transition: background-color 0.2s;
         }
         .modal-btn-cancel:hover { background-color: #e0e0e0; }
 
-        /* ทำให้การ์ดหนังสือมี cursor pointer */
-        .js-book-card {
+        /* [ <<< แก้ไข!!! >>> ] ทำให้ชื่อหนังสือและรูปภาพคลิกได้ */
+        .js-open-modal {
             cursor: pointer;
+        }
+        .js-open-modal:hover {
+            /* ไม่ต้องทำอะไรที่นี่ */
+        }
+        .book-title.js-open-modal:hover {
+            text-decoration: underline; /* ให้ขีดเส้นใต้เฉพาะชื่อหนังสือ */
         }
         /* --- [จบ] Modal Styles --- */
 
@@ -392,8 +352,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <!-- [เพิ่ม] ScriptManager จำเป็นสำหรับการเรียก WebMethod (AJAX) -->
-        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>
+        <%-- <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"></asp:ScriptManager> --%>
 
         <header class="top-header">
             <div class="container">
@@ -411,14 +370,13 @@
                     </asp:LinkButton>
                     <a href="cartPage.aspx" class="cart-icon" title="ตะกร้าสินค้า" runat="server" id="cartLink">
                         🛒
-                        <!-- [แก้ไข] cartCount จะถูกเติมค่าจาก C# code-behind -->
                         <span runat="server" id="cartCount" class="cart-count">0</span>
                     </a>
                 </div>
             </div>
         </header>
 
-        <!-- Navigation bar ใหม่ -->
+        <!-- Navigation bar -->
         <nav class="main-nav">
             <div class="container">
                 <ul>
@@ -454,30 +412,42 @@
 
             <h2 class="section-title">หนังสือแนะนำ</h2>
             <section class="book-grid">
-                <asp:Repeater ID="RepeaterBooks" runat="server">
+                <asp:Repeater ID="RepeaterBooks" runat="server" OnItemCommand="RepeaterBooks_ItemCommand">
                     <ItemTemplate>
-                         <!-- [แก้ไข] เพิ่ม class 'js-book-card' และ data attributes ทั้งหมด -->
-                        <div class="book-card js-book-card"
-                             data-bookid="<%# Eval("BookID") %>"
-                             data-title="<%# Eval("Title") %>"
-                             data-price="<%# Eval("Price", "{0:F2}") %>"
-                             data-cover="<%# Eval("CoverUrl") %>"
-                             data-authors="<%# Eval("Authors") %>"
-                             data-edition="<%# Eval("Edition") %>"
-                             data-category="<%# Eval("CategoryName") %>"
-                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
-                             data-review-count="<%# Eval("ReviewCount") %>"
-                             >
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' />
+                         <!-- [ <<< แก้ไข!!! >>> ] ย้าย data attributes มาไว้ที่นี่ (การ์ด) -->
+                        <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <!-- [ <<< แก้ไข!!! >>> ] เพิ่ม class js-open-modal ที่รูปภาพ -->
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
                             <div class="book-card-content">
                                 <div>
-                                    <h3 class="book-title"><%# Eval("Title") %></h3>
-                                    <!-- [เพิ่ม] แสดง Author บนการ์ด -->
+                                    <!-- [ <<< แก้ไข!!! >>> ] เอา data attributes ออกจาก h3 (แต่คง class ไว้) -->
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
                                 </div>
-                                <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
                             </div>
                         </div>
                     </ItemTemplate>
@@ -486,30 +456,45 @@
 
             <h2 class="section-title">Top 10 หนังสือขายดี</h2>
             <section class="book-grid">
-                <asp:Repeater ID="RepeaterTopBooks" runat="server">
+                <asp:Repeater ID="RepeaterTopBooks" runat="server" OnItemCommand="RepeaterBooks_ItemCommand">
                     <ItemTemplate>
-                         <!-- [แก้ไข] เพิ่ม class 'js-book-card' และ data attributes ทั้งหมด -->
-                        <div class="book-card js-book-card"
-                             data-bookid="<%# Eval("BookID") %>"
-                             data-title="<%# Eval("Title") %>"
-                             data-price="<%# Eval("Price", "{0:F2}") %>"
-                             data-cover="<%# Eval("CoverUrl") %>"
-                             data-authors="<%# Eval("Authors") %>"
-                             data-edition="<%# Eval("Edition") %>"
-                             data-category="<%# Eval("CategoryName") %>"
-                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
-                             data-review-count="<%# Eval("ReviewCount") %>"
-                             >
-                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' />
+                        <!-- [ <<< แก้ไข!!! >>> ] ย้าย data attributes มาไว้ที่นี่ (การ์ด) -->
+                        <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            
+ 
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                             <!-- [ <<< แก้ไข!!! >>> ] เพิ่ม class js-open-modal ที่รูปภาพ -->
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
                             <div class="book-card-content">
                                 <div>
-                                    <h3 class="book-title"><%# Eval("Title") %></h3>
-                                    <!-- [เพิ่ม] แสดง Author บนการ์ด -->
+                                     <!-- [ <<< แก้ไข!!! >>> ] เอา data attributes ออกจาก h3 (แต่คง class ไว้) -->
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
                                     <p class="book-edition"><%# Eval("Edition") %> Edition</p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
                                 </div>
-                                <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="Button1" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
                             </div>
                         </div>
                     </ItemTemplate>
@@ -517,11 +502,11 @@
             </section>
         </main>
 
-         <!-- [แก้ไข] Add to Cart Modal HTML (ปรับปรุงใหม่ทั้งหมด) -->
-        <div id="addToCartModal" class="modal-overlay">
+         <!-- Book Detail Modal -->
+        <div id="bookDetailModal" class="modal-overlay"> 
             <div class="modal-content">
-                <span class="modal-close" onclick="closeAddToCartModal()">&times;</span>
-                <h2 style="margin-top:0;">เพิ่มสินค้าลงในตะกร้า</h2>
+                <span class="modal-close" onclick="closeBookDetailModal()">&times;</span> 
+                <h2 style="margin-top:0;">รายละเอียดหนังสือ</h2> 
                 
                 <div class="modal-body">
                     <img id="modalBookCover" src="" alt="Book Cover" class="modal-book-cover" />
@@ -540,19 +525,11 @@
 
                         <p id="modalBookPrice" class="modal-book-price">฿0.00</p>
                         
-                        <div class="modal-quantity-section">
-                            <label for="modalQuantity" style="font-weight: bold;">จำนวน:</label>
-                            <input id="modalQuantity" type="number" value="1" min="1" class="modal-quantity" />
-                        </div>
                     </div>
                 </div>
                 
-                <!-- [เพิ่ม] Modal Message container -->
-                <div id="modalMessage"></div>
-
                 <div class="modal-footer">
-                    <button type="button" class="modal-btn-cancel" onclick="closeAddToCartModal()">ยกเลิก</button>
-                    <button type="button" id="btnModalAddToCart" class="modal-btn-add">เพิ่มลงตะกร้า</button>
+                    <button type="button" class="modal-btn-cancel" onclick="closeBookDetailModal()">ปิด</button>
                 </div>
             </div>
         </div>
@@ -561,27 +538,21 @@
 
     </form>
     
-    <!-- [แก้ไข] JavaScript สำหรับ Modal (ปรับปรุงใหม่) -->
+    <!-- [ <<< แก้ไข!!! >>> ] JavaScript -->
     <script type="text/javascript">
         // Get modal elements
-        const modal = document.getElementById('addToCartModal');
+        const modal = document.getElementById('bookDetailModal');
         const modalBookCover = document.getElementById('modalBookCover');
         const modalBookTitle = document.getElementById('modalBookTitle');
         const modalBookPrice = document.getElementById('modalBookPrice');
-        const modalQuantity = document.getElementById('modalQuantity');
-        const btnModalAddToCart = document.getElementById('btnModalAddToCart');
 
-        // [เพิ่ม] Get new modal elements
         const modalBookAuthors = document.getElementById('modalBookAuthors');
         const modalBookEdition = document.getElementById('modalBookEdition');
         const modalBookCategory = document.getElementById('modalBookCategory');
         const modalBookReviews = document.getElementById('modalBookReviews');
-        const modalMessage = document.getElementById('modalMessage'); // [เพิ่ม]
-            
-        // Store current book ID
-        let currentBookId = null;
 
-        // [เพิ่ม] Function to generate star rating
+
+        // Function to generate star rating
         function generateStarRating(rating) {
             rating = Math.round(rating * 2) / 2; // Round to nearest 0.5
             let stars = '';
@@ -589,7 +560,7 @@
                 if (rating >= i) {
                     stars += '★'; // Full star
                 } else if (rating >= (i - 0.5)) {
-                    stars += '★'; // (ใช้ดาวเต็มดวงแทนครึ่งดวงเพื่อความง่าย)
+                    stars += '★'; // Half star (using full star for simplicity, can be styled)
                 } else {
                     stars += '☆'; // Empty star
                 }
@@ -597,48 +568,51 @@
             return stars;
         }
 
-        // [แก้ไข] Function to open the modal
-        function openAddToCartModal(cardElement) {
-            // Get data from data-* attributes
-            currentBookId = cardElement.getAttribute('data-bookid');
+        // [ <<< แก้ไข!!! >>> ] ปรับปรุงฟังก์ชัน openBookDetailModal
+        function openBookDetailModal(clickedElement) {
+
+            // 1. ค้นหา .book-card ที่เป็น parent ของสิ่งที่ถูกคลิก (ไม่ว่าจะเป็น img หรือ h3)
+            const cardElement = clickedElement.closest('.book-card');
+            if (!cardElement) return; // ถ้าหาไม่เจอ ให้หยุดทำงาน
+
+            // 2. ดึงข้อมูลจาก data attributes ของ .book-card (ที่เป็นแม่)
             const title = cardElement.getAttribute('data-title');
             const price = cardElement.getAttribute('data-price');
             const cover = cardElement.getAttribute('data-cover');
-            
-            // [เพิ่ม] Get new data
             const authors = cardElement.getAttribute('data-authors');
             const edition = cardElement.getAttribute('data-edition');
             const category = cardElement.getAttribute('data-category');
-            const avgRating = parseFloat(cardElement.getAttribute('data-avg-rating'));
-            const reviewCount = parseInt(cardElement.getAttribute('data-review-count'), 10);
+
+            // [ <<< แก้ไข!!! >>> ] เพิ่มการตรวจสอบ isNaN เพื่อป้องกัน script crash
+            let avgRating = parseFloat(cardElement.getAttribute('data-avg-rating'));
+            if (isNaN(avgRating)) {
+                avgRating = 0; // กำหนดค่าเริ่มต้นถ้าข้อมูลผิดพลาด
+            }
+
+            let reviewCount = parseInt(cardElement.getAttribute('data-review-count'), 10);
+            if (isNaN(reviewCount)) {
+                reviewCount = 0; // กำหนดค่าเริ่มต้นถ้าข้อมูลผิดพลาด
+            }
 
 
-            // Populate modal
+            // 3. Populate modal
             modalBookCover.src = cover;
-            modalBookCover.alt = title; 
+            modalBookCover.alt = title;
             modalBookTitle.textContent = title;
             modalBookPrice.textContent = '฿' + price;
-            modalQuantity.value = 1; // Reset quantity to 1
-            
-            // [เพิ่ม] Reset modal message
-            modalMessage.style.display = 'none';
-            modalMessage.className = '';
-            btnModalAddToCart.disabled = false;
 
-
-            // [เพิ่ม] Populate new elements
             modalBookAuthors.textContent = 'โดย: ' + (authors && authors !== 'N/A' ? authors : 'ไม่ระบุผู้แต่ง');
             modalBookEdition.textContent = 'Edition: ' + (edition ? edition : 'N/A');
             modalBookCategory.textContent = 'หมวดหมู่: ' + (category ? category : 'N/A');
 
-            // [เพิ่ม] Populate reviews
-            if (reviewCount > 0) {
+            // [ <<< แก้ไข!!! >>> ] ตรวจสอบทั้ง reviewCount และ avgRating ก่อนแสดงผล
+            if (reviewCount > 0 && avgRating > 0) {
                 const stars = generateStarRating(avgRating);
-                modalBookReviews.innerHTML = 
+                modalBookReviews.innerHTML =
                     `<span class="stars">${stars}</span>` +
                     `<span class="review-count">(${avgRating.toFixed(1)} จาก ${reviewCount} รีวิว)</span>`;
             } else {
-                modalBookReviews.innerHTML = 
+                modalBookReviews.innerHTML =
                     `<span class="stars no-rating">☆☆☆☆☆</span>` +
                     `<span class="review-count">(ยังไม่มีรีวิว)</span>`;
             }
@@ -648,103 +622,26 @@
         }
 
         // Function to close the modal
-        function closeAddToCartModal() {
+        function closeBookDetailModal() {
             modal.classList.remove('show');
         }
 
-        // [เพิ่ม] Function to show modal message
-        function showModalMessage(message, isError = false) {
-            modalMessage.textContent = message;
-            modalMessage.className = isError ? 'error' : 'success';
-            modalMessage.style.display = 'block';
-        }
 
-        // [เพิ่ม] Function to update the cart count on the header
-        function updateCartHeader(count) {
-            const cartCountElement = document.getElementById('<%= cartCount.ClientID %>');
-            if (cartCountElement) {
-                if (count > 0) {
-                    cartCountElement.textContent = count;
-                    cartCountElement.className = 'cart-count'; // Ensure it's visible
-                } else {
-                    cartCountElement.textContent = '0';
-                    cartCountElement.className = 'cart-count empty'; // Hide if empty
-                }
-            }
-        }
-
-
-        // Add click event listeners to all book cards
+        // [ <<< แก้ไข!!! >>> ] Add click event listeners
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.js-book-card').forEach(card => {
-                card.addEventListener('click', function () {
-                    openAddToCartModal(this);
+            // ผูก Event Listener กับ .js-open-modal (ซึ่งตอนนี้มีทั้ง img และ h3)
+            document.querySelectorAll('.js-open-modal').forEach(element => {
+                element.addEventListener('click', function () {
+                    openBookDetailModal(this); // 'this' คือ h3 หรือ img ที่ถูกคลิก
                 });
             });
         });
 
-        // [แก้ไข] Handle "Add to Cart" button click inside the modal (AJAX call)
-        btnModalAddToCart.addEventListener('click', function () {
-            const quantity = parseInt(modalQuantity.value, 10);
-
-            if (quantity > 0 && currentBookId) {
-                console.log(`Sending to server: BookID ${currentBookId}, Quantity: ${quantity}`);
-
-                // Disable button
-                btnModalAddToCart.disabled = true;
-                showModalMessage('กำลังเพิ่มสินค้า...', false);
-
-                // --- นี่คือการเรียก WebMethod (AJAX) ---
-                fetch('mainpage.aspx/AddToCart', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
-                    body: JSON.stringify({
-                        bookId: parseInt(currentBookId, 10),
-                        quantity: quantity
-                    })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const result = data.d; // ASP.NET WebMethods wrap response in ".d"
-
-                        if (result.success) {
-                            // 1. Update header count
-                            updateCartHeader(result.newCount);
-
-                            // 2. Show success message
-                            showModalMessage('เพิ่มสินค้าลงตะกร้าเรียบร้อย!', false);
-
-                            // 3. Close modal after a short delay
-                            setTimeout(() => {
-                                closeAddToCartModal();
-                            }, 1000);
-
-                        } else {
-                            // Show error message (e.g., "Please log in")
-                            showModalMessage('เกิดข้อผิดพลาด: ' + result.message, true);
-                            btnModalAddToCart.disabled = false; // Re-enable button
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error adding to cart:', error);
-                        showModalMessage('เกิดข้อผิดพลาดในการเชื่อมต่อ', true);
-                        btnModalAddToCart.disabled = false; // Re-enable button
-                    });
-            }
-        });
 
         // Close modal if overlay (backdrop) is clicked
         modal.addEventListener('click', function (e) {
-            // ถ้าคลิกที่ .modal-overlay (พื้นหลังสีเทา) ให้ปิด
             if (e.target === modal) {
-                closeAddToCartModal();
+                closeBookDetailModal();
             }
         });
 
@@ -752,3 +649,4 @@
 
 </body>
 </html>
+

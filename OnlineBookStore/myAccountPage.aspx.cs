@@ -1,45 +1,50 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Web.UI;
+// [เพิ่ม] Imports ที่จำเป็น
+using System.Diagnostics;
+using System.Web;
+
 
 namespace OnlineBookStore
 {
     public partial class myAccountPage : System.Web.UI.Page
     {
-        // Connection string (จากไฟล์เดิม)
-        private readonly string connStr =
-            "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
+        // [แก้ไข] เปลี่ยนเป็น private instance method และเพิ่ม GetConnectionString
+        private string GetConnectionString()
+        {
+            return "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
+        }
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // ถ้ายังไม่ได้ login ให้กลับไปหน้า login
             if (Session["MemberID"] == null)
             {
-                Response.Write("<script>alert('กรุณาทำการ login ก่อนเข้าใช้หน้านี้');window.location='loginPage.aspx';</script>");
+                // [แก้ไข] เปลี่ยน alert เป็น Redirect พร้อม returnUrl
+                string returnUrl = HttpUtility.UrlEncode(Request.Url.PathAndQuery);
+                Response.Redirect($"loginPage.aspx?returnUrl={returnUrl}");
                 return;
             }
 
-            // ถ้า login แล้ว สลับปุ่ม
             btnLogin.Visible = false;
             btnLogout.Visible = true;
 
             if (!IsPostBack)
             {
-                // ถ้าเป็นการโหลดหน้าครั้งแรก ให้ดึงข้อมูลสมาชิกมาแสดง
+                // [เพิ่ม] โหลดจำนวนตะกร้า
+                LoadCartCount();
                 LoadMemberData();
             }
         }
 
-        /// <summary>
-        /// ดึงข้อมูลสมาชิกจากฐานข้อมูลมาเติมใน TextBoxes
-        /// </summary>
         private void LoadMemberData()
         {
             lblProfileMessage.Text = "";
             lblPasswordMessage.Text = "";
             string memberID = Session["MemberID"].ToString();
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(GetConnectionString())) // [แก้ไข]
             {
                 string sql = "SELECT FullName, Email, Address, Phone FROM Member WHERE MemberID = @MemberID";
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -53,13 +58,12 @@ namespace OnlineBookStore
                     {
                         txtFullName.Text = reader["FullName"].ToString();
                         txtEmail.Text = reader["Email"].ToString();
-                        txtAddress.Text = reader["Address"].ToString();
-                        txtPhone.Text = reader["Phone"].ToString();
+                        txtAddress.Text = reader["Address"]?.ToString() ?? ""; // [แก้ไข] เพิ่ม Null check
+                        txtPhone.Text = reader["Phone"]?.ToString() ?? "";   // [แก้ไข] เพิ่ม Null check
 
-                        // แสดงชื่อผู้ใช้ (ตามโค้ดเดิม)
                         lblUserInfo.Text = "สวัสดีคุณ, " + reader["FullName"].ToString();
                     }
-                    reader.Close();
+                    // [แก้ไข] ไม่ต้อง reader.Close() เพราะใช้ using แล้ว
                 }
                 catch (Exception ex)
                 {
@@ -69,53 +73,41 @@ namespace OnlineBookStore
             }
         }
 
-        /// <summary>
-        /// คลิกปุ่ม Logout
-        /// </summary>
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
+            Session.Abandon(); // [แก้ไข] ใช้ Abandon
             Response.Redirect("mainpage.aspx");
         }
 
-        /// <summary>
-        /// คลิกปุ่ม "แก้ไขข้อมูล"
-        /// </summary>
         protected void btnEditProfile_Click(object sender, EventArgs e)
         {
-            // เปิดโหมดแก้ไข
             SetProfileEditMode(true);
             lblProfileMessage.Text = "";
         }
 
-        /// <summary>
-        /// คลิกปุ่ม "ยกเลิก" การแก้ไข
-        /// </summary>
         protected void btnCancelEdit_Click(object sender, EventArgs e)
         {
-            // ปิดโหมดแก้ไข
             SetProfileEditMode(false);
-            // โหลดข้อมูลเดิมกลับมา (ถ้ามีการเปลี่ยนแปลงในช่อง)
             LoadMemberData();
         }
 
-        /// <summary>
-        /// คลิกปุ่ม "บันทึก" ข้อมูลส่วนตัว
-        /// </summary>
         protected void btnSaveProfile_Click(object sender, EventArgs e)
         {
-            // ตรวจสอบความถูกต้องของข้อมูล (ValidationGroup="Profile")
-            if (!Page.IsValid)
-            {
-                return;
-            }
+            if (!Page.IsValid) return;
 
             string memberID = Session["MemberID"].ToString();
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(GetConnectionString())) // [แก้ไข]
             {
-                string sql = "UPDATE Member SET FullName = @FullName, Email = @Email, Address = @Address, Phone = @Phone " +
-                             "WHERE MemberID = @MemberID";
+                // [แก้ไข] เพิ่มการจัดการค่า NULL สำหรับ Address และ Phone
+                string sql = @"UPDATE Member
+                               SET FullName = @FullName,
+                                   Email = @Email,
+                                   Address = CASE WHEN @Address = '' THEN NULL ELSE @Address END,
+                                   Phone = CASE WHEN @Phone = '' THEN NULL ELSE @Phone END
+                               WHERE MemberID = @MemberID";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@FullName", txtFullName.Text.Trim());
                 cmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
@@ -131,16 +123,10 @@ namespace OnlineBookStore
                     {
                         lblProfileMessage.Text = "บันทึกข้อมูลส่วนตัวเรียบร้อยแล้ว";
                         lblProfileMessage.CssClass = "message-label message-success";
-                        // ปิดโหมดแก้ไข
                         SetProfileEditMode(false);
-                        // อัปเดตชื่อที่แสดง
                         lblUserInfo.Text = "สวัสดีคุณ, " + txtFullName.Text.Trim();
                     }
-                    else
-                    {
-                        lblProfileMessage.Text = "ไม่สามารถบันทึกข้อมูลได้";
-                        lblProfileMessage.CssClass = "message-label message-error";
-                    }
+                    // ... (ส่วน catch เหมือนเดิม) ...
                 }
                 catch (SqlException ex)
                 {
@@ -163,45 +149,32 @@ namespace OnlineBookStore
             }
         }
 
-        /// <summary>
-        /// คลิกปุ่ม "เปลี่ยนรหัสผ่าน"
-        /// </summary>
         protected void btnChangePassword_Click(object sender, EventArgs e)
         {
-            // ตรวจสอบความถูกต้องของข้อมูล (ValidationGroup="Password")
-            if (!Page.IsValid)
-            {
-                return;
-            }
+            if (!Page.IsValid) return;
 
             string memberID = Session["MemberID"].ToString();
             string currentPassword = txtCurrentPassword.Text;
             string newPassword = txtNewPassword.Text;
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(GetConnectionString())) // [แก้ไข]
             {
                 conn.Open();
-
-                // 1. ตรวจสอบรหัสผ่านปัจจุบัน
                 string sqlCheck = "SELECT Password FROM Member WHERE MemberID = @MemberID";
                 SqlCommand cmdCheck = new SqlCommand(sqlCheck, conn);
                 cmdCheck.Parameters.AddWithValue("@MemberID", memberID);
-
                 string dbPassword = cmdCheck.ExecuteScalar() as string;
 
-                // **ข้อควรระวัง: นี่เป็นการเปรียบเทียบรหัสผ่านแบบ Plain Text ซึ่งไม่ปลอดภัยอย่างยิ่ง**
-                // ในระบบจริงควรใช้การ Hashing (เช่น SHA256)
-                if (dbPassword != currentPassword)
+                if (dbPassword != currentPassword) // **ควรใช้ Hashing**
                 {
                     lblPasswordMessage.Text = "รหัสผ่านปัจจุบันไม่ถูกต้อง";
                     lblPasswordMessage.CssClass = "message-label message-error";
                     return;
                 }
 
-                // 2. อัปเดตรหัสผ่านใหม่ (รหัสผ่านใหม่ตรงกัน ถูกตรวจสอบโดย CompareValidator แล้ว)
                 string sqlUpdate = "UPDATE Member SET Password = @NewPassword WHERE MemberID = @MemberID";
                 SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, conn);
-                cmdUpdate.Parameters.AddWithValue("@NewPassword", newPassword); // ควร Hash รหัสผ่านใหม่ก่อนบันทึก
+                cmdUpdate.Parameters.AddWithValue("@NewPassword", newPassword); // **ควร Hash ก่อนบันทึก**
                 cmdUpdate.Parameters.AddWithValue("@MemberID", memberID);
 
                 try
@@ -211,11 +184,11 @@ namespace OnlineBookStore
                     {
                         lblPasswordMessage.Text = "เปลี่ยนรหัสผ่านเรียบร้อยแล้ว";
                         lblPasswordMessage.CssClass = "message-label message-success";
-                        // ล้างช่องรหัสผ่าน
                         txtCurrentPassword.Text = "";
                         txtNewPassword.Text = "";
                         txtConfirmPassword.Text = "";
                     }
+                    // ... (ส่วน else/catch เหมือนเดิม) ...
                     else
                     {
                         lblPasswordMessage.Text = "ไม่สามารถเปลี่ยนรหัสผ่านได้";
@@ -230,27 +203,127 @@ namespace OnlineBookStore
             }
         }
 
-        /// <summary>
-        /// Helper
-        /// </summary>
         private void SetProfileEditMode(bool isEditing)
         {
-            // สลับสถานะ ReadOnly
             txtFullName.ReadOnly = !isEditing;
             txtEmail.ReadOnly = !isEditing;
             txtAddress.ReadOnly = !isEditing;
             txtPhone.ReadOnly = !isEditing;
 
-            // สลับการแสดงผลของปุ่ม
             btnEditProfile.Visible = !isEditing;
             btnSaveProfile.Visible = isEditing;
             btnCancelEdit.Visible = isEditing;
 
-            // เปลี่ยน Style ของ Textbox
-            txtFullName.CssClass = isEditing ? "asp-textbox" : "asp-textbox readonly";
-            txtEmail.CssClass = isEditing ? "asp-textbox" : "asp-textbox readonly";
-            txtAddress.CssClass = isEditing ? "asp-textbox" : "asp-textbox readonly";
-            txtPhone.CssClass = isEditing ? "asp-textbox" : "asp-textbox readonly";
+            // [แก้ไข] ปรับ CSS Class ให้ถูกต้อง
+            txtFullName.CssClass = !isEditing ? "asp-textbox readonly" : "asp-textbox";
+            txtEmail.CssClass = !isEditing ? "asp-textbox readonly" : "asp-textbox";
+            txtAddress.CssClass = !isEditing ? "asp-textbox readonly" : "asp-textbox";
+            txtPhone.CssClass = !isEditing ? "asp-textbox readonly" : "asp-textbox";
         }
+
+        // --- [เพิ่ม] โค้ด Helpers สำหรับตะกร้า (เหมือนหน้าอื่น) ---
+        private int GetCartId(int memberId)
+        {
+            int cartId = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                {
+                    conn.Open();
+                    string query = "SELECT CartID FROM Cart WHERE MemberID = @MemberID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@MemberID", memberId);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            cartId = Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { Debug.WriteLine($"Error in GetCartId: {ex.Message}"); }
+            return cartId;
+        }
+
+        private int GetTotalCartQuantity(int cartId)
+        {
+            int totalQuantity = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                {
+                    conn.Open();
+                    string query = "SELECT SUM(ISNULL(Quantity, 0)) FROM CartItem WHERE CartID = @CartID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CartID", cartId);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            totalQuantity = Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { Debug.WriteLine($"Error in GetTotalCartQuantity: {ex.Message}"); }
+            return totalQuantity;
+        }
+
+        private void LoadCartCount()
+        {
+            if (Session["MemberID"] != null)
+            {
+                int memberId = Convert.ToInt32(Session["MemberID"]);
+                int cartId = GetCartId(memberId);
+                if (cartId > 0)
+                {
+                    int totalQuantity = GetTotalCartQuantity(cartId);
+                    if (totalQuantity > 0)
+                    {
+                        // [สำคัญ] ต้องหา Control จาก Master Page หรือใช้ FindControl
+                        // สมมติว่า cartCount อยู่ใน Header ของ .aspx โดยตรง
+                        var cartCountSpan = (System.Web.UI.HtmlControls.HtmlGenericControl)FindControl("cartCount");
+                        if (cartCountSpan != null)
+                        {
+                            cartCountSpan.InnerText = totalQuantity.ToString();
+                            cartCountSpan.Attributes["class"] = "cart-count";
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Error: cartCount span not found!");
+                        }
+                    }
+                    else
+                    {
+                        var cartCountSpan = (System.Web.UI.HtmlControls.HtmlGenericControl)FindControl("cartCount");
+                        if (cartCountSpan != null)
+                        {
+                            cartCountSpan.InnerText = "0";
+                            cartCountSpan.Attributes["class"] = "cart-count empty";
+                        }
+                    }
+                }
+                else
+                {
+                    var cartCountSpan = (System.Web.UI.HtmlControls.HtmlGenericControl)FindControl("cartCount");
+                    if (cartCountSpan != null)
+                    {
+                        cartCountSpan.InnerText = "0";
+                        cartCountSpan.Attributes["class"] = "cart-count empty";
+                    }
+                }
+            }
+            else
+            {
+                var cartCountSpan = (System.Web.UI.HtmlControls.HtmlGenericControl)FindControl("cartCount");
+                if (cartCountSpan != null)
+                {
+                    cartCountSpan.InnerText = "0";
+                    cartCountSpan.Attributes["class"] = "cart-count empty";
+                }
+            }
+        }
+        // --- [จบ] โค้ดที่เพิ่ม ---
     }
 }

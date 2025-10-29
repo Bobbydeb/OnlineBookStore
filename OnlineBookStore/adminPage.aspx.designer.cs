@@ -87,6 +87,24 @@ namespace OnlineBookStore
         protected global::System.Web.UI.WebControls.TextBox txtAddBookId;
 
         /// <summary>
+        /// rfvBookId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBookId;
+
+        /// <summary>
+        /// cvBookId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator cvBookId;
+
+        /// <summary>
         /// txtAddBookIsbn control.
         /// </summary>
         /// <remarks>
@@ -94,6 +112,24 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddBookIsbn;
+
+        /// <summary>
+        /// rfvBookIsbn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBookIsbn;
+
+        /// <summary>
+        /// revBookIsbn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revBookIsbn;
 
         /// <summary>
         /// txtAddBookTitle control.
@@ -105,6 +141,15 @@ namespace OnlineBookStore
         protected global::System.Web.UI.WebControls.TextBox txtAddBookTitle;
 
         /// <summary>
+        /// rfvBookTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBookTitle;
+
+        /// <summary>
         /// txtAddBookPrice control.
         /// </summary>
         /// <remarks>
@@ -112,6 +157,33 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddBookPrice;
+
+        /// <summary>
+        /// rfvBookPrice control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBookPrice;
+
+        /// <summary>
+        /// cvBookPriceType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator cvBookPriceType;
+
+        /// <summary>
+        /// rvBookPrice control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator rvBookPrice;
 
         /// <summary>
         /// txtAddBookStock control.
@@ -123,6 +195,33 @@ namespace OnlineBookStore
         protected global::System.Web.UI.WebControls.TextBox txtAddBookStock;
 
         /// <summary>
+        /// rfvBookStock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBookStock;
+
+        /// <summary>
+        /// cvBookStock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator cvBookStock;
+
+        /// <summary>
+        /// rvBookStock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator rvBookStock;
+
+        /// <summary>
         /// txtAddBookPubId control.
         /// </summary>
         /// <remarks>
@@ -132,6 +231,24 @@ namespace OnlineBookStore
         protected global::System.Web.UI.WebControls.TextBox txtAddBookPubId;
 
         /// <summary>
+        /// rfvBookPubId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBookPubId;
+
+        /// <summary>
+        /// cvBookPubId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator cvBookPubId;
+
+        /// <summary>
         /// txtAddBookCatId control.
         /// </summary>
         /// <remarks>
@@ -139,6 +256,33 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddBookCatId;
+
+        /// <summary>
+        /// rfvBookCatId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBookCatId;
+
+        /// <summary>
+        /// cvBookCatId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator cvBookCatId;
+
+        /// <summary>
+        /// txtAddBookImageUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAddBookImageUrl;
 
         /// <summary>
         /// btnSaveBook control.
@@ -186,6 +330,24 @@ namespace OnlineBookStore
         protected global::System.Web.UI.WebControls.TextBox txtAddAuthorId;
 
         /// <summary>
+        /// rfvAuthorId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvAuthorId;
+
+        /// <summary>
+        /// cvAuthorId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator cvAuthorId;
+
+        /// <summary>
         /// txtAddAuthorName control.
         /// </summary>
         /// <remarks>
@@ -195,6 +357,15 @@ namespace OnlineBookStore
         protected global::System.Web.UI.WebControls.TextBox txtAddAuthorName;
 
         /// <summary>
+        /// rfvAuthorName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvAuthorName;
+
+        /// <summary>
         /// txtAddAuthorEmail control.
         /// </summary>
         /// <remarks>
@@ -202,6 +373,15 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddAuthorEmail;
+
+        /// <summary>
+        /// revAuthorEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revAuthorEmail;
 
         /// <summary>
         /// btnSaveAuthor control.
@@ -249,6 +429,24 @@ namespace OnlineBookStore
         protected global::System.Web.UI.WebControls.TextBox txtAddPublisherId;
 
         /// <summary>
+        /// rfvPubId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPubId;
+
+        /// <summary>
+        /// cvPubId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator cvPubId;
+
+        /// <summary>
         /// txtAddPublisherName control.
         /// </summary>
         /// <remarks>
@@ -256,6 +454,15 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddPublisherName;
+
+        /// <summary>
+        /// rfvPubName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPubName;
 
         /// <summary>
         /// txtAddPublisherAddress control.

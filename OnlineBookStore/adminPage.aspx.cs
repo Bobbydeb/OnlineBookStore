@@ -38,7 +38,17 @@ namespace OnlineBookStore
         {
             using (SqlConnection con = new SqlConnection(connStr))
             {
-                SqlDataAdapter da = new SqlDataAdapter("SELECT BookID, ISBN, Title, Price, Stock, PublisherID, CategoryID FROM Book ORDER BY BookID", con);
+                // ▼▼▼ MODIFIED Query ▼▼▼
+                string query = @"
+                    SELECT 
+                        b.BookID, b.ISBN, b.Title, b.Price, b.Stock, b.PublisherID, b.CategoryID,
+                        c.CoverUrl
+                    FROM Book b
+                    LEFT JOIN Cover c ON b.CoverID = c.CoverID
+                    ORDER BY b.BookID";
+                SqlDataAdapter da = new SqlDataAdapter(query, con);
+                // ▲▲▲ END Modification ▲▲▲
+
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 GridViewBooks.DataSource = dt;
@@ -86,7 +96,7 @@ namespace OnlineBookStore
         {
             using (SqlConnection con = new SqlConnection(connStr))
             {
-                SqlDataAdapter da = new SqlDataAdapter("SELECT OrderID, MemberID, OrderDate, TotalAmount, Status FROM OrderTable ORDER BY OrderID DESC", con);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT OrderID, MemberID, OrderDate, TotalAmount, Status FROM OrderTable ORDER BY OrderID ", con);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 GridViewOrders.DataSource = dt;
@@ -98,7 +108,7 @@ namespace OnlineBookStore
         {
             using (SqlConnection con = new SqlConnection(connStr))
             {
-                SqlDataAdapter da = new SqlDataAdapter("SELECT ReviewID, MemberID, BookID, Rating, Comment, ReviewDate FROM Review ORDER BY ReviewID DESC", con);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT ReviewID, MemberID, BookID, Rating, Comment, ReviewDate FROM Review ORDER BY ReviewID", con);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 GridViewReviews.DataSource = dt;
@@ -216,6 +226,8 @@ namespace OnlineBookStore
                 string stockText = (row.Cells[5].Controls[0] as TextBox).Text?.Trim();
                 string pubText = (row.Cells[6].Controls[0] as TextBox).Text?.Trim();
                 string catText = (row.Cells[7].Controls[0] as TextBox).Text?.Trim();
+                // ▼▼▼ MODIFIED: Read new field ▼▼▼
+                string coverUrl = (row.Cells[8].Controls[0] as TextBox).Text?.Trim();
 
                 // ตรวจความถูกต้องตามคอลัมน์
                 if (string.IsNullOrWhiteSpace(isbn) || isbn.Length != 13) { ShowMessage("ISBN ต้องยาว 13 ตัวอักษร", "error"); return; }
@@ -256,11 +268,61 @@ namespace OnlineBookStore
                         if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("ISBN ซ้ำกับหนังสือเล่มอื่น", "error"); return; }
                     }
 
+                    // --- ▼▼▼ ADDED: New Logic for CoverID ▼▼▼ ---
+                    int? newCoverID = null;
+
+                    // 1. Get current CoverID for this book
+                    int? currentCoverID = null;
+                    using (var cmdGetCover = new SqlCommand("SELECT CoverID FROM Book WHERE BookID = @BookID", con))
+                    {
+                        cmdGetCover.Parameters.AddWithValue("@BookID", bookID);
+                        object result = cmdGetCover.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            currentCoverID = Convert.ToInt32(result);
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(coverUrl))
+                    {
+                        // User wants to remove/clear the image. Set Book.CoverID to NULL.
+                        newCoverID = null;
+                    }
+                    else // coverUrl is NOT empty
+                    {
+                        if (currentCoverID.HasValue)
+                        {
+                            // Update existing Cover row
+                            using (var cmdUpdateCover = new SqlCommand("UPDATE Cover SET CoverUrl = @CoverUrl WHERE CoverID = @CoverID", con))
+                            {
+                                cmdUpdateCover.Parameters.AddWithValue("@CoverUrl", coverUrl);
+                                cmdUpdateCover.Parameters.AddWithValue("@CoverID", currentCoverID.Value);
+                                cmdUpdateCover.ExecuteNonQuery();
+                            }
+                            newCoverID = currentCoverID; // It's the same ID
+                        }
+                        else
+                        {
+                            // Create new Cover row
+                            using (var cmdInsertCover = new SqlCommand("INSERT INTO Cover (CoverUrl) VALUES (@CoverUrl); SELECT SCOPE_IDENTITY();", con))
+                            {
+                                cmdInsertCover.Parameters.AddWithValue("@CoverUrl", coverUrl);
+                                object result = cmdInsertCover.ExecuteScalar();
+                                if (result != null && result != DBNull.Value)
+                                {
+                                    newCoverID = Convert.ToInt32(result);
+                                }
+                            }
+                        }
+                    }
+                    // --- ▲▲▲ END: New Logic ---
+
                     // ผ่านทุกเงื่อนไข ค่อยอัปเดต
+                    // ▼▼▼ MODIFIED Query ▼▼▼
                     using (var cmd = new SqlCommand(@"
                 UPDATE Book
                 SET ISBN=@ISBN, Title=@Title, Price=@Price, Stock=@Stock,
-                    PublisherID=@PublisherID, CategoryID=@CategoryID
+                    PublisherID=@PublisherID, CategoryID=@CategoryID, CoverID=@CoverID
                 WHERE BookID=@BookID", con))
                     {
                         cmd.Parameters.AddWithValue("@ISBN", isbn);
@@ -269,6 +331,17 @@ namespace OnlineBookStore
                         cmd.Parameters.AddWithValue("@Stock", stock);
                         cmd.Parameters.AddWithValue("@PublisherID", publisherID);
                         cmd.Parameters.AddWithValue("@CategoryID", categoryID);
+
+                        // Handle nullable CoverID
+                        if (newCoverID.HasValue)
+                        {
+                            cmd.Parameters.AddWithValue("@CoverID", newCoverID.Value);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@CoverID", DBNull.Value);
+                        }
+
                         cmd.Parameters.AddWithValue("@BookID", bookID);
                         cmd.ExecuteNonQuery();
                     }
@@ -457,33 +530,52 @@ namespace OnlineBookStore
 
         protected void btnSaveBook_Click(object sender, EventArgs e)
         {
+            // ▼▼▼ ADDED: Server-side validation check ▼▼▼
+            Page.Validate("AddBookValidation");
+            if (!Page.IsValid)
+            {
+                return; // Validators will show messages
+            }
+            // ▲▲▲ END Modification ▲▲▲
+
             try
             {
-                // 1. อ่านค่าจาก Modal TextBoxes
-                string bookIdText = txtAddBookId.Text.Trim();
+                // 1. อ่านค่าจาก Modal TextBoxes (We can safely parse now)
+                int bookID = Convert.ToInt32(txtAddBookId.Text.Trim());
                 string isbn = txtAddBookIsbn.Text.Trim();
                 string title = txtAddBookTitle.Text.Trim();
-                string priceText = txtAddBookPrice.Text.Trim();
-                string stockText = txtAddBookStock.Text.Trim();
-                string pubText = txtAddBookPubId.Text.Trim();
-                string catText = txtAddBookCatId.Text.Trim();
+                decimal price = Convert.ToDecimal(txtAddBookPrice.Text.Trim());
+                int stock = Convert.ToInt32(txtAddBookStock.Text.Trim());
+                int publisherID = Convert.ToInt32(txtAddBookPubId.Text.Trim());
+                int categoryID = Convert.ToInt32(txtAddBookCatId.Text.Trim());
+                string imageUrl = txtAddBookImageUrl.Text.Trim();
 
-                // 2. ตรวจสอบความถูกต้อง
-                if (!int.TryParse(bookIdText, out int bookID)) { ShowMessage("BookID ต้องเป็นตัวเลข", "error"); return; }
-                if (string.IsNullOrWhiteSpace(isbn) || isbn.Length != 13) { ShowMessage("ISBN ต้องยาว 13 ตัวอักษร", "error"); return; }
-                if (string.IsNullOrWhiteSpace(title)) { ShowMessage("Title ห้ามว่าง", "error"); return; }
-                if (!decimal.TryParse(priceText, out decimal price)) { ShowMessage("Price ต้องเป็นตัวเลข", "error"); return; }
-                if (price < 0) { ShowMessage("ราคาต้องมีค่ามากกว่าหรือเท่ากับ 0", "error"); return; }
-                if (!int.TryParse(stockText, out int stock)) { ShowMessage("Stock ต้องเป็นจำนวนเต็ม", "error"); return; }
-                if (stock < 0) { ShowMessage("Stock หนังสือต้องมีค่ามากกว่าหรือเท่ากับ 0", "error"); return; }
-                if (!int.TryParse(pubText, out int publisherID)) { ShowMessage("PublisherID ต้องเป็นจำนวนเต็ม", "error"); return; }
-                if (!int.TryParse(catText, out int categoryID)) { ShowMessage("CategoryID ต้องเป็นจำนวนเต็ม", "error"); return; }
+                // 2. ตรวจสอบความถูกต้อง (REMOVED redundant input checks)
+                // Validators now handle: required, int, decimal, range, length
 
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
 
+                    // ▼▼▼ Handle Cover Image URL (This logic is correct) ▼▼▼
+                    int? coverID = null; // Use nullable int
+                    if (!string.IsNullOrWhiteSpace(imageUrl))
+                    {
+                        // Insert into Cover table and get the new ID
+                        using (var cmdCover = new SqlCommand("INSERT INTO Cover (CoverUrl) VALUES (@CoverUrl); SELECT SCOPE_IDENTITY();", con))
+                        {
+                            cmdCover.Parameters.AddWithValue("@CoverUrl", imageUrl);
+                            object result = cmdCover.ExecuteScalar();
+                            if (result != null && result != DBNull.Value)
+                            {
+                                coverID = Convert.ToInt32(result);
+                            }
+                        }
+                    }
+                    // --- ▲▲▲ END: New Logic ---
+
                     // 3. ตรวจสอบ Constraints (PK, Unique, FK)
+                    // (This is business logic, so it STAYS)
                     // PK: BookID ต้องไม่ซ้ำ
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Book WHERE BookID=@BookID", con))
                     {
@@ -514,8 +606,8 @@ namespace OnlineBookStore
 
                     // 4. INSERT ข้อมูล
                     using (var cmd = new SqlCommand(@"
-                INSERT INTO Book (BookID, ISBN, Title, Price, Stock, PublisherID, CategoryID)
-                VALUES (@BookID, @ISBN, @Title, @Price, @Stock, @PublisherID, @CategoryID)", con))
+                INSERT INTO Book (BookID, ISBN, Title, Price, Stock, PublisherID, CategoryID, CoverID)
+                VALUES (@BookID, @ISBN, @Title, @Price, @Stock, @PublisherID, @CategoryID, @CoverID)", con))
                     {
                         cmd.Parameters.AddWithValue("@BookID", bookID);
                         cmd.Parameters.AddWithValue("@ISBN", isbn);
@@ -524,6 +616,16 @@ namespace OnlineBookStore
                         cmd.Parameters.AddWithValue("@Stock", stock);
                         cmd.Parameters.AddWithValue("@PublisherID", publisherID);
                         cmd.Parameters.AddWithValue("@CategoryID", categoryID);
+
+                        if (coverID.HasValue)
+                        {
+                            cmd.Parameters.AddWithValue("@CoverID", coverID.Value);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@CoverID", DBNull.Value);
+                        }
+
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -542,21 +644,27 @@ namespace OnlineBookStore
 
         protected void btnSaveAuthor_Click(object sender, EventArgs e)
         {
+            // ▼▼▼ ADDED: Server-side validation check ▼▼▼
+            Page.Validate("AddAuthorValidation");
+            if (!Page.IsValid)
+            {
+                return; // Validators will show messages
+            }
+            // ▲▲▲ END Modification ▲▲▲
+
             try
             {
-                // 1. อ่านค่า
-                string authorIdText = txtAddAuthorId.Text.Trim();
+                // 1. อ่านค่า (Safely parse)
+                int authorID = Convert.ToInt32(txtAddAuthorId.Text.Trim());
                 string authorName = txtAddAuthorName.Text.Trim();
                 string email = txtAddAuthorEmail.Text.Trim();
 
-                // 2. ตรวจสอบ
-                if (!int.TryParse(authorIdText, out int authorID)) { ShowMessage("AuthorID ต้องเป็นตัวเลข", "error"); return; }
-                if (string.IsNullOrWhiteSpace(authorName)) { ShowMessage("Author Name ห้ามว่าง", "error"); return; }
+                // 2. ตรวจสอบ (REMOVED redundant checks)
 
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
-                    // 3. ตรวจสอบ PK
+                    // 3. ตรวจสอบ PK (Business logic - STAYS)
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Author WHERE AuthorID=@AuthorID", con))
                     {
                         cmd.Parameters.AddWithValue("@AuthorID", authorID);
@@ -568,7 +676,7 @@ namespace OnlineBookStore
                     SqlCommand cmdInsert = new SqlCommand(query, con);
                     cmdInsert.Parameters.AddWithValue("@AuthorID", authorID);
                     cmdInsert.Parameters.AddWithValue("@AuthorName", authorName);
-                    cmdInsert.Parameters.AddWithValue("@Email", email);
+                    cmdInsert.Parameters.AddWithValue("@Email", string.IsNullOrWhiteSpace(email) ? (object)DBNull.Value : email); // Handle optional email
                     cmdInsert.ExecuteNonQuery();
                 }
 
@@ -586,22 +694,28 @@ namespace OnlineBookStore
 
         protected void btnSavePublisher_Click(object sender, EventArgs e)
         {
+            // ▼▼▼ ADDED: Server-side validation check ▼▼▼
+            Page.Validate("AddPublisherValidation");
+            if (!Page.IsValid)
+            {
+                return; // Validators will show messages
+            }
+            // ▲▲▲ END Modification ▲▲▲
+
             try
             {
-                // 1. อ่านค่า
-                string publisherIdText = txtAddPublisherId.Text.Trim();
+                // 1. อ่านค่า (Safely parse)
+                int publisherID = Convert.ToInt32(txtAddPublisherId.Text.Trim());
                 string publisherName = txtAddPublisherName.Text.Trim();
                 string address = txtAddPublisherAddress.Text.Trim();
                 string phone = txtAddPublisherPhone.Text.Trim();
 
-                // 2. ตรวจสอบ
-                if (!int.TryParse(publisherIdText, out int publisherID)) { ShowMessage("PublisherID ต้องเป็นตัวเลข", "error"); return; }
-                if (string.IsNullOrWhiteSpace(publisherName)) { ShowMessage("Publisher Name ห้ามว่าง", "error"); return; }
+                // 2. ตรวจสอบ (REMOVED redundant checks)
 
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
-                    // 3. ตรวจสอบ PK
+                    // 3. ตรวจสอบ PK (Business logic - STAYS)
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Publisher WHERE PublisherID=@PublisherID", con))
                     {
                         cmd.Parameters.AddWithValue("@PublisherID", publisherID);
@@ -613,8 +727,8 @@ namespace OnlineBookStore
                     SqlCommand cmdInsert = new SqlCommand(query, con);
                     cmdInsert.Parameters.AddWithValue("@PublisherID", publisherID);
                     cmdInsert.Parameters.AddWithValue("@PublisherName", publisherName);
-                    cmdInsert.Parameters.AddWithValue("@Address", address);
-                    cmdInsert.Parameters.AddWithValue("@Phone", phone);
+                    cmdInsert.Parameters.AddWithValue("@Address", string.IsNullOrWhiteSpace(address) ? (object)DBNull.Value : address);
+                    cmdInsert.Parameters.AddWithValue("@Phone", string.IsNullOrWhiteSpace(phone) ? (object)DBNull.Value : phone);
                     cmdInsert.ExecuteNonQuery();
                 }
 
@@ -640,6 +754,7 @@ namespace OnlineBookStore
             txtAddBookStock.Text = "";
             txtAddBookPubId.Text = "";
             txtAddBookCatId.Text = "";
+            txtAddBookImageUrl.Text = "";
         }
 
         private void ClearAuthorModal()
@@ -685,6 +800,11 @@ namespace OnlineBookStore
                     SqlCommand cmdReview = new SqlCommand("DELETE FROM Review WHERE BookID=@BookID", con);
                     cmdReview.Parameters.AddWithValue("@BookID", bookID);
                     cmdReview.ExecuteNonQuery();
+
+                    // Note: This does not delete the Cover entry, which is fine.
+                    // If we wanted to, we'd have to get the CoverID first, then delete book, then delete cover.
+                    // The current schema sets CoverID to DEFAULT (NULL) on Cover deletion,
+                    // but we are deleting the Book, not the Cover. Orphaned Cover rows are acceptable.
 
                     // Now delete the book
                     SqlCommand cmd = new SqlCommand("DELETE FROM Book WHERE BookID=@BookID", con);
@@ -872,3 +992,4 @@ namespace OnlineBookStore
         #endregion
     }
 }
+

@@ -38,6 +38,19 @@
         .search-button:hover { background-color: #e0e0e0; }
         
         .header-icons { display: flex; gap: 15px; font-size: 0.95rem; }
+        
+        /* [เพิ่ม] CSS ตะกร้า (จาก mainpage) */
+        .cart-count {
+            display: inline;
+            color: white;
+            background-color: #d90000;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+        }
+        .cart-count.empty {
+            display: none;
+        }
 
         /* Navbar */
         .main-nav {
@@ -86,6 +99,7 @@
             gap: 20px;
         }
 
+        /* [แก้ไข] CSS การ์ด (เหมือน mainpage) */
         .book-card {
             background-color: #fff;
             border: 1px solid #e0e0e0;
@@ -133,7 +147,8 @@
             text-overflow: ellipsis;
         }
 
-        .book-edition {
+        .book-edition,
+        .book-category { /* [เพิ่ม] .book-category */
             font-size: 0.9rem;
             color: #666;
             margin: 6px 0;
@@ -149,7 +164,7 @@
             font-size: 1.1rem;
             font-weight: bold;
             color: #d90000;
-            margin-top: auto;
+            margin-top: 6px; /* [แก้ไข] ใช้ margin-top แทน auto */
         }
 
         /* Responsive */
@@ -161,7 +176,7 @@
             .book-title { font-size: 0.9rem; }
         }
 
-        /* --- [แก้ไข] Modal Styles (เพิ่ม Info Modal) --- */
+        /* --- [เพิ่ม] CSS Modal ทั้งหมดจาก mainpage.aspx --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -184,12 +199,12 @@
         }
         .modal-content {
             background: #fff;
-            padding: 30px; 
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             z-index: 1001;
             width: 90%;
-            max-width: 550px; /* ปรับขนาดให้กระชับ */
+            max-width: 600px; 
             transform: translateY(-50px);
             transition: transform 0.3s ease-out;
             position: relative;
@@ -208,11 +223,11 @@
             line-height: 1;
         }
         .modal-close:hover { color: #333; }
-
+        
         .modal-body {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 20px; 
             margin-top: 15px;
         }
 
@@ -230,7 +245,7 @@
             object-fit: cover;
             border-radius: 4px;
             border: 1px solid #eee;
-            flex-shrink: 0;
+            flex-shrink: 0; 
             margin: 0 auto;
         }
 
@@ -242,38 +257,40 @@
              }
         }
 
+
         .modal-details {
-            flex-grow: 1;
+            flex-grow: 1; 
         }
 
         .modal-details h3 {
             margin-top: 0;
-            font-size: 1.8rem; 
+            font-size: 1.6rem;
         }
         .modal-details p {
             margin: 6px 0;
         }
         .modal-book-price {
-            font-size: 1.5rem; 
-            font-weight: bold;
+            font-size: 1.4rem; 
+            font-weight: bold; 
             color: #d90000;
-            margin-top: 12px; 
+            margin-top: 10px;
         }
         .modal-book-meta {
-             font-size: 0.95rem; 
-             color: #333; 
-             margin: 12px 0; 
-             border-top: none; 
-             padding-top: 0; 
+             font-size: 0.9rem;
+             color: #555;
+             margin: 10px 0;
+             border-top: 1px solid #f0f0f0;
+             padding-top: 10px;
         }
         .modal-book-meta span {
             display: block;
-            margin-bottom: 6px; 
+            margin-bottom: 4px;
         }
+
         .modal-review-summary {
-            margin-top: 12px; 
-            padding-top: 0; 
-            border-top: none; 
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
         }
         .modal-review-summary .stars {
             font-size: 1.2rem;
@@ -288,118 +305,48 @@
             margin-left: 8px;
         }
 
-        .modal-quantity-section {
-             margin-top: 20px;
-             padding-top: 0; 
-             border-top: none; 
-        }
-
-        .modal-quantity {
-            width: 70px;
-            padding: 8px;
-            font-size: 1rem;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            margin-left: 10px;
-            box-sizing: border-box;
-        }
-
-        #modalStockWarning {
-            color: #d90000;
-            margin-left: 10px;
-            font-size: 0.9rem;
-            display: none;
-        }
-
-        #modalOutOfStock {
-            display: none;
-            color: #d90000;
-            font-weight: bold;
-            margin-top: 20px;
-            font-size: 1.1rem;
-        }
-
         .modal-footer {
             text-align: right;
-            padding-top: 20px;
+            padding-top: 20px; 
             margin-top: 20px;
             border-top: 1px solid #eee;
         }
-
         .modal-btn-add {
-            background-color: #e11d48; /* สีแดงสด */
+            background-color: #d90000;
             color: white;
             border: none;
             padding: 10px 20px;
             font-size: 1rem;
-            font-weight: 600; 
+            font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        .modal-btn-add:hover { background-color: #be123c; } 
+        .modal-btn-add:hover { background-color: #b00000; }
         .modal-btn-add:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
-
         .modal-btn-cancel {
-            background-color: #e5e7eb; /* สีเทา */
-            color: #374151; /* สีเทาเข้ม */
-            border: none; 
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
             padding: 10px 20px;
             font-size: 1rem;
-            font-weight: 600; 
             border-radius: 5px;
             cursor: pointer;
             margin-right: 10px;
-            transition: background-color 0.2s;
         }
-        .modal-btn-cancel:hover { background-color: #d1d5db; } 
-
-        .js-book-card {
+        .modal-btn-cancel:hover { background-color: #e0e0e0; }
+        .js-open-modal {
             cursor: pointer;
         }
-        
-        /* [เพิ่ม] Info Modal (สำหรับ Alert) */
-        .info-modal-content {
-             max-width: 400px;
+        .js-open-modal:hover {
         }
-        .info-modal-body {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 15px;
-            margin-top: 10px;
+        .book-title.js-open-modal:hover {
+            text-decoration: underline; 
         }
-        .info-modal-body h3 {
-             font-size: 1.5rem;
-             margin: 0;
-        }
-        .info-modal-body p {
-             font-size: 1rem;
-             color: #333;
-             margin: 0;
-        }
-        .info-modal-footer {
-            text-align: center;
-            border-top: none;
-            margin-top: 10px;
-            padding-top: 0;
-        }
-        .info-modal-btn-ok {
-            background-color: #e11d48; /* สีแดง */
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .info-modal-btn-ok:hover { background-color: #be123c; }
-
+        /* --- [จบ] CSS Modal --- */
 
     </style>
 </head>
@@ -407,11 +354,9 @@
 <body>
     <form id="form1" runat="server">
         
-        <!-- [แก้ไข] ลบ EnablePageMethods="true" -->
-        <asp:ScriptManager ID="ScriptManager1" runat="server" />
-        
-        <!-- [เพิ่ม] HiddenField สำหรับตรวจสอบสถานะ Login -->
-        <asp:HiddenField ID="isUserLoggedIn" runat="server" Value="false" />
+        <!-- [ลบ] ScriptManager และ HiddenField -->
+        <%-- <asp:ScriptManager ID="ScriptManager1" runat="server" /> --%>
+        <%-- <asp:HiddenField ID="isUserLoggedIn" runat="server" Value="false" /> --%>
 
 
         <!-- Header -->
@@ -430,14 +375,11 @@
                         Logout
                     </asp:LinkButton>
                     
-                    <!-- [ !! ลบ !! ] -->
-                    <!-- ลบ Link ตะกร้าสินค้า และ cartCount -->
-                    <!--
+                    <!-- [เพิ่ม] ไอคอนตะกร้า จาก mainpage.aspx -->
                     <a href="cartPage.aspx" class="cart-icon" title="ตะกร้าสินค้า" runat="server" id="cartLink">
                         🛒
                         <span runat="server" id="cartCount" class="cart-count">0</span>
                     </a>
-                    -->
                 </div>
             </div>
         </header>
@@ -476,254 +418,525 @@
         <main class="container">
             <h2>หนังสือขายดี 5 อันดับแรกของแต่ละหมวดหมู่</h2>
 
-             <%-- Helper Function: สร้าง Template ของ Repeater Item --%>
-            <script runat="server">
-                protected string GetBookCardTemplate(object dataItem)
-                {
-                    string bookID = DataBinder.Eval(dataItem, "BookID").ToString();
-                    string title = DataBinder.Eval(dataItem, "Title").ToString();
-                    string price = DataBinder.Eval(dataItem, "Price", "{0:F2}");
-                    string coverUrl = DataBinder.Eval(dataItem, "CoverUrl").ToString();
-                    string authors = DataBinder.Eval(dataItem, "Authors").ToString();
-                    string edition = DataBinder.Eval(dataItem, "Edition").ToString();
-                    string category = DataBinder.Eval(dataItem, "CategoryName").ToString();
-                    string avgRating = DataBinder.Eval(dataItem, "AvgRating", "{0:F1}");
-                    string reviewCount = DataBinder.Eval(dataItem, "ReviewCount").ToString();
-                    string stock = DataBinder.Eval(dataItem, "Stock").ToString();
-                    string totalSold = DataBinder.Eval(dataItem, "TotalSold").ToString();
+             <!-- [ลบ] C# Helper Function 'GetBookCardTemplate' -->
+            <%-- <script runat="server"> ... </script> --%>
 
-                    string dataAttributes = $@"
-                        data-bookid=""{bookID}""
-                        data-title=""{Server.HtmlEncode(title)}""
-                        data-price=""{price}""
-                        data-cover=""{coverUrl}""
-                        data-authors=""{Server.HtmlEncode(authors)}""
-                        data-edition=""{Server.HtmlEncode(edition)}""
-                        data-category=""{Server.HtmlEncode(category)}""
-                        data-avg-rating=""{avgRating}""
-                        data-review-count=""{reviewCount}""
-                        data-stock=""{stock}"" ";
-
-                    return $@"
-                        <div class=""book-card js-book-card"" {dataAttributes}>
-                            <img src='{coverUrl}' alt='{Server.HtmlEncode(title)}' />
-                            <div class=""book-card-content"">
-                                <div>
-                                    <h3 class=""book-title"">{Server.HtmlEncode(title)}</h3>
-                                    <p class=""book-author"">{Server.HtmlEncode(authors)}</p>
-                                    <p class=""book-edition"">{Server.HtmlEncode(edition)} Edition</p>
-                                    <p class=""book-sold"">ขายแล้ว {totalSold} เล่ม</p>
-                                </div>
-                                <p class=""book-price"">฿{price}</p>
-                            </div>
-                        </div>";
-                }
-            </script>
-
+            <%-- [แก้ไข] Repeater ทั้ง 11 ตัว --%>
 
             <asp:Literal ID="LiteralCate1" runat="server"></asp:Literal>
             <div class="book-grid">
-                <asp:Repeater ID="RepeaterLoadTopCate1" runat="server">
+                <!-- [แก้ไข] เพิ่ม OnItemCommand และเปลี่ยน ItemTemplate -->
+                <asp:Repeater ID="RepeaterLoadTopCate1" runat="server" OnItemCommand="Repeater_ItemCommand">
                     <ItemTemplate>
-                        <%# GetBookCardTemplate(Container.DataItem) %>
+                        <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
 
              <asp:Literal ID="LiteralCate2" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate2" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate2" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
 
              <asp:Literal ID="LiteralCate3" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate3" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate3" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                          <%# GetBookCardTemplate(Container.DataItem) %>
+                          <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
 
-            <%-- (Repeaters 4-11 ... ) --%>
              <asp:Literal ID="LiteralCate4" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate4" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate4" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
              <asp:Literal ID="LiteralCate5" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate5" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate5" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
              <asp:Literal ID="LiteralCate6" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate6" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate6" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
              <asp:Literal ID="LiteralCate7" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate7" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate7" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
              <asp:Literal ID="LiteralCate8" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate8" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate8" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
              <asp:Literal ID="LiteralCate9" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate9" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate9" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
              <asp:Literal ID="LiteralCate10" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate10" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate10" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
              <asp:Literal ID="LiteralCate11" runat="server"></asp:Literal>
              <div class="book-grid">
-                 <asp:Repeater ID="RepeaterLoadTopCate11" runat="server">
+                 <asp:Repeater ID="RepeaterLoadTopCate11" runat="server" OnItemCommand="Repeater_ItemCommand">
                      <ItemTemplate>
-                         <%# GetBookCardTemplate(Container.DataItem) %>
+                         <div class="book-card"
+                            data-bookid="<%# Eval("BookID") %>"
+                            data-title="<%# Eval("Title") %>"
+                            data-price="<%# Eval("Price", "{0:F2}") %>"
+                            data-cover="<%# Eval("CoverUrl") %>"
+                            data-authors="<%# Eval("Authors") %>"
+                            data-edition="<%# Eval("Edition") %>"
+                            data-category="<%# Eval("CategoryName") %>"
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
+                            data-review-count="<%# Eval("ReviewCount") %>">
+                            
+                            <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>' class="js-open-modal" />
+                            
+                            <div class="book-card-content">
+                                <div>
+                                    <h3 class="book-title js-open-modal">
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <p class="book-author"><%# Eval("Authors") %></p>
+                                    <p class="book-edition"><%# Eval("Edition") %> Edition</p>
+                                    <p class="book-category"><%# Eval("CategoryName") %></p>
+                                    <p class="book-sold">ขายแล้ว <%# Eval("TotalSold") %> เล่ม</p>
+                                </div>
+                                <div>
+                                    <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
+                                    <asp:Button ID="btnAddToCart" runat="server" 
+                                        Text="เพิ่มลงตะกร้า" 
+                                        CommandName="AddToCart" 
+                                        CommandArgument='<%# Eval("BookID") %>' 
+                                        CssClass="modal-btn-add" 
+                                        style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
                      </ItemTemplate>
                  </asp:Repeater>
              </div>
         </main>
 
-        <!-- Add to Cart Modal HTML (ยังคง layout ไว้) -->
-        <div id="addToCartModal" class="modal-overlay">
+        <!-- [ลบ] Modal เก่า (addToCartModal และ infoModal) -->
+        
+        <!-- [เพิ่ม] Book Detail Modal (เหมือน mainpage) -->
+        <div id="bookDetailModal" class="modal-overlay"> 
             <div class="modal-content">
-                <span class="modal-close" onclick="closeAddToCartModal()">&times;</span>
-                <h2 style="margin-top:0;">เพิ่มสินค้าลงในตะกร้า</h2>
-
+                <span class="modal-close" onclick="closeBookDetailModal()">&times;</span> 
+                <h2 style="margin-top:0;">รายละเอียดหนังสือ</h2> 
+                
                 <div class="modal-body">
                     <img id="modalBookCover" src="" alt="Book Cover" class="modal-book-cover" />
                     <div class="modal-details">
                         <h3 id="modalBookTitle">Book Title</h3>
+                        
                         <div class="modal-book-meta">
                             <span id="modalBookAuthors"></span>
                             <span id="modalBookEdition"></span>
                             <span id="modalBookCategory"></span>
                         </div>
+
                         <div id="modalBookReviews" class="modal-review-summary">
                         </div>
+
                         <p id="modalBookPrice" class="modal-book-price">฿0.00</p>
-                        <div id="modalQuantitySection" class="modal-quantity-section">
-                            <label for="modalQuantity" style="font-weight: bold;">จำนวน:</label>
-                            <input id="modalQuantity" type="number" value="1" min="1" class="modal-quantity" />
-                            <span id="modalStockWarning"></span> 
-                        </div>
-                        <div id="modalOutOfStock"> 
-                            สินค้าหมด
-                        </div>
                     </div>
                 </div>
-
+                
                 <div class="modal-footer">
-                    <button type="button" class="modal-btn-cancel" onclick="closeAddToCartModal()">ยกเลิก</button>
-                    <button type="button" id="btnModalAddToCart" class="modal-btn-add">เพิ่มลงตะกร้า</button>
+                    <button type="button" class="modal-btn-cancel" onclick="closeBookDetailModal()">ปิด</button>
                 </div>
             </div>
         </div>
-        
-        <!-- [เพิ่ม] Info Modal (สำหรับ Alert) -->
-        <div id="infoModal" class="modal-overlay">
-            <div class="modal-content info-modal-content">
-                <div class="info-modal-body">
-                    <h3 id="infoModalTitle">แจ้งเตือน</h3>
-                    <p id="infoModalMessage">ข้อความ</p>
-                </div>
-                <div class="info-modal-footer">
-                    <button type="button" id="infoModalOkButton" class="info-modal-btn-ok">ตกลง</button>
-                </div>
-            </div>
-        </div>
-
+        <!-- [จบ] Modal -->
 
     </form>
 
-    <!-- [แก้ไข] JavaScript สำหรับ Modal (Full Logic) -->
+    <!-- [แก้ไข] JavaScript ทั้งหมด (ยกมา mainpage) -->
     <script type="text/javascript">
         // Get modal elements
-        const modal = document.getElementById('addToCartModal');
+        const modal = document.getElementById('bookDetailModal');
         const modalBookCover = document.getElementById('modalBookCover');
         const modalBookTitle = document.getElementById('modalBookTitle');
         const modalBookPrice = document.getElementById('modalBookPrice');
-        let modalQuantity = document.getElementById('modalQuantity');
-        const btnModalAddToCart = document.getElementById('btnModalAddToCart');
 
         const modalBookAuthors = document.getElementById('modalBookAuthors');
         const modalBookEdition = document.getElementById('modalBookEdition');
         const modalBookCategory = document.getElementById('modalBookCategory');
         const modalBookReviews = document.getElementById('modalBookReviews');
 
-        const modalQuantitySection = document.getElementById('modalQuantitySection');
-        const modalOutOfStock = document.getElementById('modalOutOfStock');
-        const modalStockWarning = document.getElementById('modalStockWarning');
 
-        // [เพิ่ม] Info Modal elements
-        const infoModal = document.getElementById('infoModal');
-        const infoModalTitle = document.getElementById('infoModalTitle');
-        const infoModalMessage = document.getElementById('infoModalMessage');
-        const infoModalOkButton = document.getElementById('infoModalOkButton');
-        let infoModalCallback = null; // ฟังก์ชันที่จะรันหลังกด OK
-
-        let currentBookId = null;
-        let currentMaxStock = 0;
-
-        // [เพิ่ม] Function to show info modal
-        function showInfoModal(title, message, onOkCallback) {
-            infoModalTitle.textContent = title;
-            infoModalMessage.textContent = message;
-            infoModalCallback = onOkCallback;
-            infoModal.classList.add('show');
-        }
-
-        // [เพิ่ม] Function to close info modal
-        function closeInfoModal() {
-            infoModal.classList.remove('show');
-            if (typeof infoModalCallback === 'function') {
-                infoModalCallback(); // รัน callback (ถ้ามี)
-            }
-            infoModalCallback = null; // ล้าง callback
-        }
-
-        // [เพิ่ม] Event listener for info modal OK button
-        infoModalOkButton.addEventListener('click', closeInfoModal);
-
-        // --- จบส่วน Info Modal ---
-
-
+        // Function to generate star rating
         function generateStarRating(rating) {
-            rating = Math.round(rating * 2) / 2;
+            rating = Math.round(rating * 2) / 2; // Round to nearest 0.5
             let stars = '';
             for (let i = 1; i <= 5; i++) {
                 if (rating >= i) {
+                    stars += '★';
+                } else if (rating >= (i - 0.5)) {
                     stars += '★';
                 } else {
                     stars += '☆';
@@ -732,21 +945,32 @@
             return stars;
         }
 
-        function openAddToCartModal(cardElement) {
-            currentBookId = cardElement.getAttribute('data-bookid');
+        // ปรับปรุงฟังก์ชัน openBookDetailModal
+        function openBookDetailModal(clickedElement) {
+
+            // 1. ค้นหา .book-card
+            const cardElement = clickedElement.closest('.book-card');
+            if (!cardElement) return;
+
+            // 2. ดึงข้อมูลจาก data attributes
             const title = cardElement.getAttribute('data-title');
             const price = cardElement.getAttribute('data-price');
             const cover = cardElement.getAttribute('data-cover');
-
             const authors = cardElement.getAttribute('data-authors');
             const edition = cardElement.getAttribute('data-edition');
             const category = cardElement.getAttribute('data-category');
-            const avgRating = parseFloat(cardElement.getAttribute('data-avg-rating'));
-            const reviewCount = parseInt(cardElement.getAttribute('data-review-count'), 10);
 
-            const stock = parseInt(cardElement.getAttribute('data-stock'), 10) || 0;
-            currentMaxStock = stock;
+            let avgRating = parseFloat(cardElement.getAttribute('data-avg-rating'));
+            if (isNaN(avgRating)) {
+                avgRating = 0;
+            }
 
+            let reviewCount = parseInt(cardElement.getAttribute('data-review-count'), 10);
+            if (isNaN(reviewCount)) {
+                reviewCount = 0;
+            }
+
+            // 3. Populate modal
             modalBookCover.src = cover;
             modalBookCover.alt = title;
             modalBookTitle.textContent = title;
@@ -756,7 +980,7 @@
             modalBookEdition.textContent = 'Edition: ' + (edition ? edition : 'N/A');
             modalBookCategory.textContent = 'หมวดหมู่: ' + (category ? category : 'N/A');
 
-            if (reviewCount > 0) {
+            if (reviewCount > 0 && avgRating > 0) {
                 const stars = generateStarRating(avgRating);
                 modalBookReviews.innerHTML =
                     `<span class="stars">${stars}</span>` +
@@ -767,71 +991,34 @@
                     `<span class="review-count">(ยังไม่มีรีวิว)</span>`;
             }
 
-            if (stock <= 0) {
-                modalQuantitySection.style.display = 'none';
-                modalOutOfStock.style.display = 'block';
-                btnModalAddToCart.disabled = true;
-            } else {
-                modalQuantitySection.style.display = 'block';
-                modalOutOfStock.style.display = 'none';
-                modalQuantity.value = 1;
-                modalQuantity.max = stock;
-                modalStockWarning.style.display = 'none';
-                btnModalAddToCart.disabled = false;
-            }
-
+            // Show modal
             modal.classList.add('show');
         }
 
-        function closeAddToCartModal() {
+        // Function to close the modal
+        function closeBookDetailModal() {
             modal.classList.remove('show');
         }
 
-        // [ !! ลบ !! ]
-        // function checkQuantity() { ... }
-
+        // Add click event listeners
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.js-book-card').forEach(card => {
-                card.addEventListener('click', function () {
-                    openAddToCartModal(this);
+            // [แก้ไข] เปลี่ยน Selector เป็น .js-open-modal
+            document.querySelectorAll('.js-open-modal').forEach(element => {
+                element.addEventListener('click', function () {
+                    openBookDetailModal(this);
                 });
             });
-
-            // [ !! ลบ !! ]
-            // ลบ event listener ของ quantity input
-            // const qtyInput = document.getElementById('modalQuantity');
-            // if(qtyInput) {
-            //     qtyInput.addEventListener('input', checkQuantity);
-            // }
         });
-
-
-        // [ !! ลบ !! ]
-        // ลบ Event listener ของปุ่ม AddToCart
-        // btnModalAddToCart.addEventListener('click', function() { ... });
-
-        // [ !! ลบ !! ]
-        // ลบ Callback function onCartAddSuccess
-        // function onCartAddSuccess(result) { ... }
-
-        // [ !! ลบ !! ]
-        // ลบ Callback function onCartAddError
-        // function onCartAddError(error) { ... }
 
 
         // Close modal if overlay (backdrop) is clicked
         modal.addEventListener('click', function (e) {
             if (e.target === modal) {
-                closeAddToCartModal();
+                closeBookDetailModal();
             }
         });
 
-        infoModal.addEventListener('click', function (e) {
-            if (e.target === infoModal) {
-                closeInfoModal();
-            }
-        });
-
+        // [ลบ] JavaScript ของ infoModal
     </script>
 
 </body>
