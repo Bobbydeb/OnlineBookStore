@@ -33,9 +33,6 @@
         .main-nav li a { padding: 6px 10px; font-size: 0.9rem; display: block; border-radius: 5px; transition: background-color 0.2s; color: #fff; }
         .main-nav li a:hover { background-color: #555; }
 
-        /* --- CSS เฉพาะสำหรับหน้านี้ --- */
-        
-        /* Dropdown (from mainpage.aspx) - แก้ไขให้เฉพาะเจาะจงมากขึ้น */
         .main-nav li.dropdown { 
             position: relative; 
         }
@@ -76,7 +73,7 @@
         /* --- CSS สำหรับเนื้อหาหน้า MyCollectionPage --- */
         .content-layout {
             display: grid;
-            grid-template-columns: 1fr; /* 1 คอลัมน์สำหรับมือถือ */
+            grid-template-columns: 1fr;  
             gap: 24px;
         }
         

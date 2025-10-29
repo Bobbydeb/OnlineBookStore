@@ -11,46 +11,65 @@
         a { text-decoration: none; color: inherit; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         
-        /* Header & Nav Styles (from original file) */
+        /* --- CSS ส่วน Header และ Nav ที่คัดลอกจาก myCollectionPage.aspx --- */
+        
+        /* Header (from mainpage.aspx) */
         .top-header { background-color: #fff; padding: 10px 0; border-bottom: 1px solid #ddd; }
         .top-header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: bold; color: #d90000; }
         .search-bar { flex-grow: 1; margin: 0 20px; }
         .search-bar input { width: 100%; max-width: 400px; padding: 8px 40px 8px 12px; border: 1px solid #ccc; border-radius: 20px; }
         .header-icons { display: flex; gap: 15px; font-size: 0.95rem; }
-        .main-nav { background-color: #333; color: #fff; padding: 6px 0; }
+
+        /* Nav (from mainpage.aspx) */
+        .main-nav {
+            background-color: #333;
+            color: #fff;
+            padding: 6px 0;
+            position: relative;   /* จุดอ้างอิงของ dropdown */
+            z-index: 10;
+        }
         .main-nav .container { display: flex; justify-content: center; align-items: center; }
         .main-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .main-nav li { position: relative; } /* นี่คือจุดที่สำคัญ ทำให้ dropdown ทำงานได้ */
         .main-nav li a { padding: 6px 10px; font-size: 0.9rem; display: block; border-radius: 5px; transition: background-color 0.2s; color: #fff; }
         .main-nav li a:hover { background-color: #555; }
 
-        /* --- CSS ที่แก้ไข --- */
-        /* เพิ่ม position: relative; ให้กับ .dropdown ที่เป็นตัวแม่ */
-        .dropdown {
-            position: relative;
+        .main-nav li.dropdown { 
+            position: relative; 
         }
+        .main-nav li.dropdown .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;               
+            left: 0;
+            background-color: #444;
+            min-width: 200px;
+            border-radius: 6px;
+            padding: 8px 0;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+        .main-nav .dropdown-content li a {
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            display: block;
+            color: #fff;
+        }
+        .main-nav .dropdown-content li a:hover { 
+            background-color: #555; 
+        }
+        .main-nav li.dropdown:hover .dropdown-content { 
+            display: block; 
+        }
+        /* --- สิ้นสุด CSS ส่วนที่คัดลอกมา --- */
 
-        .dropdown-content { 
-            display: none; 
-            position: absolute; 
-            top: 100%; /* ตำแหน่งนี้จะถูกต้องเมื่อ .dropdown เป็น relative */
-            left: 0; 
-            background-color: #444; 
-            min-width: 200px; 
-            border-radius: 6px; 
-            padding: 8px 0; 
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2); 
-            z-index: 1000; /* เพิ่ม z-index เพื่อให้แน่ใจว่าอยู่ข้างหน้า */
-        }
-        .dropdown-content a { padding: 8px 14px; font-size: 0.9rem; display: block; color: #fff; }
-        .dropdown-content a:hover { background-color: #555; }
-        .dropdown:hover .dropdown-content { display: block; }
         
-        /* Main Content Styles */
+        /* Main Content Styles (ของเดิมใน myAccountPage.aspx) */
         main { padding: 20px 0; }
         .section-title { font-size: 1.8rem; font-weight: bold; margin: 20px 0 30px 0; color: #111; }
 
-        /* Account Form Styles */
+        /* Account Form Styles (ของเดิมใน myAccountPage.aspx) */
         .account-container {
             display: flex;
             gap: 30px;
@@ -201,7 +220,7 @@
             </div>
         </nav>
 
-        <!-- Main Content -->
+        <!-- Main Content (ของเดิมใน myAccountPage.aspx) -->
         <main class="container">
             <h2 class="section-title">บัญชีของฉัน</h2>
             
@@ -292,3 +311,4 @@
     </form>
 </body>
 </html>
+

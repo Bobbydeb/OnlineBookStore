@@ -11,7 +11,7 @@ namespace OnlineBookStore
 {
 
 
-    public partial class mainpage
+    public partial class cartPage
     {
 
         /// <summary>
@@ -22,15 +22,6 @@ namespace OnlineBookStore
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-
-        /// <summary>
-        /// ScriptManager1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
         /// txtSearch control.
@@ -87,21 +78,66 @@ namespace OnlineBookStore
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl cartCount;
 
         /// <summary>
-        /// RepeaterBooks control.
+        /// pnlCart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater RepeaterBooks;
+        protected global::System.Web.UI.WebControls.Panel pnlCart;
 
         /// <summary>
-        /// RepeaterTopBooks control.
+        /// RepeaterCart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater RepeaterTopBooks;
+        protected global::System.Web.UI.WebControls.Repeater RepeaterCart;
+
+        /// <summary>
+        /// ltlSubtotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltlSubtotal;
+
+        /// <summary>
+        /// ltlShipping control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltlShipping;
+
+        /// <summary>
+        /// ltlTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltlTotal;
+
+        /// <summary>
+        /// btnCheckout control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCheckout;
+
+        /// <summary>
+        /// pnlEmptyCart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlEmptyCart;
     }
 }

@@ -90,17 +90,48 @@ namespace OnlineBookStore
                 {
                     pnlNoBooks.Visible = false;
 
-                    // [แก้ไข] --- Query 3: ดึงหนังสือแบบแบ่งหน้า ---
+                    // [แก้ไข] --- Query 3: ดึงหนังสือแบบแบ่งหน้า (เพิ่ม BookID, Stock, Authors, Reviews) ---
                     string bookQuery = @"
                         SELECT 
+                            b.BookID, 
                             b.Title, 
                             b.Edition,
                             c.CategoryName, 
                             b.Price,
-                            ISNULL(cv.CoverUrl, 'https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/00_DefaultBook.jpg') AS CoverUrl
+                            b.Stock,
+                            ISNULL(cv.CoverUrl, 'https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/00_DefaultBook.jpg') AS CoverUrl,
+
+                            -- ดึงชื่อผู้แต่ง
+                            ISNULL(authors.AuthorNames, 'N/A') AS Authors,
+                        
+                            -- ดึงข้อมูลรีวิว
+                            ISNULL(reviews.AvgRating, 0) AS AvgRating,
+                            ISNULL(reviews.ReviewCount, 0) AS ReviewCount
+
                         FROM Book b
                         LEFT JOIN BookCategory c ON b.CategoryID = c.CategoryID
                         LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
+                        
+                        -- Subquery สำหรับ Authors
+                        OUTER APPLY (
+                            SELECT STUFF(
+                                (SELECT ', ' + a.AuthorName
+                                 FROM Author a
+                                 JOIN BookAuthor ba ON a.AuthorID = ba.AuthorID
+                                 WHERE ba.BookID = b.BookID
+                                 FOR XML PATH('')), 
+                            1, 2, '') AS AuthorNames
+                        ) AS authors
+
+                        -- Subquery สำหรับ Reviews
+                        OUTER APPLY (
+                            SELECT 
+                                AVG(CAST(r.Rating AS FLOAT)) AS AvgRating, 
+                                COUNT(r.ReviewID) AS ReviewCount
+                            FROM Review r
+                            WHERE r.BookID = b.BookID
+                        ) AS reviews
+
                         WHERE b.CategoryID = @CategoryID
                         ORDER BY b.Title -- OFFSET/FETCH ต้องใช้ ORDER BY
                         OFFSET @Offset ROWS
@@ -198,4 +229,3 @@ namespace OnlineBookStore
         }
     }
 }
-
