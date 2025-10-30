@@ -61,13 +61,13 @@ namespace OnlineBookStore
                         txtAddress.Text = reader["Address"]?.ToString() ?? ""; // [แก้ไข] เพิ่ม Null check
                         txtPhone.Text = reader["Phone"]?.ToString() ?? "";   // [แก้ไข] เพิ่ม Null check
 
-                        lblUserInfo.Text = "สวัสดีคุณ, " + reader["FullName"].ToString();
+                        lblUserInfo.Text = "Hello, " + reader["FullName"].ToString();
                     }
                     // [แก้ไข] ไม่ต้อง reader.Close() เพราะใช้ using แล้ว
                 }
                 catch (Exception ex)
                 {
-                    lblProfileMessage.Text = "เกิดข้อผิดพลาดในการโหลดข้อมูล: " + ex.Message;
+                    lblProfileMessage.Text = "something wrong: " + ex.Message;
                     lblProfileMessage.CssClass = "message-label message-error";
                 }
             }

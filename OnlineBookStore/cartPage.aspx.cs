@@ -300,16 +300,18 @@ namespace OnlineBookStore
                 try
                 {
                     // 1. สร้าง Order ใหม่ใน OrderTable
+                    // [ << แก้ไข >> ] เพิ่มการกำหนด Status เป็น 'Pending Payment'
                     string insertOrderQuery = @"
-                        INSERT INTO OrderTable (MemberID, TotalAmount)
+                        INSERT INTO OrderTable (MemberID, TotalAmount, Status)
                         OUTPUT INSERTED.OrderID
-                        VALUES (@MemberID, @TotalAmount);";
-                    // OrderDate และ Status จะใช้ค่า DEFAULT จาก DDL
+                        VALUES (@MemberID, @TotalAmount, @Status);";
+                    // OrderDate จะใช้ค่า DEFAULT จาก DDL
 
                     using (SqlCommand cmdOrder = new SqlCommand(insertOrderQuery, conn, transaction))
                     {
                         cmdOrder.Parameters.AddWithValue("@MemberID", memberId);
                         cmdOrder.Parameters.AddWithValue("@TotalAmount", totalAmount);
+                        cmdOrder.Parameters.AddWithValue("@Status", "Pending Payment"); // [ << แก้ไข >> ] กำหนดค่า Status เริ่มต้นเป็นภาษาอังกฤษ
 
                         // ExecuteScalar เพื่อดึงค่า OrderID ที่เพิ่งสร้าง (จาก OUTPUT INSERTED.OrderID)
                         newOrderId = (int)cmdOrder.ExecuteScalar();
@@ -486,7 +488,7 @@ namespace OnlineBookStore
             Response.Redirect("mainpage.aspx");
         }
 
- 
+
     }
 }
 

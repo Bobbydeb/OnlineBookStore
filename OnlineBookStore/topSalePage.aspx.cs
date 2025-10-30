@@ -82,7 +82,7 @@ namespace OnlineBookStore
                     cmd.Parameters.AddWithValue("@CategoryID", categoryId);
                     conn.Open();
                     object result = cmd.ExecuteScalar();
-                    return result != null ? result.ToString() : "ไม่ทราบหมวดหมู่";
+                    return result != null ? result.ToString() : "Uncetegorize";
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace OnlineBookStore
         private void LoadTopCate(int categoryId, System.Web.UI.WebControls.Repeater repeater, System.Web.UI.WebControls.Literal literalTitle)
         {
             string categoryName = GetCategoryName(categoryId);
-            literalTitle.Text = $"<div class='category-title'>หมวดหมู่ : {categoryName}</div>";
+            literalTitle.Text = $"<div class='category-title'>Category : {categoryName}</div>";
 
             using (SqlConnection conn = new SqlConnection(GetConnectionString())) // [แก้ไข]
             {

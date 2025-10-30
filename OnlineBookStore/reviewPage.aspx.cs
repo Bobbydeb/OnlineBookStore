@@ -122,10 +122,10 @@ namespace OnlineBookStore
         private void PopulateRatingDropdown()
         {
             ddlRating.Items.Clear();
-            ddlRating.Items.Add(new ListItem("--- เลือกคะแนน ---", "0"));
+            ddlRating.Items.Add(new ListItem("--- Rate This Book ---", "0"));
             for (int i = 5; i >= 1; i--)
             {
-                ddlRating.Items.Add(new ListItem($"{i} ดาว", i.ToString()));
+                ddlRating.Items.Add(new ListItem($"{i} Stars", i.ToString()));
             }
         }
 

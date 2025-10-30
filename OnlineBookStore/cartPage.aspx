@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cartPage.aspx.cs" Inherits="OnlineBookStore.cartPage" %>
+﻿﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cartPage.aspx.cs" Inherits="OnlineBookStore.cartPage" %>
 
 <!DOCTYPE html>
 <html lang="th">
@@ -632,4 +632,3 @@
     </script>
 </body>
 </html>
-

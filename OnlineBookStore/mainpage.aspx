@@ -774,7 +774,7 @@
         <section class="featured-banner">
             <div class="banner-content">
                 <h1 class="banner-title">Fall Reading Sale</h1>
-                <p class="banner-subtitle">Get up to 40% off on select bestsellers. Find your next great read today.</p>
+                <p class="banner-subtitle">Not sure what to read? Check out these popular books in each category.</p>
                 <a href="topSalePage.aspx" class="banner-button">Shop The Sale</a>
             </div>
         </section>

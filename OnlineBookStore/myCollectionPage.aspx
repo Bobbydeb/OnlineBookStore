@@ -589,15 +589,16 @@
                                         <span class="status <%# GetStatusClass(Eval("Status").ToString()) %>">
                                             <%# Eval("Status") %>
                                         </span>
+                                        <%-- [ << แก้ไข >> ] อัปเดตเงื่อนไข Visible เป็นภาษาอังกฤษ --%>
                                         <asp:Button ID="btnPay" runat="server"
                                             Text="Pay Now"
                                             CssClass="btn btn-blue"
                                             CommandName="Pay"
                                             CommandArgument='<%# Eval("OrderID") %>'
-                                            Visible='<%# Eval("Status").ToString() == "รอการชำระเงิน" %>'
+                                            Visible='<%# Eval("Status").ToString() == "Pending Payment" %>'
                                             OnClientClick="return confirm('Confirm payment for this order?');"
                                             />
-                                        <asp:Panel runat="server" Visible='<%# Eval("Status").ToString() == "กำลังจัดส่ง" %>' style="display:inline-flex; gap: 0.5rem;">
+                                        <asp:Panel runat="server" Visible='<%# Eval("Status").ToString() == "Shipping" %>' style="display:inline-flex; gap: 0.5rem;">
                                             <asp:Button ID="btnReceived" runat="server"
                                                 Text="Confirm Receipt"
                                                 CssClass="btn btn-green"
@@ -691,4 +692,3 @@
     </script>
 </body>
 </html>
-

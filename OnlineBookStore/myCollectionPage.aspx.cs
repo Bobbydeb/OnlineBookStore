@@ -87,7 +87,7 @@ namespace OnlineBookStore
             }
         }
 
-        // [ << แก้ไข >> ] เพิ่ม Case "CancelOrder"
+        // [ << แก้ไข >> ] อัปเดต CommandName arguments เป็นภาษาอังกฤษ
         protected void rptOrders_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (Session["MemberID"] == null)
@@ -101,22 +101,24 @@ namespace OnlineBookStore
 
             if (e.CommandName == "Pay")
             {
-                UpdateOrderStatus(orderID, memberID, "กำลังจัดส่ง", "รอการชำระเงิน");
+                // จาก "รอการชำระเงิน" -> "Shipping"
+                UpdateOrderStatus(orderID, memberID, "Shipping", "Pending Payment");
             }
             else if (e.CommandName == "Received")
             {
-                UpdateOrderStatus(orderID, memberID, "จัดส่งสำเร็จ", "กำลังจัดส่ง");
+                // จาก "Shipping" -> "Delivered"
+                UpdateOrderStatus(orderID, memberID, "Delivered", "Shipping");
             }
-            // [ << เพิ่ม >> ] Handle ปุ่ม CancelOrder
+            // [ << แก้ไข >> ] Handle ปุ่ม CancelOrder
             else if (e.CommandName == "CancelOrder")
             {
-                // อัปเดตสถานะเป็น "ถูกยกเลิก" (จาก 'กำลังจัดส่ง')
-                UpdateOrderStatus(orderID, memberID, "ถูกยกเลิก", "กำลังจัดส่ง");
+                // จาก "Shipping" -> "Cancelled"
+                UpdateOrderStatus(orderID, memberID, "Cancelled", "Shipping");
             }
 
 
             LoadOrders();
-            LoadMyBooks(); // โหลดใหม่เผื่อมีผลกับการรีวิว (กรณีเปลี่ยนเป็น จัดส่งสำเร็จ)
+            LoadMyBooks(); // โหลดใหม่เผื่อมีผลกับการรีวิว (กรณีเปลี่ยนเป็น Delivered)
         }
 
         // Helper Method สำหรับอัปเดตสถานะ Order (เหมือนเดิม)
@@ -182,7 +184,7 @@ namespace OnlineBookStore
             return dt;
         }
 
-        // LoadMyBooks (เหมือนเดิม - ใช้สถานะ 'Completed' และ 'จัดส่งสำเร็จ')
+        // [ << แก้ไข >> ] LoadMyBooks (ใช้สถานะ 'Completed' และ 'Delivered')
         private void LoadMyBooks()
         {
             int memberID = (int)Session["MemberID"];
@@ -207,7 +209,7 @@ namespace OnlineBookStore
                     LEFT JOIN BookCategory bc ON b.CategoryID = bc.CategoryID
                     JOIN OrderDetail od ON b.BookID = od.BookID
                     JOIN OrderTable ot ON od.OrderID = ot.OrderID
-                    WHERE ot.MemberID = @MemberID AND ot.Status IN ('Completed', 'จัดส่งสำเร็จ')";
+                    WHERE ot.MemberID = @MemberID AND ot.Status IN ('Completed', 'Delivered')"; // [ << แก้ไข >> ]
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -283,25 +285,21 @@ namespace OnlineBookStore
             return reviewed;
         }
 
-        // [ << แก้ไข >> ] Helper Method สำหรับเปลี่ยนสีสถานะ (เพิ่ม case "ถูกยกเลิก")
+        // [ << แก้ไข >> ] Helper Method สำหรับเปลี่ยนสีสถานะ (ใช้ภาษาอังกฤษ)
         protected string GetStatusClass(string status)
         {
-            switch (status?.ToLower())
+            switch (status?.ToLower()) // แปลงเป็นตัวพิมพ์เล็กเพื่อเทียบ
             {
-                case "รอการชำระเงิน":
+                case "pending payment": // [ << แก้ไข >> ]
                     return "status-yellow";
                 case "pending":
                     return "status-blue";
-                case "processing":
-                case "กำลังจัดส่ง":
+                case "shipping": // [ << แก้ไข >> ]
                     return "status-blue";
-                case "delivered":
+                case "delivered": // [ << แก้ไข >> ]
                 case "completed":
-                case "จัดส่งสำเร็จ":
                     return "status-green";
-                case "cancelled":
-                case "ยกเลิก":
-                case "ถูกยกเลิก": // [ << เพิ่ม >> ] ใช้สีแดง
+                case "cancelled": // [ << แก้ไข >> ]
                     return "status-red";
                 default:
                     return "status-gray";
@@ -399,4 +397,3 @@ namespace OnlineBookStore
         // --- [จบ] โค้ดตะกร้า ---
     }
 }
-
