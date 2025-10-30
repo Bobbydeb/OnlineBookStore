@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head runat="server">
-    <title>Shopping Cart | The Red Bookmark</title> <!-- Changed title -->
+    <title>Shopping Cart | ChaiChaKit Bookstore</title> <!-- Changed title -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Minimalist Font -->
@@ -499,7 +499,7 @@
  
         <header class="top-header">
             <div class="container">
-                <div class="logo"><a href="mainpage.aspx">The Red Bookmark</a></div>
+                <div class="logo"><a href="mainpage.aspx">ChaiChaKit Bookstore</a></div>
      
                 <div class="header-icons">
                     <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx" CssClass="asp-link">

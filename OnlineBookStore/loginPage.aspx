@@ -5,7 +5,7 @@
 <head runat="server">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | The Red Bookmark</title> <!-- Changed title -->
+    <title>Login | ChaiChaKit</title> <!-- Changed title -->
     <!-- Minimalist Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -182,19 +182,19 @@
             <div class="icon-container">
                  <i data-feather="book-open"></i> <!-- Feather Icon -->
             </div>
-            <h1>The Red Bookmark Login</h1>
+            <h1>ChaiChaKit Bookstore Login</h1>
 
             <label for="<%= txtEmail.ClientID %>">Email Address</label> <!-- Changed label -->
             <div class="input-group">
                  <i data-feather="mail"></i> <!-- Feather Icon -->
                 <%-- Update type to email for better semantics --%>
-                <asp:TextBox ID="txtEmail" runat="server" placeholder="you@example.com" type="email" />
+                <asp:TextBox ID="txtEmail" runat="server" placeholder=" you@example.com" type="email" />
             </div>
 
             <label for="<%= txtPassword.ClientID %>">Password</label>
             <div class="input-group">
                 <i data-feather="lock"></i> <!-- Feather Icon -->
-                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" placeholder="Enter your password" />
+                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" placeholder=" Enter your password" />
             </div>
 
             <asp:Button ID="btnLogin" runat="server" Text="Log In" CssClass="btn-login" OnClick="btnLogin_Click" />

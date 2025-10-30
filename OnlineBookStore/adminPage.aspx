@@ -4,19 +4,20 @@
 <html>
 <head runat="server">
     <title>Admin Page</title>
-    <%-- Stylesheets... --%>
+  
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
     
     <style>
-        /* ▼▼▼ NEW COLOR PALETTE ▼▼▼ */
+         
         :root {
             --bookstore-primary: #C70039; /* Ruby Red */
             --bookstore-primary-hover: #A3002D; /* Darker Ruby */
             --bookstore-accent-gold: #D4AF37; 
             --bookstore-accent-gold-hover: #B8860B;
             --bookstore-charcoal: #343A40;
-            --bookstore-light-gray: #F8F9FA;
+            --bookstore-light-gray: #F8F9FA; /* For card headers, etc. */
+            --bookstore-beige: #FBF9F6;     /* NEW: Soft beige for background */
             --bookstore-white: #FFFFFF;
             --bookstore-danger: #dc3545;
             --bookstore-danger-hover: #c82333;
@@ -27,7 +28,10 @@
         }
 
         body {
-            background-color: var(--bookstore-light-gray); /* Use light gray neutral */
+            background-color: var(--bookstore-beige); /* Use soft beige for main background */
+            display: flex; /* sticky footer */
+            flex-direction: column; /* sticky footer */
+            min-height: 100vh; /* sticky footer */
         }
         
         /* --- Navigation --- */
@@ -39,6 +43,12 @@
              background-color: var(--bookstore-charcoal) !important;
         }
 
+        /* --- Main Content --- */
+        .container {
+            flex-grow: 1; /* Used for sticky footer */
+        }
+
+        /* --- Tabs --- */
         .nav-tabs .nav-link {
             color: var(--bookstore-secondary);
         }
@@ -66,13 +76,36 @@
             border-color: var(--bookstore-primary-hover);
             color: var(--bookstore-white);
         }
+        
+        /* Specific modal button styling */
+        .modal-footer .btn-primary {
+            min-width: 100px;
+        }
+        .modal-footer .btn-secondary {
+            min-width: 100px;
+        }
+
 
         /* --- GridView Styles --- */
-        .table-primary th {
-            color: var(--bookstore-white);
-            background-color: var(--bookstore-primary);
-            border-color: var(--bookstore-primary);
+ 
+        .table th.grid-header-red {
+            color: var(--bookstore-white) !important;
+            background-color: var(--bookstore-primary) !important; /* This is the red color #C70039 */
+            border-color: var(--bookstore-primary) !important;
         }
+
+ 
+        .table.table-hover thead tr:hover .grid-header-red {
+            color: var(--bookstore-white) !important;
+            background-color: var(--bookstore-primary) !important; /* Keep it red */
+            border-color: var(--bookstore-primary) !important; /* Keep border red */
+        }
+ 
+        
+        .card-header.bg-light {
+            background-color: var(--bookstore-light-gray) !important;
+        }
+
         .gridview-pagination table {
             border-collapse: collapse;
             margin: 1rem 0;
@@ -139,6 +172,7 @@
             border-radius: 0.2rem;
             text-decoration: none;
             color: var(--bookstore-white); /* Default to white text */
+            transition: background-color 0.15s ease-in-out;
         }
         .table-responsive a[href*="Edit"] {
             background-color: var(--bookstore-secondary);
@@ -168,14 +202,28 @@
         }
         .table-responsive a[href*="Cancel"]:hover {
             background-color: var(--bookstore-accent-gold-hover);
+            color: var(--bookstore-charcoal);
         }
+        
+        /* ▼▼▼ REMOVED this rule as it conflicts with form-control ▼▼▼
         .table-responsive input[type="text"] {
             width: 100%;
-            min-width: 150px; /* Adjust as needed */
+            min-width: 150px; 
             padding: 0.25rem;
             font-size: 0.9rem;
-            box-sizing: border-box; /* Important */
+            box-sizing: border-box;
         }
+        */
+
+        /* ▼▼▼ ADDED FOR URL WRAPPING ▼▼▼ */
+        .url-wrap {
+            word-break: break-all; /* Force break long words/URLs */
+            max-width: 250px;      /* Set a max width for this column */
+            min-width: 150px;      /* Ensure it doesn't get too small */
+        }
+        /* ▲▲▲ END ADDITION ▲▲▲ */
+        
+        /* --- Notification Bar --- */
         #messageBar {
             display: none;
             position: fixed;
@@ -185,8 +233,11 @@
             min-width: 300px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
+        
+        /* --- Forms --- */
         .form-label {
             font-weight: 500;
+            color: var(--bookstore-charcoal);
         }
         .validator-error {
             color: var(--bookstore-danger); /* Use danger color */
@@ -196,7 +247,7 @@
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
     
  
        <div id="messageBar" class="alert alert-dismissible fade" role="alert">
@@ -216,7 +267,7 @@
                    <div class="collapse navbar-collapse" id="adminNavbar">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">                  
                             <li class="nav-item">
-                                <asp:LinkButton ID="btnLogout" runat="server" CssClass="nav-link" OnClick="btnLogout_Click">Logout</asp:LinkButton>
+                                <asp:LinkButton ID="btnLogout" runat="server" CssClass="nav-link" OnClick="btnLogout_Click"><i class="bi bi-box-arrow-right me-1"></i>Logout</asp:LinkButton>
                             </li>
                         </ul>
                     </div>
@@ -228,28 +279,29 @@
         <div class="container mt-4 mb-4">
             
       
-           <h2 class="mb-3"><i class="bi bi-gear-wide-connected"></i> Bookstore Management</h2>
+           <h2 class="mb-3" style="color: var(--bookstore-charcoal);"><i class="bi bi-gear-wide-connected"></i> Bookstore Management</h2>
 
             <%-- ... (Your Nav Tabs) ... --%>
             <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+                <%-- MODIFIED: Translated Tab Links --%>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="books-tab" data-bs-toggle="tab" href="#books" role="tab" aria-controls="books" aria-selected="true"><i class="bi bi-book"></i> หนังสือ</a>
+                    <a class="nav-link active" id="books-tab" data-bs-toggle="tab" href="#books" role="tab" aria-controls="books" aria-selected="true"><i class="bi bi-book"></i> Books</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="authors-tab" data-bs-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false"><i class="bi bi-person"></i> ผู้แต่ง</a>
+                    <a class="nav-link" id="authors-tab" data-bs-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false"><i class="bi bi-person"></i> Authors</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="publishers-tab" data-bs-toggle="tab" href="#publishers" role="tab" 
- aria-controls="publishers" aria-selected="false"><i class="bi bi-building"></i> สำนักพิมพ์</a>
+ aria-controls="publishers" aria-selected="false"><i class="bi bi-building"></i> Publishers</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="members-tab" data-bs-toggle="tab" href="#members" role="tab" aria-controls="members" aria-selected="false"><i class="bi bi-people"></i> สมาชิก</a>
+                    <a class="nav-link" id="members-tab" data-bs-toggle="tab" href="#members" role="tab" aria-controls="members" aria-selected="false"><i class="bi bi-people"></i> Members</a>
                 </li>
                  <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="bi bi-box-seam"></i> คำสั่งซื้อ</a>
+                    <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="bi bi-box-seam"></i> Orders</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false"><i class="bi bi-star"></i> รีวิว</a>
+                    <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false"><i class="bi bi-star"></i> Reviews</a>
                  </li>
             </ul>
 
@@ -260,20 +312,22 @@
                     
                     <asp:UpdatePanel ID="UpdatePanelBooks" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div class="card shadow-sm">
+                            <div class="card shadow-sm border-0">
                                 <div class="card-header bg-light">
-                                     <h4 class="mb-0">จัดการหนังสือ</h4>
+                                     
+                                     <h4 class="mb-0" style="color: var(--bookstore-charcoal);">Manage Books</h4>
                                 </div>
                                 <div class="card-body">
                                      <div class="d-flex justify-content-end mb-3">
-                                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBookModal">
-                                            <i class="bi bi-plus-circle"></i> เพิ่มหนังสือใหม่
+                                          
+                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                                            <i class="bi bi-plus-circle"></i> Add New Book
                                         </button>
                                     </div>
                                     <div class="table-responsive">
                                          <asp:GridView ID="GridViewBooks" runat="server"
                                             CssClass="table table-striped table-hover table-bordered"
-                                            HeaderStyle-CssClass="table-primary"
+                                            HeaderStyle-CssClass="grid-header-red" 
                                             AutoGenerateColumns="false"
                                             AllowPaging="true" PageSize="10"
                                             DataKeyNames="BookID"
@@ -294,16 +348,20 @@
                                                  <asp:CommandField ShowEditButton="true" ShowDeleteButton="true" ShowCancelButton="true" 
                                                     HeaderText="Actions" ItemStyle-Width="150px" ControlStyle-CssClass="gridview-command" />
                                                  <asp:BoundField DataField="BookID" HeaderText="BookID" ReadOnly="true" ItemStyle-Width="80px" />
-                                                <asp:BoundField DataField="ISBN" HeaderText="ISBN" ItemStyle-Width="130px" />
-                                                <asp:BoundField DataField="Title" HeaderText="Title" />
-                                                <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0:n2}" ItemStyle-Width="100px" ItemStyle-HorizontalAlign="Right" />
-                                                <asp:BoundField DataField="Stock" HeaderText="Stock" ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Center" />
-                                                <asp:BoundField DataField="PublisherID" HeaderText="PublisherID" ItemStyle-Width="80px"  />
-                                                <asp:BoundField DataField="CategoryID" HeaderText="CategoryID" ItemStyle-Width="80px"  />
-                                                <asp:BoundField DataField="CoverUrl" HeaderText="Image URL" />
+                                                
+                                                <asp:BoundField DataField="ISBN" HeaderText="ISBN" ItemStyle-Width="130px" ControlStyle-CssClass="form-control" />
+                                                <asp:BoundField DataField="Title" HeaderText="Title" ControlStyle-CssClass="form-control" />
+                                                <%-- ▼▼▼ MODIFIED: Added text-end ▼▼▼ --%>
+                                                <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0:n2}" ItemStyle-Width="100px" ItemStyle-HorizontalAlign="Right" ControlStyle-CssClass="form-control text-end" />
+                                                <%-- ▼▼▼ MODIFIED: Added text-center ▼▼▼ --%>
+                                                <asp:BoundField DataField="Stock" HeaderText="Stock" ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Center" ControlStyle-CssClass="form-control text-center" />
+                                                <asp:BoundField DataField="PublisherID" HeaderText="PublisherID" ItemStyle-Width="80px" ControlStyle-CssClass="form-control" />
+                                                <asp:BoundField DataField="CategoryID" HeaderText="CategoryID" ItemStyle-Width="80px" ControlStyle-CssClass="form-control" />
+                                                <asp:BoundField DataField="CoverUrl" HeaderText="Image URL" ItemStyle-CssClass="url-wrap" ControlStyle-CssClass="form-control" />
+                                                
                                             </Columns>
                                             <PagerStyle CssClass="gridview-pagination" />
-                                            <HeaderStyle CssClass="table-primary" />
+                                            <HeaderStyle CssClass="grid-header-red" /> 
                                             <RowStyle VerticalAlign="Top" />
                                             <EditRowStyle BackColor="#f2f2f2" />
                                          </asp:GridView>
@@ -320,69 +378,71 @@
                     <%-- Book Modal (outside the grid's UpdatePanel) --%>
                     <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
+                            <div class="modal-content border-0">
                                 <asp:UpdatePanel ID="UpdatePanelAddBook" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addBookModalLabel"><i class="bi bi-book-fill"></i> เพิ่มหนังสือใหม่</h5>
+                                        <div class="modal-header" style="background-color: var(--bookstore-light-gray);">
+                                          
+                                            <h5 class="modal-title" id="addBookModalLabel" style="color: var(--bookstore-charcoal);"><i class="bi bi-book-fill"></i> Add New Book</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="row g-3">
                                                 <div class="col-md-6">
-                                                    <label for="<%= txtAddBookId.ClientID %>" class="form-label">BookID (รหัสหนังสือ)</label>
-                                                    <asp:TextBox ID="txtAddBookId" runat="server" CssClass="form-control" placeholder="เช่น 1001"></asp:TextBox>
-                                                    <asp:RequiredFieldValidator ID="rfvBookId" runat="server" ErrorMessage="กรุณากรอก BookID" ControlToValidate="txtAddBookId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
-                                                    <asp:CompareValidator ID="cvBookId" runat="server" ErrorMessage="BookID ต้องเป็นตัวเลข" ControlToValidate="txtAddBookId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
+                                                    
+                                                    <label for="<%= txtAddBookId.ClientID %>" class="form-label">BookID</label>
+                                                    <asp:TextBox ID="txtAddBookId" runat="server" CssClass="form-control" placeholder="e.g., 1001"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="rfvBookId" runat="server" ErrorMessage="Please enter a BookID." ControlToValidate="txtAddBookId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookId" runat="server" ErrorMessage="BookID must be a number." ControlToValidate="txtAddBookId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="<%= txtAddBookIsbn.ClientID %>" class="form-label">ISBN (13 หลัก)</label>
+                                                    <label for="<%= txtAddBookIsbn.ClientID %>" class="form-label">ISBN (13 digits)</label>
                                                     <asp:TextBox ID="txtAddBookIsbn" runat="server" CssClass="form-control" MaxLength="13"></asp:TextBox>
-                                                    <asp:RequiredFieldValidator ID="rfvBookIsbn" runat="server" ErrorMessage="กรุณากรอก ISBN" ControlToValidate="txtAddBookIsbn" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
-                                                    <asp:RegularExpressionValidator ID="revBookIsbn" runat="server" ErrorMessage="ISBN ต้องเป็นตัวเลข 13 หลัก" ControlToValidate="txtAddBookIsbn" ValidationExpression="^\d{13}$" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RegularExpressionValidator>
+                                                    <asp:RequiredFieldValidator ID="rfvBookIsbn" runat="server" ErrorMessage="Please enter an ISBN." ControlToValidate="txtAddBookIsbn" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:RegularExpressionValidator ID="revBookIsbn" runat="server" ErrorMessage="ISBN must be 13 digits." ControlToValidate="txtAddBookIsbn" ValidationExpression="^\d{13}$" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RegularExpressionValidator>
                                                 </div>
                                                 <div class="col-12">
-                                                    <label for="<%= txtAddBookTitle.ClientID %>" class="form-label">Title (ชื่อหนังสือ)</label>
+                                                    <label for="<%= txtAddBookTitle.ClientID %>" class="form-label">Title</label>
                                                     <asp:TextBox ID="txtAddBookTitle" runat="server" CssClass="form-control"></asp:TextBox>
-                                                    <asp:RequiredFieldValidator ID="rfvBookTitle" runat="server" ErrorMessage="กรุณากรอกชื่อหนังสือ" ControlToValidate="txtAddBookTitle" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:RequiredFieldValidator ID="rfvBookTitle" runat="server" ErrorMessage="Please enter a title." ControlToValidate="txtAddBookTitle" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="<%= txtAddBookPrice.ClientID %>" class="form-label">Price (ราคา)</label>
+                                                    <label for="<%= txtAddBookPrice.ClientID %>" class="form-label">Price</label>
                                                     <asp:TextBox ID="txtAddBookPrice" runat="server" CssClass="form-control" TextMode="Number" step="0.01"></asp:TextBox>
-                                                    <asp:RequiredFieldValidator ID="rfvBookPrice" runat="server" ErrorMessage="กรุณากรอกราคา" ControlToValidate="txtAddBookPrice" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
-                                                    <asp:CompareValidator ID="cvBookPriceType" runat="server" ErrorMessage="ราคาต้องเป็นตัวเลข" ControlToValidate="txtAddBookPrice" Operator="DataTypeCheck" Type="Currency" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
-                                                    <asp:RangeValidator ID="rvBookPrice" runat="server" ErrorMessage="ราคาต้องไม่ติดลบ" ControlToValidate="txtAddBookPrice" MinimumValue="0" MaximumValue="999999" Type="Currency" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RangeValidator>
+                                                    <asp:RequiredFieldValidator ID="rfvBookPrice" runat="server" ErrorMessage="Please enter a price." ControlToValidate="txtAddBookPrice" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookPriceType" runat="server" ErrorMessage="Price must be a number." ControlToValidate="txtAddBookPrice" Operator="DataTypeCheck" Type="Currency" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
+                                                    <asp:RangeValidator ID="rvBookPrice" runat="server" ErrorMessage="Price cannot be negative." ControlToValidate="txtAddBookPrice" MinimumValue="0" MaximumValue="999999" Type="Currency" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RangeValidator>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="<%= txtAddBookStock.ClientID %>" class="form-label">Stock (จำนวนคงคลัง)</label>
+                                                    <label for="<%= txtAddBookStock.ClientID %>" class="form-label">Stock</label>
                                                     <asp:TextBox ID="txtAddBookStock" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
-                                                    <asp:RequiredFieldValidator ID="rfvBookStock" runat="server" ErrorMessage="กรุณากรอกจำนวน" ControlToValidate="txtAddBookStock" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
-                                                    <asp:CompareValidator ID="cvBookStock" runat="server" ErrorMessage="Stock ต้องเป็นตัวเลข" ControlToValidate="txtAddBookStock" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
-                                                    <asp:RangeValidator ID="rvBookStock" runat="server" ErrorMessage="Stock ต้องไม่ติดลบ" ControlToValidate="txtAddBookStock" MinimumValue="0" MaximumValue="99999" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RangeValidator>
+                                                    <asp:RequiredFieldValidator ID="rfvBookStock" runat="server" ErrorMessage="Please enter stock quantity." ControlToValidate="txtAddBookStock" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookStock" runat="server" ErrorMessage="Stock must be a number." ControlToValidate="txtAddBookStock" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
+                                                    <asp:RangeValidator ID="rvBookStock" runat="server" ErrorMessage="Stock cannot be negative." ControlToValidate="txtAddBookStock" MinimumValue="0" MaximumValue="99999" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RangeValidator>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="<%= txtAddBookPubId.ClientID %>" class="form-label">PublisherID (รหัสสำนักพิมพ์)</label>
+                                                    <label for="<%= txtAddBookPubId.ClientID %>" class="form-label">PublisherID</label>
                                                     <asp:TextBox ID="txtAddBookPubId" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
-                                                    <asp:RequiredFieldValidator ID="rfvBookPubId" runat="server" ErrorMessage="กรุณากรอก PublisherID" ControlToValidate="txtAddBookPubId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
-                                                    <asp:CompareValidator ID="cvBookPubId" runat="server" ErrorMessage="PublisherID ต้องเป็นตัวเลข" ControlToValidate="txtAddBookPubId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
+                                                    <asp:RequiredFieldValidator ID="rfvBookPubId" runat="server" ErrorMessage="Please enter a PublisherID." ControlToValidate="txtAddBookPubId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookPubId" runat="server" ErrorMessage="PublisherID must be a number." ControlToValidate="txtAddBookPubId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="<%= txtAddBookCatId.ClientID %>" class="form-label">CategoryID (รหัสประเภท)</label>
+                                                    <label for="<%= txtAddBookCatId.ClientID %>" class="form-label">CategoryID</label>
                                                     <asp:TextBox ID="txtAddBookCatId" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
-                                                    <asp:RequiredFieldValidator ID="rfvBookCatId" runat="server" ErrorMessage="กรุณากรอก CategoryID" ControlToValidate="txtAddBookCatId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
-                                                    <asp:CompareValidator ID="cvBookCatId" runat="server" ErrorMessage="CategoryID ต้องเป็นตัวเลข" ControlToValidate="txtAddBookCatId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
+                                                    <asp:RequiredFieldValidator ID="rfvBookCatId" runat="server" ErrorMessage="Please enter a CategoryID." ControlToValidate="txtAddBookCatId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:RequiredFieldValidator>
+                                                    <asp:CompareValidator ID="cvBookCatId" runat="server" ErrorMessage="CategoryID must be a number." ControlToValidate="txtAddBookCatId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddBookValidation"></asp:CompareValidator>
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <label for="<%= txtAddBookImageUrl.ClientID %>" class="form-label">Image URL (ลิงก์รูปภาพ)</label>
+                                                    <label for="<%= txtAddBookImageUrl.ClientID %>" class="form-label">Image URL (Optional)</label>
                                                     <asp:TextBox ID="txtAddBookImageUrl" runat="server" CssClass="form-control" TextMode="Url" placeholder="https://example.com/image.jpg"></asp:TextBox>
                                                     <%-- ไม่บังคับ --%>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                            <%-- ▼▼▼ MODIFIED Button ▼▼▼ --%>
-                                            <asp:Button ID="btnSaveBook" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSaveBook_Click" ValidationGroup="AddBookValidation" />
+                                        <div class="modal-footer" style="background-color: var(--bookstore-light-gray);">
+                                           
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <asp:Button ID="btnSaveBook" runat="server" Text="Save" CssClass="btn btn-primary" OnClick="btnSaveBook_Click" ValidationGroup="AddBookValidation" />
                                         </div>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
@@ -395,20 +455,22 @@
                 <div class="tab-pane fade" id="authors" role="tabpanel" aria-labelledby="authors-tab">
                     <asp:UpdatePanel ID="UpdatePanelAuthors" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div class="card shadow-sm">
+                            <div class="card shadow-sm border-0">
                                  <div class="card-header bg-light">
-                                    <h4 class="mb-0">จัดการผู้แต่ง</h4>
+                                 
+                                    <h4 class="mb-0" style="color: var(--bookstore-charcoal);">Manage Authors</h4>
                                 </div>
                                      <div class="card-body">
                                     <div class="d-flex justify-content-end mb-3">
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addAuthorModal">
-                                            <i class="bi bi-plus-circle"></i> เพิ่มผู้แต่งใหม่
+                                     
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAuthorModal">
+                                            <i class="bi bi-plus-circle"></i> Add New Author
                                         </button>
                                     </div>
                                     <div class="table-responsive">
                                          <asp:GridView ID="GridViewAuthors" runat="server"
                                             CssClass="table table-striped table-hover table-bordered"
-                                             HeaderStyle-CssClass="table-primary"
+                                             HeaderStyle-CssClass="grid-header-red" 
                                             AutoGenerateColumns="false"
                                              AllowPaging="true" PageSize="10"
                                             DataKeyNames="AuthorID"
@@ -429,11 +491,13 @@
                                                  <asp:CommandField ShowEditButton="true" ShowDeleteButton="true" ShowCancelButton="true" 
                                                     HeaderText="Actions" ItemStyle-Width="150px" ControlStyle-CssClass="gridview-command" />
                                                  <asp:BoundField DataField="AuthorID" HeaderText="AuthorID" ReadOnly="true" ItemStyle-Width="100px" />
-                                                <asp:BoundField DataField="AuthorName" HeaderText="Author Name" />
-                                                <asp:BoundField DataField="Email" HeaderText="Email" />
+                                                
+                                                <asp:BoundField DataField="AuthorName" HeaderText="Author Name" ControlStyle-CssClass="form-control" />
+                                                <asp:BoundField DataField="Email" HeaderText="Email" ControlStyle-CssClass="form-control" />
+                                                
                                             </Columns>
                                             <PagerStyle CssClass="gridview-pagination" />
-                                            <HeaderStyle CssClass="table-primary" />
+                                            <HeaderStyle CssClass="grid-header-red" /> 
                                             <EditRowStyle BackColor="#f2f2f2" />
                                         </asp:GridView>
                                     </div>
@@ -445,38 +509,40 @@
                         </Triggers>
                     </asp:UpdatePanel>
 
-                    <%-- Author Modal (outside the grid's UpdatePanel) --%>
+                  
                     <div class="modal fade" id="addAuthorModal" tabindex="-1" aria-labelledby="addAuthorModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                            <div class="modal-content">
+                            <div class="modal-content border-0">
                                 <asp:UpdatePanel ID="UpdatePanelAddAuthor" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addAuthorModalLabel"><i class="bi bi-person-fill-add"></i> เพิ่มผู้แต่งใหม่</h5>
+                                        <div class="modal-header" style="background-color: var(--bookstore-light-gray);">
+                                     
+                                            <h5 class="modal-title" id="addAuthorModalLabel" style="color: var(--bookstore-charcoal);"><i class="bi bi-person-fill-add"></i> Add New Author</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
+                                        
                                             <div class="mb-3">
-                                                <label for="<%= txtAddAuthorId.ClientID %>" class="form-label">AuthorID (รหัสผู้แต่ง)</label>
-                                                <asp:TextBox ID="txtAddAuthorId" runat="server" CssClass="form-control" placeholder="เช่น 2001"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="rfvAuthorId" runat="server" ErrorMessage="กรุณากรอก AuthorID" ControlToValidate="txtAddAuthorId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RequiredFieldValidator>
-                                                <asp:CompareValidator ID="cvAuthorId" runat="server" ErrorMessage="AuthorID ต้องเป็นตัวเลข" ControlToValidate="txtAddAuthorId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:CompareValidator>
+                                                <label for="<%= txtAddAuthorId.ClientID %>" class="form-label">AuthorID</label>
+                                                <asp:TextBox ID="txtAddAuthorId" runat="server" CssClass="form-control" placeholder="e.g., 2001"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="rfvAuthorId" runat="server" ErrorMessage="Please enter an AuthorID." ControlToValidate="txtAddAuthorId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RequiredFieldValidator>
+                                                <asp:CompareValidator ID="cvAuthorId" runat="server" ErrorMessage="AuthorID must be a number." ControlToValidate="txtAddAuthorId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:CompareValidator>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="<%= txtAddAuthorName.ClientID %>" class="form-label">Author Name (ชื่อผู้แต่ง)</label>
+                                                <label for="<%= txtAddAuthorName.ClientID %>" class="form-label">Author Name</label>
                                                 <asp:TextBox ID="txtAddAuthorName" runat="server" CssClass="form-control"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="rfvAuthorName" runat="server" ErrorMessage="กรุณากรอกชื่อผู้แต่ง" ControlToValidate="txtAddAuthorName" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RequiredFieldValidator>
+                                                <asp:RequiredFieldValidator ID="rfvAuthorName" runat="server" ErrorMessage="Please enter an author name." ControlToValidate="txtAddAuthorName" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RequiredFieldValidator>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="<%= txtAddAuthorEmail.ClientID %>" class="form-label">Email</label>
+                                                <label for="<%= txtAddAuthorEmail.ClientID %>" class="form-label">Email (Optional)</label>
                                                 <asp:TextBox ID="txtAddAuthorEmail" runat="server" CssClass="form-control" TextMode="Email"></asp:TextBox>
-                                                <asp:RegularExpressionValidator ID="revAuthorEmail" runat="server" ErrorMessage="รูปแบบ Email ไม่ถูกต้อง" ControlToValidate="txtAddAuthorEmail" ValidationExpression="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RegularExpressionValidator>
+                                                <asp:RegularExpressionValidator ID="revAuthorEmail" runat="server" ErrorMessage="Invalid email format." ControlToValidate="txtAddAuthorEmail" ValidationExpression="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddAuthorValidation"></asp:RegularExpressionValidator>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                            <%-- ▼▼▼ MODIFIED Button ▼▼▼ --%>
-                                            <asp:Button ID="btnSaveAuthor" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSaveAuthor_Click" ValidationGroup="AddAuthorValidation" />
+                                        <div class="modal-footer" style="background-color: var(--bookstore-light-gray);">
+                            
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <asp:Button ID="btnSaveAuthor" runat="server" Text="Save" CssClass="btn btn-primary" OnClick="btnSaveAuthor_Click" ValidationGroup="AddAuthorValidation" />
                                         </div>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
@@ -489,20 +555,22 @@
                 <div class="tab-pane fade" id="publishers" role="tabpanel" aria-labelledby="publishers-tab">
                     <asp:UpdatePanel ID="UpdatePanelPublishers" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                             <div class="card shadow-sm">
+                             <div class="card shadow-sm border-0">
                                 <div class="card-header bg-light">
-                                    <h4 class="mb-0">จัดการสำนักพิมพ์</h4>
+                            
+                                    <h4 class="mb-0" style="color: var(--bookstore-charcoal);">Manage Publishers</h4>
                                  </div>
                                 <div class="card-body">
                                     <div class="d-flex justify-content-end mb-3">
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPublisherModal">
-                                            <i class="bi bi-plus-circle"></i> เพิ่มสำนักพิมพ์ใหม่
+                             
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPublisherModal">
+                                            <i class="bi bi-plus-circle"></i> Add New Publisher
                                         </button>
                                     </div>
                                      <div class="table-responsive">
                                         <asp:GridView ID="GridViewPublishers" runat="server"
                                              CssClass="table table-striped table-hover table-bordered"
-                                            HeaderStyle-CssClass="table-primary"
+                                            HeaderStyle-CssClass="grid-header-red" 
                                             AutoGenerateColumns="false"
                                             AllowPaging="true" PageSize="10"
                                             DataKeyNames="PublisherID"
@@ -523,12 +591,29 @@
                                                  <asp:CommandField ShowEditButton="true" ShowDeleteButton="true" ShowCancelButton="true" 
                                                     HeaderText="Actions" ItemStyle-Width="150px" ControlStyle-CssClass="gridview-command" />
                                                  <asp:BoundField DataField="PublisherID" HeaderText="PublisherID" ReadOnly="true" ItemStyle-Width="100px" />
-                                                <asp:BoundField DataField="PublisherName" HeaderText="Publisher Name" />
-                                                <asp:BoundField DataField="Address" HeaderText="Address" />
-                                                <asp:BoundField DataField="Phone" HeaderText="Phone" ItemStyle-Width="150px" />
+                                                
+                                                <asp:BoundField DataField="PublisherName" HeaderText="Publisher Name" ControlStyle-CssClass="form-control" />
+                                                
+                                                <%-- ▼▼▼ MODIFIED: Converted to TemplateField ▼▼▼ --%>
+                                                <asp:TemplateField HeaderText="Address">
+                                                    <ItemTemplate>
+                                                        <%# Eval("Address") %>
+                                                    </ItemTemplate>
+                                                    <EditItemTemplate>
+                                                        <asp:TextBox ID="txtEditAddress" runat="server" 
+                                                            CssClass="form-control" 
+                                                            TextMode="MultiLine" 
+                                                            Rows="3" 
+                                                            Text='<%# Bind("Address") %>'></asp:TextBox>
+                                                    </EditItemTemplate>
+                                                </asp:TemplateField>
+                                                <%-- ▲▲▲ END Modification ▲▲▲ --%>
+                                                
+                                                <asp:BoundField DataField="Phone" HeaderText="Phone" ItemStyle-Width="150px" ControlStyle-CssClass="form-control" />
+                                                
                                            </Columns>
                                             <PagerStyle CssClass="gridview-pagination" />
-                                            <HeaderStyle CssClass="table-primary" />
+                                            <HeaderStyle CssClass="grid-header-red" /> 
                                             <EditRowStyle BackColor="#f2f2f2" />
                                          </asp:GridView> 
                                     </div>
@@ -540,41 +625,43 @@
                         </Triggers>
                     </asp:UpdatePanel>
 
-                    <%-- Publisher Modal (outside the grid's UpdatePanel) --%>
+              
                     <div class="modal fade" id="addPublisherModal" tabindex="-1" aria-labelledby="addPublisherModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                            <div class="modal-content">
+                            <div class="modal-content border-0">
                                 <asp:UpdatePanel ID="UpdatePanelAddPublisher" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addPublisherModalLabel"><i class="bi bi-building-fill-add"></i> เพิ่มสำนักพิมพ์ใหม่</h5>
+                                        <div class="modal-header" style="background-color: var(--bookstore-light-gray);">
+                                        
+                                            <h5 class="modal-title" id="addPublisherModalLabel" style="color: var(--bookstore-charcoal);"><i class="bi bi-building-fill-add"></i> Add New Publisher</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
+                                          
                                             <div class="mb-3">
-                                                <label for="<%= txtAddPublisherId.ClientID %>" class="form-label">PublisherID (รหัสสำนักพิมพ์)</label>
-                                                <asp:TextBox ID="txtAddPublisherId" runat="server" CssClass="form-control" placeholder="เช่น 3001"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="rfvPubId" runat="server" ErrorMessage="กรุณากรอก PublisherID" ControlToValidate="txtAddPublisherId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:RequiredFieldValidator>
-                                                <asp:CompareValidator ID="cvPubId" runat="server" ErrorMessage="PublisherID ต้องเป็นตัวเลข" ControlToValidate="txtAddPublisherId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:CompareValidator>
+                                                <label for="<%= txtAddPublisherId.ClientID %>" class="form-label">PublisherID</label>
+                                                <asp:TextBox ID="txtAddPublisherId" runat="server" CssClass="form-control" placeholder="e.g., 3001"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="rfvPubId" runat="server" ErrorMessage="Please enter a PublisherID." ControlToValidate="txtAddPublisherId" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:RequiredFieldValidator>
+                                                <asp:CompareValidator ID="cvPubId" runat="server" ErrorMessage="PublisherID must be a number." ControlToValidate="txtAddPublisherId" Operator="DataTypeCheck" Type="Integer" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:CompareValidator>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="<%= txtAddPublisherName.ClientID %>" class="form-label">Publisher Name (ชื่อสำนักพิมพ์)</label>
+                                                <label for="<%= txtAddPublisherName.ClientID %>" class="form-label">Publisher Name</label>
                                                 <asp:TextBox ID="txtAddPublisherName" runat="server" CssClass="form-control"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="rfvPubName" runat="server" ErrorMessage="กรุณากรอกชื่อสำนักพิมพ์" ControlToValidate="txtAddPublisherName" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:RequiredFieldValidator>
+                                                <asp:RequiredFieldValidator ID="rfvPubName" runat="server" ErrorMessage="Please enter a publisher name." ControlToValidate="txtAddPublisherName" Display="Dynamic" CssClass="validator-error" ValidationGroup="AddPublisherValidation"></asp:RequiredFieldValidator>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="<%= txtAddPublisherAddress.ClientID %>" class="form-label">Address (ที่อยู่)</label>
+                                                <label for="<%= txtAddPublisherAddress.ClientID %>" class="form-label">Address (Optional)</label>
                                                 <asp:TextBox ID="txtAddPublisherAddress" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="<%= txtAddPublisherPhone.ClientID %>" class="form-label">Phone (เบอร์โทร)</label>
+                                                <label for="<%= txtAddPublisherPhone.ClientID %>" class="form-label">Phone (Optional)</label>
                                                 <asp:TextBox ID="txtAddPublisherPhone" runat="server" CssClass="form-control"></asp:TextBox>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                            <%-- ▼▼▼ MODIFIED Button ▼▼▼ --%>
-                                            <asp:Button ID="btnSavePublisher" runat="server" Text="บันทึก" CssClass="btn btn-primary" OnClick="btnSavePublisher_Click" ValidationGroup="AddPublisherValidation" />
+                                        <div class="modal-footer" style="background-color: var(--bookstore-light-gray);">
+                                          
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <asp:Button ID="btnSavePublisher" runat="server" Text="Save" CssClass="btn btn-primary" OnClick="btnSavePublisher_Click" ValidationGroup="AddPublisherValidation" />
                                         </div>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
@@ -587,15 +674,16 @@
                 <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
                     <asp:UpdatePanel ID="UpdatePanelMembers" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div class="card shadow-sm">
+                            <div class="card shadow-sm border-0">
                                  <div class="card-header bg-light">
-                                    <h4 class="mb-0">จัดการสมาชิก</h4>
+                                
+                                    <h4 class="mb-0" style="color: var(--bookstore-charcoal);">Manage Members</h4>
                                 </div>
                                      <div class="card-body">
                                     <div class="table-responsive">
                                         <asp:GridView ID="GridViewMembers" runat="server"
                                             CssClass="table table-striped table-hover table-bordered"
-                                            HeaderStyle-CssClass="table-primary"
+                                            HeaderStyle-CssClass="grid-header-red" 
                                             AutoGenerateColumns="false"
                                             AllowPaging="true" PageSize="10"
                                             DataKeyNames="MemberID"
@@ -616,15 +704,32 @@
                                                  <asp:CommandField ShowEditButton="true" ShowDeleteButton="true" ShowCancelButton="true" 
                                                     HeaderText="Actions" ItemStyle-Width="150px" ControlStyle-CssClass="gridview-command" />
                                                  <asp:BoundField DataField="MemberID" HeaderText="MemberID" ReadOnly="true" ItemStyle-Width="100px" />
-                                                <asp:BoundField DataField="FullName" HeaderText="Full Name" />
-                                                <asp:BoundField DataField="Email" HeaderText="Email" />
+                                                
+                                                <asp:BoundField DataField="FullName" HeaderText="Full Name" ControlStyle-CssClass="form-control" />
+                                                <asp:BoundField DataField="Email" HeaderText="Email" ControlStyle-CssClass="form-control" />
                                                 <asp:BoundField DataField="Password" HeaderText="Password" ReadOnly="true" />
-                                                <asp:BoundField DataField="Address" HeaderText="Address" />
-                                                <asp:BoundField DataField="Phone" HeaderText="Phone" ItemStyle-Width="150px" />
-                                                <asp:BoundField DataField="Role" HeaderText="Role" ItemStyle-Width="100px" />
+                                                
+                                                <%-- ▼▼▼ MODIFIED: Converted to TemplateField ▼▼▼ --%>
+                                                <asp:TemplateField HeaderText="Address">
+                                                    <ItemTemplate>
+                                                        <%# Eval("Address") %>
+                                                    </ItemTemplate>
+                                                    <EditItemTemplate>
+                                                        <asp:TextBox ID="txtEditAddress" runat="server" 
+                                                            CssClass="form-control" 
+                                                            TextMode="MultiLine" 
+                                                            Rows="3" 
+                                                            Text='<%# Bind("Address") %>'></asp:TextBox>
+                                                    </EditItemTemplate>
+                                                </asp:TemplateField>
+                                                <%-- ▲▲▲ END Modification ▲▲▲ --%>
+                                                
+                                                <asp:BoundField DataField="Phone" HeaderText="Phone" ItemStyle-Width="150px" ControlStyle-CssClass="form-control" />
+                                                <asp:BoundField DataField="Role" HeaderText="Role" ItemStyle-Width="100px" ControlStyle-CssClass="form-control text-center" />
+                                                
                                             </Columns>
                                             <PagerStyle CssClass="gridview-pagination" />
-                                            <HeaderStyle CssClass="table-primary" />
+                                            <HeaderStyle CssClass="grid-header-red" /> 
                                             <EditRowStyle BackColor="#f2f2f2" />
                                         </asp:GridView>
                                     </div>
@@ -638,15 +743,16 @@
                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                     <asp:UpdatePanel ID="UpdatePanelOrders" runat="server" UpdateMode="Conditional">
                        <ContentTemplate>
-                            <div class="card shadow-sm">
+                            <div class="card shadow-sm border-0">
                                 <div class="card-header bg-light">
-                                     <h4 class="mb-0">จัดการคำสั่งซื้อ</h4>
+                                   
+                                     <h4 class="mb-0" style="color: var(--bookstore-charcoal);">Manage Orders</h4>
                                 </div>
                                 <div class="card-body">
                                      <div class="table-responsive">
                                         <asp:GridView ID="GridViewOrders" runat="server"
                                             CssClass="table table-striped table-hover table-bordered"
-                                            HeaderStyle-CssClass="table-primary"
+                                            HeaderStyle-CssClass="grid-header-red" 
                                             AutoGenerateColumns="false"
                                             AllowPaging="true" PageSize="10"
                                             DataKeyNames="OrderID"
@@ -669,11 +775,13 @@
                                                  <asp:BoundField DataField="OrderID" HeaderText="OrderID" ReadOnly="true" ItemStyle-Width="100px" />
                                                 <asp:BoundField DataField="MemberID" HeaderText="MemberID" ReadOnly="true" ItemStyle-Width="100px" />
                                                 <asp:BoundField DataField="OrderDate" HeaderText="Order Date" ReadOnly="true" DataFormatString="{0:yyyy-MM-dd HH:mm}" />
-                                                <asp:BoundField DataField="TotalAmount" HeaderText="Total" ReadOnly="true" DataFormatString="{0:n2}" ItemStyle-Width="100px" />
-                                                <asp:BoundField DataField="Status" HeaderText="Status" ItemStyle-Width="120px" />
+                                                <asp:BoundField DataField="TotalAmount" HeaderText="Total" ReadOnly="true" DataFormatString="{0:n2}" ItemStyle-Width="100px" ItemStyle-HorizontalAlign="Right" />
+                                                
+                                                <asp:BoundField DataField="Status" HeaderText="Status" ItemStyle-Width="120px" ControlStyle-CssClass="form-control" />
+                                                
                                             </Columns>
                                             <PagerStyle CssClass="gridview-pagination" />
-                                            <HeaderStyle CssClass="table-primary" />
+                                            <HeaderStyle CssClass="grid-header-red" /> 
                                             <EditRowStyle BackColor="#f2f2f2" />
                                         </asp:GridView>
                                     </div>
@@ -687,15 +795,16 @@
                 <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                     <asp:UpdatePanel ID="UpdatePanelReviews" runat="server" UpdateMode="Conditional">
                        <ContentTemplate>
-                            <div class="card shadow-sm">
+                            <div class="card shadow-sm border-0">
                                 <div class="card-header bg-light">
-                                     <h4 class="mb-0">จัดการรีวิว</h4>
+                                  
+                                     <h4 class="mb-0" style="color: var(--bookstore-charcoal);">Manage Reviews</h4>
                                 </div>
                                 <div class="card-body">
                                      <div class="table-responsive">
                                         <asp:GridView ID="GridViewReviews" runat="server"
                                             CssClass="table table-striped table-hover table-bordered"
-                                            HeaderStyle-CssClass="table-primary"
+                                            HeaderStyle-CssClass="grid-header-red" 
                                             AutoGenerateColumns="false"
                                             AllowPaging="true" PageSize="10"
                                             DataKeyNames="ReviewID"
@@ -718,12 +827,15 @@
                                                  <asp:BoundField DataField="ReviewID" HeaderText="ReviewID" ReadOnly="true" ItemStyle-Width="100px" />
                                                 <asp:BoundField DataField="MemberID" HeaderText="MemberID" ReadOnly="true" ItemStyle-Width="100px" />
                                                 <asp:BoundField DataField="BookID" HeaderText="BookID" ReadOnly="true" ItemStyle-Width="100px" />
-                                                <asp:BoundField DataField="Rating" HeaderText="Rating" ItemStyle-Width="80px" />
-                                                <asp:BoundField DataField="Comment" HeaderText="Comment" />
+                                                
+                                                <%-- ▼▼▼ MODIFIED: Added text-center ▼▼▼ --%>
+                                                <asp:BoundField DataField="Rating" HeaderText="Rating" ItemStyle-Width="80px" ControlStyle-CssClass="form-control text-center" />
+                                                <asp:BoundField DataField="Comment" HeaderText="Comment" ControlStyle-CssClass="form-control" />
+                                                
                                                 <asp:BoundField DataField="ReviewDate" HeaderText="Review Date" ReadOnly="true" DataFormatString="{0:yyyy-MM-dd}" />
                                           </Columns>
                                             <PagerStyle CssClass="gridview-pagination" />
-                                            <HeaderStyle CssClass="table-primary" />
+                                            <HeaderStyle CssClass="grid-header-red" /> 
                                             <EditRowStyle BackColor="#f2f2f2" />
                                          </asp:GridView>
                                     </div>
@@ -738,9 +850,8 @@
     </form>
     
   
-       <footer class="bg-dark text-center text-white-50 p-3 mt-auto">
-        &copy;
- <%= DateTime.Now.Year %> Admin Panel
+       <footer class="footer bg-dark text-center text-white-50 p-3 mt-auto">
+        &copy; <%= DateTime.Now.Year %> Admin Panel
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -779,7 +890,7 @@
             }
         }
 
-        // --- ADDED: Function to hide a modal by ID ---
+        // ---   Function to hide a modal by ID ---
         function hideModal(modalId) {
             var modalEl = document.getElementById(modalId);
             if (modalEl) {
@@ -806,7 +917,7 @@
             var activeTabField = document.getElementById('hdnActiveTab');
             var adminTabs = document.getElementById('adminTabs');
 
-            // 1. Save the active tab's href when it's shown
+
             if (adminTabs) {
 
                 var tabLinks = adminTabs.querySelectorAll('a[data-bs-toggle="tab"]');
@@ -820,8 +931,7 @@
                 });
             }
 
-            // 2. On page 
-            load(including postbacks), restore the active tab
+
             if (activeTabField && activeTabField.value) {
                 var tabToActivate = document.querySelector('a[href="' + activeTabField.value + '"]');
                 if (tabToActivate) {
@@ -829,7 +939,7 @@
                     tabInstance.show();
                 }
             } else if (activeTabField) {
-                // If it's the very first load (no value saved), set the default
+
                 var defaultActiveTab = document.querySelector('#adminTabs a.active[data-bs-toggle="tab"]');
                 if (defaultActiveTab) {
                     activeTabField.value = defaultActiveTab.getAttribute('href');
@@ -837,8 +947,8 @@
             }
         });
 
-        // 3. Re-initialize tab persistence after an UpdatePanel refreshes
-        var prm = Sys.WebForms.PageRequestManager.getInstance();
+
+        var prm = Sys.Web.Forms.PageRequestManager.getInstance();
         if (prm) {
             prm.add_endRequest(function (sender, args) {
                 var activeTabField = document.getElementById('hdnActiveTab');
@@ -847,8 +957,7 @@
                 if (adminTabs) {
                     var tabLinks = adminTabs.querySelectorAll('a[data-bs-toggle="tab"]');
 
-                    // We must re-bind the 'shown.bs.tab' event after AJAX load
-                    // We use a simple flag to avoid duplicate bindings
+
                     tabLinks.forEach(function (tabLink) {
 
                         if (!tabLink.dataset.tabBound) { // Check if already bound
@@ -864,11 +973,11 @@
                     });
                 }
 
-                // Ensure the correct tab is still visually active after AJAX
+
                 if (activeTabField && activeTabField.value) {
                     var tabToActivate = document.querySelector('a[href="' + activeTabField.value + '"]');
                     if (tabToActivate && !tabToActivate.classList.contains('active')) {
-                        // Only show if it's not already active
+
                         var tabInstance = new bootstrap.Tab(tabToActivate);
                         tabInstance.show();
                     }
@@ -878,3 +987,4 @@
     </script>
 </body>
 </html>
+

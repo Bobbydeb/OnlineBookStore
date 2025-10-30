@@ -5,7 +5,7 @@
 <head runat="server">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results | The Red Bookmark</title> <!-- Changed Title -->
+    <title>Search Results | ChaiChaKit Bookstore</title> <!-- Changed Title -->
     <!-- Minimalist Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -202,7 +202,7 @@
         <!-- Header -->
         <header class="top-header">
             <div class="container">
-                <div class="logo"><a href="mainpage.aspx">The Red Bookmark</a></div>
+                <div class="logo"><a href="mainpage.aspx">ChaiChaKit Bookstore</a></div>
                  <div class="search-bar">
                     <asp:TextBox ID="txtSearch" runat="server" placeholder="Search for books, authors..." CssClass="search-input"></asp:TextBox>
                     <asp:LinkButton ID="btnSearch" runat="server" OnClick="btnSearch_Click" CssClass="search-button">

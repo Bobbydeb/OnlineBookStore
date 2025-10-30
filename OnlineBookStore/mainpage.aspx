@@ -5,7 +5,7 @@
 <head runat="server">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Red Bookmark</title>
+    <title>ChaiChaKit Bookstore</title>
     <!-- Minimalist Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -712,7 +712,7 @@
 
         <header class="top-header">
             <div class="container">
-                <div class="logo">The Red Bookmark</div>
+                <div class="logo">ChaiChaKit Bookstore</div>
                 
                 <div class="search-bar">
                     <asp:TextBox ID="txtSearch" runat="server" placeholder="Search for books, authors, or ISBN..." CssClass="search-input"></asp:TextBox>
@@ -782,7 +782,7 @@
         <main class="container">
 
             <!-- Updated Section Title -->
-            <h2 class="section-title">New Arrivals</h2>
+            <h2 class="section-title">Recommended Books</h2>
             <section class="book-grid">
                 <asp:Repeater ID="RepeaterBooks" runat="server" OnItemCommand="RepeaterBooks_ItemCommand">
                     <ItemTemplate>

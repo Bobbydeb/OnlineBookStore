@@ -5,7 +5,7 @@
 <head runat="server">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | The Red Bookmark</title>
+    <title>Sign Up | ChaiChaKit Bookstore</title>
     <!-- Minimalist Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -246,7 +246,7 @@
             <label for="<%= txtFullName.ClientID %>">Full Name</label>
             <div class="input-group">
                  <i data-feather="user"></i>
-                <asp:TextBox ID="txtFullName" runat="server" placeholder="Enter your full name" />
+                <asp:TextBox ID="txtFullName" runat="server" placeholder=" Enter your full name" />
             </div>
             <asp:RequiredFieldValidator ID="reqFullName" runat="server" ControlToValidate="txtFullName"
                 ErrorMessage="Full Name is required." CssClass="validation-error" Display="Dynamic" ValidationGroup="Register">*</asp:RequiredFieldValidator>
@@ -254,7 +254,7 @@
             <label for="<%= txtEmail.ClientID %>">Email Address</label>
             <div class="input-group">
                  <i data-feather="mail"></i>
-                <asp:TextBox ID="txtEmail" runat="server" placeholder="you@example.com" type="email" />
+                <asp:TextBox ID="txtEmail" runat="server" placeholder=" you@example.com" type="email" />
             </div>
             <asp:RequiredFieldValidator ID="reqEmail" runat="server" ControlToValidate="txtEmail"
                 ErrorMessage="Email is required." CssClass="validation-error" Display="Dynamic" ValidationGroup="Register">*</asp:RequiredFieldValidator>
@@ -266,7 +266,7 @@
             <label for="<%= txtPassword.ClientID %>">Password</label>
             <div class="input-group">
                 <i data-feather="lock"></i>
-                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" placeholder="Create a password" />
+                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" placeholder=" Create a password" />
             </div>
              <asp:RequiredFieldValidator ID="reqPassword" runat="server" ControlToValidate="txtPassword"
                 ErrorMessage="Password is required." CssClass="validation-error" Display="Dynamic" ValidationGroup="Register">*</asp:RequiredFieldValidator>
@@ -275,7 +275,7 @@
             <label for="<%= txtConfirmPassword.ClientID %>">Confirm Password</label>
             <div class="input-group">
                 <i data-feather="check-circle"></i>
-                <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" placeholder="Confirm your password" />
+                <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" placeholder=" Confirm your password" />
             </div>
              <asp:RequiredFieldValidator ID="reqConfirmPassword" runat="server" ControlToValidate="txtConfirmPassword"
                 ErrorMessage="Please confirm your password." CssClass="validation-error" Display="Dynamic" ValidationGroup="Register">*</asp:RequiredFieldValidator>
@@ -288,14 +288,14 @@
             <div class="input-group">
                 <i data-feather="home"></i>
                 <%-- Using TextMode="MultiLine" renders a textarea --%>
-                <asp:TextBox ID="txtAddress" runat="server" TextMode="MultiLine" Rows="2" placeholder="Enter your address"></asp:TextBox>
+                <asp:TextBox ID="txtAddress" runat="server" TextMode="MultiLine" Rows="2" placeholder=" Enter your address"></asp:TextBox>
             </div>
 
 
             <label for="<%= txtPhone.ClientID %>">Phone (Optional)</label>
             <div class="input-group">
                 <i data-feather="phone"></i>
-                <asp:TextBox ID="txtPhone" runat="server" placeholder="Enter your phone number" type="tel" />
+                <asp:TextBox ID="txtPhone" runat="server" placeholder=" Enter your phone number" type="tel" />
             </div>
 
 

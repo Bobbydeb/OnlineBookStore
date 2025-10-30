@@ -25,7 +25,8 @@ namespace OnlineBookStore
             }
             if (Session["MemberID"] == null)
             {
-                Response.Write("<script>alert('คุณยังไม่ได้ login');window.location='loginPage.aspx';</script>");
+                // MODIFIED: Translated alert message
+                Response.Write("<script>alert('You are not logged in.');window.location='loginPage.aspx';</script>");
                 return;
             }
 
@@ -229,18 +230,19 @@ namespace OnlineBookStore
                 // ▼▼▼ MODIFIED: Read new field ▼▼▼
                 string coverUrl = (row.Cells[8].Controls[0] as TextBox).Text?.Trim();
 
-                // ตรวจความถูกต้องตามคอลัมน์
-                if (string.IsNullOrWhiteSpace(isbn) || isbn.Length != 13) { ShowMessage("ISBN ต้องยาว 13 ตัวอักษร", "error"); return; }
-                if (string.IsNullOrWhiteSpace(title)) { ShowMessage("Title ห้ามว่าง", "error"); return; }
+                // MODIFIED: Translated validation messages
+                if (string.IsNullOrWhiteSpace(isbn) || isbn.Length != 13) { ShowMessage("ISBN must be 13 characters long.", "error"); return; }
+                if (string.IsNullOrWhiteSpace(title)) { ShowMessage("Title cannot be empty.", "error"); return; }
 
-                if (!decimal.TryParse(priceText, out decimal price)) { ShowMessage("Price ต้องเป็นตัวเลข", "error"); return; }
-                if (price < 0) { ShowMessage("ราคาต้องมีค่ามากกว่าหรือเท่ากับ 0", "error"); return; }
+                if (!decimal.TryParse(priceText, out decimal price)) { ShowMessage("Price must be a number.", "error"); return; }
+                if (price < 0) { ShowMessage("Price must be 0 or greater.", "error"); return; }
 
-                if (!int.TryParse(stockText, out int stock)) { ShowMessage("Stock ต้องเป็นจำนวนเต็ม", "error"); return; }
-                if (stock < 0) { ShowMessage("Stock หนังสือต้องมีค่ามากกว่าหรือเท่ากับ 0", "error"); return; }
+                if (!int.TryParse(stockText, out int stock)) { ShowMessage("Stock must be an integer.", "error"); return; }
+                if (stock < 0) { ShowMessage("Stock must be 0 or greater.", "error"); return; }
 
-                if (!int.TryParse(pubText, out int publisherID)) { ShowMessage("PublisherID ต้องเป็นจำนวนเต็ม", "error"); return; }
-                if (!int.TryParse(catText, out int categoryID)) { ShowMessage("CategoryID ต้องเป็นจำนวนเต็ม", "error"); return; }
+                if (!int.TryParse(pubText, out int publisherID)) { ShowMessage("PublisherID must be an integer.", "error"); return; }
+                if (!int.TryParse(catText, out int categoryID)) { ShowMessage("CategoryID must be an integer.", "error"); return; }
+
 
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
@@ -250,14 +252,16 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Publisher WHERE PublisherID=@id", con))
                     {
                         cmd.Parameters.AddWithValue("@id", publisherID);
-                        if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("ไม่พบ PublisherID นี้", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("This PublisherID was not found.", "error"); return; }
                     }
 
                     // FK: CategoryID ต้องมีอยู่จริง
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM BookCategory WHERE CategoryID=@id", con))
                     {
                         cmd.Parameters.AddWithValue("@id", categoryID);
-                        if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("ไม่พบ CategoryID นี้", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("This CategoryID was not found.", "error"); return; }
                     }
 
                     // UNIQUE: ISBN ต้องไม่ซ้ำกับเล่มอื่น
@@ -265,7 +269,8 @@ namespace OnlineBookStore
                     {
                         cmd.Parameters.AddWithValue("@ISBN", isbn);
                         cmd.Parameters.AddWithValue("@BookID", bookID);
-                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("ISBN ซ้ำกับหนังสือเล่มอื่น", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This ISBN already exists for another book.", "error"); return; }
                     }
 
                     // --- ▼▼▼ ADDED: New Logic for CoverID ▼▼▼ ---
@@ -349,7 +354,8 @@ namespace OnlineBookStore
 
                 GridViewBooks.EditIndex = -1;
                 LoadBooks();
-                ShowMessage("อัปเดตข้อมูลหนังสือสำเร็จ", "success");
+                // MODIFIED: Translated message
+                ShowMessage("Book updated successfully!", "success");
             }
             catch (Exception ex)
             {
@@ -580,28 +586,32 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Book WHERE BookID=@BookID", con))
                     {
                         cmd.Parameters.AddWithValue("@BookID", bookID);
-                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("BookID นี้มีอยู่แล้ว", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This BookID already exists.", "error"); return; }
                     }
 
                     // UNIQUE: ISBN ต้องไม่ซ้ำ
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Book WHERE ISBN=@ISBN", con))
                     {
                         cmd.Parameters.AddWithValue("@ISBN", isbn);
-                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("ISBN นี้ซ้ำกับหนังสือเล่มอื่น", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This ISBN already exists for another book.", "error"); return; }
                     }
 
                     // FK: PublisherID ต้องมีอยู่จริง
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Publisher WHERE PublisherID=@id", con))
                     {
                         cmd.Parameters.AddWithValue("@id", publisherID);
-                        if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("ไม่พบ PublisherID นี้", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("This PublisherID was not found.", "error"); return; }
                     }
 
                     // FK: CategoryID ต้องมีอยู่จริง
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM BookCategory WHERE CategoryID=@id", con))
                     {
                         cmd.Parameters.AddWithValue("@id", categoryID);
-                        if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("ไม่พบ CategoryID นี้", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("This CategoryID was not found.", "error"); return; }
                     }
 
                     // 4. INSERT ข้อมูล
@@ -632,7 +642,8 @@ namespace OnlineBookStore
 
                 // 5. สั่ง Refresh Grid, แสดงข้อความ, ปิด Modal
                 LoadBooks();
-                ShowMessage("เพิ่มหนังสือสำเร็จ", "success");
+                // MODIFIED: Translated message
+                ShowMessage("Book added successfully!", "success");
                 CloseModal("addBookModal");
                 ClearBookModal();
             }
@@ -668,7 +679,8 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Author WHERE AuthorID=@AuthorID", con))
                     {
                         cmd.Parameters.AddWithValue("@AuthorID", authorID);
-                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("AuthorID นี้มีอยู่แล้ว", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This AuthorID already exists.", "error"); return; }
                     }
 
                     // 4. INSERT
@@ -682,7 +694,8 @@ namespace OnlineBookStore
 
                 // 5. Refresh
                 LoadAuthors();
-                ShowMessage("เพิ่มผู้แต่งสำเร็จ", "success");
+                // MODIFIED: Translated message
+                ShowMessage("Author added successfully!", "success");
                 CloseModal("addAuthorModal");
                 ClearAuthorModal();
             }
@@ -719,7 +732,8 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Publisher WHERE PublisherID=@PublisherID", con))
                     {
                         cmd.Parameters.AddWithValue("@PublisherID", publisherID);
-                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("PublisherID นี้มีอยู่แล้ว", "error"); return; }
+                        // MODIFIED: Translated message
+                        if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This PublisherID already exists.", "error"); return; }
                     }
 
                     // 4. INSERT
@@ -734,7 +748,8 @@ namespace OnlineBookStore
 
                 // 5. Refresh
                 LoadPublishers();
-                ShowMessage("เพิ่มสำนักพิมพ์สำเร็จ", "success");
+                // MODIFIED: Translated message
+                ShowMessage("Publisher added successfully!", "success");
                 CloseModal("addPublisherModal");
                 ClearPublisherModal();
             }
@@ -867,7 +882,8 @@ namespace OnlineBookStore
             }
             catch (Exception ex)
             {
-                ShowMessage("ไม่สามารถลบสำนักพิมพ์ได้ เนื่องจากยังมีหนังสือที่ใช้สำนักพิมพ์นี้อยู่", "error");
+                // MODIFIED: Translated message
+                ShowMessage("Cannot delete publisher. It is still in use by one or more books.", "error");
 
             }
         }
@@ -899,7 +915,8 @@ namespace OnlineBookStore
             }
             catch (Exception ex)
             {
-                ShowMessage("ไม่สามารถลบสมาชิกได้ เนื่องจากมีคำสั่งซื้อที่เชื่อมอยู่กับสมาชิกนี้ คุณต้องลบคำสังซื้อเหล่านั้นก่อน", "error");
+                // MODIFIED: Translated message
+                ShowMessage("Cannot delete member. Orders are still associated with this member. You must delete those orders first.", "error");
             }
         }
 
@@ -992,4 +1009,3 @@ namespace OnlineBookStore
         #endregion
     }
 }
-
