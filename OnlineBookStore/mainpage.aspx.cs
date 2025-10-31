@@ -104,6 +104,7 @@ namespace OnlineBookStore
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 // [แก้ไข] Query ให้ดึงข้อมูล rating และ review count
+                // [แก้ไข 31/10/2568] เพิ่ม PublisherName
                 string query = @"
                     SELECT TOP 10
                         b.BookID,
@@ -111,6 +112,7 @@ namespace OnlineBookStore
                         b.Edition,
                         c.CategoryName,
                         b.Price,
+                        ISNULL(p.PublisherName, 'N/A') AS PublisherName, -- [เพิ่ม] ดึงชื่อ Publisher
                         ISNULL(cv.CoverUrl, 'https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/00_DefaultBook.jpg') AS CoverUrl,
                         ISNULL(authors.AuthorNames, 'N/A') AS Authors,
                         ISNULL(reviews.AvgRating, 0) AS AvgRating,
@@ -118,6 +120,7 @@ namespace OnlineBookStore
                     FROM Book b
                     LEFT JOIN BookCategory c ON b.CategoryID = c.CategoryID
                     LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
+                    LEFT JOIN Publisher p ON b.PublisherID = p.PublisherID -- [เพิ่ม] JOIN ตาราง Publisher
                     OUTER APPLY (
                         SELECT STUFF(
                             (SELECT ', ' + a.AuthorName
@@ -164,6 +167,7 @@ namespace OnlineBookStore
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 // [แก้ไข] Query ให้ดึงข้อมูล rating และ review count
+                // [แก้ไข 31/10/2568] เพิ่ม PublisherName
                 string query = @"
                     SELECT TOP 10
                         b.BookID,
@@ -171,6 +175,7 @@ namespace OnlineBookStore
                         b.Edition,
                         c.CategoryName,
                         b.Price,
+                        ISNULL(p.PublisherName, 'N/A') AS PublisherName, -- [เพิ่ม] ดึงชื่อ Publisher
                         ISNULL(cv.CoverUrl, 'https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/00_DefaultBook.jpg') AS CoverUrl,
                         ISNULL(SUM(od.Quantity), 0) AS TotalSold,
                         ISNULL(authors.AuthorNames, 'N/A') AS Authors,
@@ -179,6 +184,7 @@ namespace OnlineBookStore
                     FROM Book b
                     LEFT JOIN BookCategory c ON b.CategoryID = c.CategoryID
                     LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
+                    LEFT JOIN Publisher p ON b.PublisherID = p.PublisherID -- [เพิ่ม] JOIN ตาราง Publisher
                     LEFT JOIN OrderDetail od ON b.BookID = od.BookID
                     LEFT JOIN OrderTable ot ON od.OrderID = ot.OrderID AND ot.Status = 'Completed' -- นับเฉพาะ Order ที่เสร็จสมบูรณ์
                     OUTER APPLY (
@@ -197,7 +203,7 @@ namespace OnlineBookStore
                         FROM Review r
                         WHERE r.BookID = b.BookID
                     ) AS reviews
-                    GROUP BY b.BookID, b.Title, b.Edition, c.CategoryName, b.Price, cv.CoverUrl, authors.AuthorNames, reviews.AvgRating, reviews.ReviewCount
+                    GROUP BY b.BookID, b.Title, b.Edition, c.CategoryName, b.Price, cv.CoverUrl, p.PublisherName, authors.AuthorNames, reviews.AvgRating, reviews.ReviewCount -- [เพิ่ม] p.PublisherName ใน GROUP BY
                     ORDER BY TotalSold DESC;"; // เรียงตามยอดขาย
 
                 try // [เพิ่ม] Try-catch
@@ -460,4 +466,3 @@ namespace OnlineBookStore
 
     }
 }
-

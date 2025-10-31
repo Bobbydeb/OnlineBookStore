@@ -48,7 +48,7 @@ namespace OnlineBookStore
                     LEFT JOIN Cover c ON b.CoverID = c.CoverID
                     ORDER BY b.BookID";
                 SqlDataAdapter da = new SqlDataAdapter(query, con);
-                // ▲▲▲ END Modification ▲▲▲
+              
 
                 DataTable dt = new DataTable();
                 da.Fill(dt);

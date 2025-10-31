@@ -266,17 +266,18 @@
             <section class="book-grid">
                 <asp:Repeater ID="rptSearchResults" runat="server" OnItemCommand="Repeater_ItemCommand"> <%-- Added ItemCommand --%>
                     <ItemTemplate>
-                        <%-- Updated book card structure to match mainpage --%>
+                        <%-- [แก้ไข] เพิ่ม data-publisher --%>
                         <div class="book-card"
                             data-bookid="<%# Eval("BookID") %>"
                             data-title="<%# Eval("Title") %>"
                             data-price="<%# Eval("Price", "{0:F2}") %>"
                             data-cover="<%# Eval("CoverUrl") %>"
-                            data-authors="<%# Eval("Authors") %>" <%-- Added Authors --%>
+                            data-authors="<%# Eval("Authors") %>" 
                             data-edition="<%# Eval("Edition") %>"
+                            data-publisher="<%# Eval("PublisherName") %>" <%-- [เพิ่ม] data-publisher --%>
                             data-category="<%# Eval("CategoryName") %>"
-                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>" <%-- Added Rating --%>
-                            data-review-count="<%# Eval("ReviewCount") %>"> <%-- Added Review Count --%>
+                            data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>" 
+                            data-review-count="<%# Eval("ReviewCount") %>"> 
 
                             <a href="javascript:void(0);" class="book-cover-link js-open-modal">
                                 <img src='<%# Eval("CoverUrl") %>' alt='<%# Eval("Title") %>'
@@ -290,7 +291,6 @@
                                     </h3>
                                     <p class="book-author"><%# Eval("Authors") %></p>
                                     <p class="book-category"><%# Eval("CategoryName") %></p>
-                                    <%-- Removed Edition from display, but kept in data-* --%>
                                 </div>
                                 <div>
                                     <p class="book-price">฿<%# Eval("Price", "{0:F2}") %></p>
@@ -336,6 +336,7 @@
                         <div class="modal-book-meta">
                             <span id="modalBookAuthors"></span>
                             <span id="modalBookEdition"></span>
+                            <span id="modalBookPublisher"></span> <%-- [เพิ่ม] Span สำหรับ Publisher --%>
                             <span id="modalBookCategory"></span>
                         </div>
 
@@ -367,6 +368,7 @@
         const modalBookPrice = document.getElementById('modalBookPrice');
         const modalBookAuthors = document.getElementById('modalBookAuthors');
         const modalBookEdition = document.getElementById('modalBookEdition');
+        const modalBookPublisher = document.getElementById('modalBookPublisher'); // [เพิ่ม]
         const modalBookCategory = document.getElementById('modalBookCategory');
         const modalBookReviews = document.getElementById('modalBookReviews');
 
@@ -383,6 +385,7 @@
             const cover = cardElement.getAttribute('data-cover');
             const authors = cardElement.getAttribute('data-authors');
             const edition = cardElement.getAttribute('data-edition');
+            const publisher = cardElement.getAttribute('data-publisher'); // [เพิ่ม]
             const category = cardElement.getAttribute('data-category');
             let avgRating = parseFloat(cardElement.getAttribute('data-avg-rating')); if (isNaN(avgRating)) avgRating = 0;
             let reviewCount = parseInt(cardElement.getAttribute('data-review-count'), 10); if (isNaN(reviewCount)) reviewCount = 0;
@@ -392,6 +395,7 @@
             modalBookTitle.textContent = title; modalBookPrice.textContent = '฿' + price;
             modalBookAuthors.innerHTML = '<strong>Author:</strong> ' + (authors && authors !== 'N/A' ? authors : 'Unknown');
             modalBookEdition.innerHTML = '<strong>Edition:</strong> ' + (edition ? edition : 'N/A');
+            modalBookPublisher.innerHTML = '<strong>Publisher:</strong> ' + (publisher && publisher !== 'N/A' ? publisher : 'Unknown'); // [เพิ่ม]
             modalBookCategory.innerHTML = '<strong>Genre:</strong> ' + (category ? category : 'N/A');
 
             if (reviewCount > 0 && avgRating > 0) {
@@ -416,4 +420,3 @@
     </script>
 </body>
 </html>
-

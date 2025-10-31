@@ -94,7 +94,7 @@ namespace OnlineBookStore
 
             using (SqlConnection conn = new SqlConnection(GetConnectionString())) // [แก้ไข]
             {
-                // (Query เหมือนเดิม)
+                // [แก้ไข 31/10/2568] เพิ่ม PublisherName
                 string query = @"
                 SELECT TOP 5
                     B.BookID,
@@ -102,6 +102,7 @@ namespace OnlineBookStore
                     B.Edition,
                     B.Price,
                     B.Stock, 
+                    ISNULL(p.PublisherName, 'N/A') AS PublisherName, -- [เพิ่ม]
                     ISNULL(SUM(OD.Quantity), 0) AS TotalSold, 
                     ISNULL(C.CoverUrl, 'https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/00_DefaultBook.jpg') AS CoverUrl,
                     BC.CategoryName,
@@ -112,6 +113,7 @@ namespace OnlineBookStore
                 LEFT JOIN OrderDetail OD ON B.BookID = OD.BookID 
                 LEFT JOIN Cover C ON B.CoverID = C.CoverID
                 LEFT JOIN BookCategory BC ON B.CategoryID = BC.CategoryID 
+                LEFT JOIN Publisher p ON B.PublisherID = p.PublisherID -- [เพิ่ม]
                 OUTER APPLY (
                     SELECT STUFF(
                         (SELECT ', ' + a.AuthorName
@@ -129,7 +131,7 @@ namespace OnlineBookStore
                     WHERE r.BookID = B.BookID
                 ) AS reviews
                 WHERE B.CategoryID = @CategoryID
-                GROUP BY B.BookID, B.Title, B.Edition, B.Price, B.Stock, C.CoverUrl, BC.CategoryName, authors.AuthorNames, reviews.AvgRating, reviews.ReviewCount
+                GROUP BY B.BookID, B.Title, B.Edition, B.Price, B.Stock, C.CoverUrl, BC.CategoryName, p.PublisherName, authors.AuthorNames, reviews.AvgRating, reviews.ReviewCount -- [เพิ่ม] p.PublisherName
                 ORDER BY TotalSold DESC;";
 
 
@@ -147,9 +149,8 @@ namespace OnlineBookStore
             }
         }
 
-        // --- [เพิ่ม] โค้ดทั้งหมดจาก mainpage.aspx.cs สำหรับตะกร้า ---
 
-        // [เพิ่ม] Event Handler สำหรับปุ่มใน Repeater (จะใช้ชื่อนี้กับ Repeater ทั้ง 11 ตัว)
+
         protected void Repeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "AddToCart")
@@ -356,6 +357,6 @@ namespace OnlineBookStore
                 cartCount.Attributes["class"] = "cart-count empty";
             }
         }
-        // --- [จบ] โค้ดที่เพิ่มจาก mainpage.aspx.cs ---
+
     }
 }

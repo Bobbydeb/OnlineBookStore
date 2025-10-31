@@ -519,7 +519,7 @@
             <div class="container">
                 <div class="logo">ChaiChaKit Bookstore</div>
                 <div class="search-bar">
-                    <asp:TextBox ID="txtSearch" runat="server" placeholder="Search for books, authors, or ISBN..." CssClass="search-input"></asp:TextBox>
+                    <asp:TextBox ID="txtSearch" runat="server" placeholder="Search for books, authors..." CssClass="search-input"></asp:TextBox>
                     <asp:LinkButton ID="btnSearch" runat="server" OnClick="btnSearch_Click" CssClass="search-button">
                          <i data-feather="search"></i>
                     </asp:LinkButton>
@@ -584,6 +584,7 @@
                             data-cover="<%# Eval("CoverUrl") %>"
                             data-authors="<%# Eval("Authors") %>"
                             data-edition="<%# Eval("Edition") %>"
+                            data-publisher="<%# Eval("PublisherName") %>" <%-- [เพิ่ม] data-publisher --%>
                             data-category="<%# Eval("CategoryName") %>"
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
@@ -649,6 +650,7 @@
                         <div class="modal-book-meta">
                             <span id="modalBookAuthors"></span>
                             <span id="modalBookEdition"></span>
+                            <span id="modalBookPublisher"></span> <%-- [เพิ่ม] Span สำหรับ Publisher --%>
                             <span id="modalBookCategory"></span>
                         </div>
                         <div id="modalBookReviews" class="modal-review-summary"></div>
@@ -676,6 +678,7 @@
         const modalBookPrice = document.getElementById('modalBookPrice');
         const modalBookAuthors = document.getElementById('modalBookAuthors');
         const modalBookEdition = document.getElementById('modalBookEdition');
+        const modalBookPublisher = document.getElementById('modalBookPublisher'); // [เพิ่ม]
         const modalBookCategory = document.getElementById('modalBookCategory');
         const modalBookReviews = document.getElementById('modalBookReviews');
 
@@ -692,6 +695,7 @@
             const cover = cardElement.getAttribute('data-cover');
             const authors = cardElement.getAttribute('data-authors');
             const edition = cardElement.getAttribute('data-edition');
+            const publisher = cardElement.getAttribute('data-publisher'); // [เพิ่ม] อ่านค่า
             const category = cardElement.getAttribute('data-category');
             let avgRating = parseFloat(cardElement.getAttribute('data-avg-rating')); if (isNaN(avgRating)) avgRating = 0;
             let reviewCount = parseInt(cardElement.getAttribute('data-review-count'), 10); if (isNaN(reviewCount)) reviewCount = 0;
@@ -706,6 +710,7 @@
             modalBookPrice.textContent = '฿' + price;
             modalBookAuthors.innerHTML = '<strong>Author:</strong> ' + (authors && authors !== 'N/A' ? authors : 'Unknown');
             modalBookEdition.innerHTML = '<strong>Edition:</strong> ' + (edition ? edition : 'N/A');
+            modalBookPublisher.innerHTML = '<strong>Publisher:</strong> ' + (publisher && publisher !== 'N/A' ? publisher : 'Unknown'); // [เพิ่ม] แสดงผล
             modalBookCategory.innerHTML = '<strong>Genre:</strong> ' + (category ? category : 'N/A');
 
             if (reviewCount > 0 && avgRating > 0) {

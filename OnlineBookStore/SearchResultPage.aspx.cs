@@ -90,10 +90,11 @@ namespace OnlineBookStore
                         pnlNoResults.Visible = false;
 
                         // Fetch paginated results (Added more fields)
+                        // [แก้ไข] เพิ่ม p.PublisherName
                         string sqlQuery = @"
                             SELECT DISTINCT
                                 b.BookID, b.Title, b.Edition,
-                                c.CategoryName, b.Price,
+                                c.CategoryName, b.Price, p.PublisherName,
                                 ISNULL(cv.CoverUrl, 'https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/00_DefaultBook.jpg') AS CoverUrl,
                                 ISNULL(authors.AuthorNames, 'N/A') AS Authors,
                                 ISNULL(reviews.AvgRating, 0) AS AvgRating,
@@ -101,6 +102,7 @@ namespace OnlineBookStore
                             FROM Book b
                             LEFT JOIN BookCategory c ON b.CategoryID = c.CategoryID
                             LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
+                            LEFT JOIN Publisher p ON b.PublisherID = p.PublisherID
                             LEFT JOIN BookAuthor ba ON b.BookID = ba.BookID
                             LEFT JOIN Author a ON ba.AuthorID = a.AuthorID
                             OUTER APPLY (

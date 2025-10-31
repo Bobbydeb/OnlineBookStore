@@ -100,12 +100,14 @@ namespace OnlineBookStore
                     pnlNoBooks.Visible = false;
 
                     // --- Query 3: ดึงหนังสือแบบแบ่งหน้า ---
+                    // [แก้ไข] เพิ่ม PublisherName
                     string bookQuery = @"
                         SELECT
                             b.BookID,
                             b.Title,
                             b.Edition,
                             c.CategoryName,
+                            p.PublisherName,
                             b.Price,
                             b.Stock,
                             ISNULL(cv.CoverUrl, 'https://raw.githubusercontent.com/Bobbydeb/OnlineBookStore/refs/heads/master/OnlineBookStore/wwwroot/images/00_DefaultBook.jpg') AS CoverUrl,
@@ -114,6 +116,7 @@ namespace OnlineBookStore
                             ISNULL(reviews.ReviewCount, 0) AS ReviewCount
                         FROM Book b
                         LEFT JOIN BookCategory c ON b.CategoryID = c.CategoryID
+                        LEFT JOIN Publisher p ON b.PublisherID = p.PublisherID
                         LEFT JOIN Cover cv ON b.CoverID = cv.CoverID
                         OUTER APPLY (
                             SELECT STUFF(
