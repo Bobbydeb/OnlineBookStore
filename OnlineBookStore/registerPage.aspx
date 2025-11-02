@@ -112,33 +112,33 @@
         .input-group input[type="tel"], /* Added tel type */
         .input-group textarea
         {
-            border: none !important; /* Force remove border */
-            outline: none !important; /* Force remove outline */
-            box-shadow: none !important; /* Force remove shadow */
+            border: none !important;  
+            outline: none !important;  
+            box-shadow: none !important;  
             width: 100%;
-            padding: 0; /* Remove default padding */
-            font-size: 1rem; /* Standard font size */
-            background-color: transparent !important; /* Force transparent background */
+            padding: 0;  
+            font-size: 1rem;  
+            background-color: transparent !important;  
             font-family: var(--font-primary);
             color: var(--color-black);
-            height: auto; /* Allow height to adjust */
-            line-height: inherit; /* Inherit line height */
-            appearance: none; /* Remove default appearance */
+            height: auto;  
+            line-height: inherit;  
+            appearance: none;  
              -webkit-appearance: none;
              -moz-appearance: none;
         }
         .input-group textarea {
-             resize: vertical; /* Allow vertical resize */
-             min-height: 40px; /* Adjusted minimum height for address */
-             line-height: 1.5; /* Improve textarea line height */
-             padding-top: 2px; /* Fine-tune alignment */
+             resize: vertical;  
+             min-height: 40px;  
+             line-height: 1.5;  
+             padding-top: 2px;  
         }
 
-        input::placeholder, textarea::placeholder { /* Added textarea */
-            color: #aaa; /* Lighter placeholder */
+        input::placeholder, textarea::placeholder {  
+            color: #aaa;  
             opacity: 1;
         }
-        /* --- End Updated Styles --- */
+       
 
 
         .btn-register { /* Renamed from btn-login */

@@ -83,56 +83,7 @@
             flex-shrink: 0;
         }
         
-        /* [NEW] Search Bar Removed for My Account Page, uncomment if needed */
-        /*
-        .search-bar { 
-            flex-grow: 1; 
-            display: flex; 
-            max-width: 500px;
-            position: relative;
-        }
-        .search-input { 
-            width: 100%; 
-            padding: 12px 20px; 
-            padding-right: 50px;
-            border: 1px solid var(--color-gray-medium); 
-            border-radius: 25px;
-            font-size: 1rem; 
-            font-family: var(--font-primary);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        .search-input:focus {
-            outline: none;
-            border-color: var(--color-red-vibrant);
-            box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
-        }
-        .search-button {
-            position: absolute;
-            right: 6px;
-            top: 6px;
-            height: 38px;
-            width: 38px;
-            border: none;
-            border-radius: 50%;
-            background-color: var(--color-red-vibrant);
-            color: var(--color-white);
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-        .search-button:hover { 
-            background-color: var(--color-red-deep); 
-        }
-        .search-button i {
-            width: 18px;
-            height: 18px;
-        }
-        */
-
-        /* [NEW] Header Icons (No Search Bar) */
+ 
         .top-header .container .header-icons {
              margin-left: auto; /* Push to the right */
         }

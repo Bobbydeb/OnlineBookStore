@@ -5,8 +5,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Linq;
 using System.Web.UI.HtmlControls;
-using System.Diagnostics; // Added for Debug
-using System.Web; // Added for HttpUtility
+using System.Diagnostics;  
+using System.Web;  
 
 namespace OnlineBookStore
 {
@@ -23,7 +23,7 @@ namespace OnlineBookStore
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Login check
+           
             if (Session["MemberID"] != null)
             {
                 btnLogin.Visible = false;
@@ -35,7 +35,7 @@ namespace OnlineBookStore
                 btnLogout.Visible = false;
             }
 
-            // Get QueryString values
+    
             searchQuery = Request.QueryString["query"];
             if (!int.TryParse(Request.QueryString["page"], out currentPage)) { currentPage = 1; }
             if (currentPage < 1) { currentPage = 1; }
@@ -54,7 +54,7 @@ namespace OnlineBookStore
                 {
                     litSearchQuery.Text = "[Search term not specified]";
                     pnlNoResults.Visible = true;
-                    pnlPager.Visible = false; // Hide pager if no query
+                    pnlPager.Visible = false; //  
                 }
             }
         }
@@ -67,11 +67,10 @@ namespace OnlineBookStore
 
             using (SqlConnection con = new SqlConnection(GetConnectionString()))
             {
-                try // Added try-catch
+                try  
                 {
                     con.Open();
-
-                    // Count total results
+ 
                     string countQuery = @"
                         SELECT COUNT(DISTINCT b.BookID)
                         FROM Book b
@@ -89,8 +88,7 @@ namespace OnlineBookStore
                     {
                         pnlNoResults.Visible = false;
 
-                        // Fetch paginated results (Added more fields)
-                        // [แก้ไข] เพิ่ม p.PublisherName
+ 
                         string sqlQuery = @"
                             SELECT DISTINCT
                                 b.BookID, b.Title, b.Edition,
@@ -157,13 +155,13 @@ namespace OnlineBookStore
                 catch (Exception ex)
                 {
                     Debug.WriteLine("Error loading search results: " + ex.Message);
-                    // Optionally show an error message to the user
+                    
                     pnlNoResults.Visible = true;
                     pnlPager.Visible = false;
                     rptSearchResults.DataSource = null;
                     rptSearchResults.DataBind();
                 }
-            } // Connection closed automatically
+            }  
         }
 
         protected void rptPager_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -275,7 +273,7 @@ namespace OnlineBookStore
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in AddToCart (Repeater): {ex.Message}");
-                    // Show error message?
+              
                 }
                 finally
                 {
@@ -319,7 +317,7 @@ namespace OnlineBookStore
             return cartId;
         }
 
-        // --- Cart Count Helpers (Copied from mainpage.aspx.cs) ---
+ 
         private void LoadCartCount()
         {
             if (Session["MemberID"] != null)
@@ -388,6 +386,6 @@ namespace OnlineBookStore
             cartCount.InnerText = "0";
             cartCount.Attributes["class"] = "cart-count empty";
         }
-        // --- End Cart Count Helpers ---
+       
     }
 }

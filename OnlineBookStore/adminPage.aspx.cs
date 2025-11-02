@@ -25,7 +25,7 @@ namespace OnlineBookStore
             }
             if (Session["MemberID"] == null)
             {
-                // MODIFIED: Translated alert message
+              
                 Response.Write("<script>alert('You are not logged in.');window.location='loginPage.aspx';</script>");
                 return;
             }
@@ -39,7 +39,7 @@ namespace OnlineBookStore
         {
             using (SqlConnection con = new SqlConnection(connStr))
             {
-                // ▼▼▼ MODIFIED Query ▼▼▼
+                
                 string query = @"
                     SELECT 
                         b.BookID, b.ISBN, b.Title, b.Price, b.Stock, b.PublisherID, b.CategoryID,
@@ -161,29 +161,22 @@ namespace OnlineBookStore
 
         #region Generic GridView Edit/Cancel Methods
 
-        /// <summary>
-        /// Handles the RowEditing event for ALL GridViews.
-        /// </summary>
+ 
         protected void GridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
             GridView gv = (GridView)sender;
             gv.EditIndex = e.NewEditIndex;
-            LoadDataForGridView(gv.ID); // Reload data for the specific grid
+            LoadDataForGridView(gv.ID);  
         }
-
-        /// <summary>
-        /// Handles the RowCancelingEdit event for ALL GridViews.
-        /// </summary>
+ 
         protected void GridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             GridView gv = (GridView)sender;
             gv.EditIndex = -1;
-            LoadDataForGridView(gv.ID); // Reload data for the specific grid
+            LoadDataForGridView(gv.ID);  
         }
 
-        /// <summary>
-        /// Helper to reload data for the correct GridView.
-        /// </summary>
+        
         private void LoadDataForGridView(string gridViewId)
         {
             switch (gridViewId)
@@ -227,10 +220,10 @@ namespace OnlineBookStore
                 string stockText = (row.Cells[5].Controls[0] as TextBox).Text?.Trim();
                 string pubText = (row.Cells[6].Controls[0] as TextBox).Text?.Trim();
                 string catText = (row.Cells[7].Controls[0] as TextBox).Text?.Trim();
-                // ▼▼▼ MODIFIED: Read new field ▼▼▼
+         
                 string coverUrl = (row.Cells[8].Controls[0] as TextBox).Text?.Trim();
 
-                // MODIFIED: Translated validation messages
+                 
                 if (string.IsNullOrWhiteSpace(isbn) || isbn.Length != 13) { ShowMessage("ISBN must be 13 characters long.", "error"); return; }
                 if (string.IsNullOrWhiteSpace(title)) { ShowMessage("Title cannot be empty.", "error"); return; }
 
@@ -252,7 +245,7 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Publisher WHERE PublisherID=@id", con))
                     {
                         cmd.Parameters.AddWithValue("@id", publisherID);
-                        // MODIFIED: Translated message
+                     
                         if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("This PublisherID was not found.", "error"); return; }
                     }
 
@@ -260,7 +253,7 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM BookCategory WHERE CategoryID=@id", con))
                     {
                         cmd.Parameters.AddWithValue("@id", categoryID);
-                        // MODIFIED: Translated message
+                    
                         if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("This CategoryID was not found.", "error"); return; }
                     }
 
@@ -269,14 +262,14 @@ namespace OnlineBookStore
                     {
                         cmd.Parameters.AddWithValue("@ISBN", isbn);
                         cmd.Parameters.AddWithValue("@BookID", bookID);
-                        // MODIFIED: Translated message
+                  
                         if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This ISBN already exists for another book.", "error"); return; }
                     }
 
-                    // --- ▼▼▼ ADDED: New Logic for CoverID ▼▼▼ ---
+                 
                     int? newCoverID = null;
 
-                    // 1. Get current CoverID for this book
+                    // 1. Get  CoverID 
                     int? currentCoverID = null;
                     using (var cmdGetCover = new SqlCommand("SELECT CoverID FROM Book WHERE BookID = @BookID", con))
                     {
@@ -290,25 +283,25 @@ namespace OnlineBookStore
 
                     if (string.IsNullOrWhiteSpace(coverUrl))
                     {
-                        // User wants to remove/clear the image. Set Book.CoverID to NULL.
+                       
                         newCoverID = null;
                     }
-                    else // coverUrl is NOT empty
+                    else  
                     {
                         if (currentCoverID.HasValue)
                         {
-                            // Update existing Cover row
+                           
                             using (var cmdUpdateCover = new SqlCommand("UPDATE Cover SET CoverUrl = @CoverUrl WHERE CoverID = @CoverID", con))
                             {
                                 cmdUpdateCover.Parameters.AddWithValue("@CoverUrl", coverUrl);
                                 cmdUpdateCover.Parameters.AddWithValue("@CoverID", currentCoverID.Value);
                                 cmdUpdateCover.ExecuteNonQuery();
                             }
-                            newCoverID = currentCoverID; // It's the same ID
+                            newCoverID = currentCoverID;  
                         }
                         else
                         {
-                            // Create new Cover row
+                          
                             using (var cmdInsertCover = new SqlCommand("INSERT INTO Cover (CoverUrl) VALUES (@CoverUrl); SELECT SCOPE_IDENTITY();", con))
                             {
                                 cmdInsertCover.Parameters.AddWithValue("@CoverUrl", coverUrl);
@@ -320,10 +313,10 @@ namespace OnlineBookStore
                             }
                         }
                     }
-                    // --- ▲▲▲ END: New Logic ---
+              
 
                     // ผ่านทุกเงื่อนไข ค่อยอัปเดต
-                    // ▼▼▼ MODIFIED Query ▼▼▼
+                 
                     using (var cmd = new SqlCommand(@"
                 UPDATE Book
                 SET ISBN=@ISBN, Title=@Title, Price=@Price, Stock=@Stock,
@@ -337,7 +330,7 @@ namespace OnlineBookStore
                         cmd.Parameters.AddWithValue("@PublisherID", publisherID);
                         cmd.Parameters.AddWithValue("@CategoryID", categoryID);
 
-                        // Handle nullable CoverID
+                 
                         if (newCoverID.HasValue)
                         {
                             cmd.Parameters.AddWithValue("@CoverID", newCoverID.Value);
@@ -354,7 +347,7 @@ namespace OnlineBookStore
 
                 GridViewBooks.EditIndex = -1;
                 LoadBooks();
-                // MODIFIED: Translated message
+          
                 ShowMessage("Book updated successfully!", "success");
             }
             catch (Exception ex)
@@ -436,7 +429,7 @@ namespace OnlineBookStore
                 int memberID = Convert.ToInt32(GridViewMembers.DataKeys[e.RowIndex].Value);
                 string fullName = (row.Cells[2].Controls[0] as TextBox).Text;
                 string email = (row.Cells[3].Controls[0] as TextBox).Text;
-                // Password (Cell 4) is ReadOnly, so we don't update it.
+          
                 string address = (row.Cells[5].Controls[0] as TextBox).Text;
                 string phone = (row.Cells[6].Controls[0] as TextBox).Text;
                 string role = (row.Cells[7].Controls[0] as TextBox).Text;
@@ -472,7 +465,7 @@ namespace OnlineBookStore
             {
                 GridViewRow row = GridViewOrders.Rows[e.RowIndex];
                 int orderID = Convert.ToInt32(GridViewOrders.DataKeys[e.RowIndex].Value);
-                // Other fields are ReadOnly
+      
                 string status = (row.Cells[5].Controls[0] as TextBox).Text;
 
                 using (SqlConnection con = new SqlConnection(connStr))
@@ -501,7 +494,7 @@ namespace OnlineBookStore
             {
                 GridViewRow row = GridViewReviews.Rows[e.RowIndex];
                 int reviewID = Convert.ToInt32(GridViewReviews.DataKeys[e.RowIndex].Value);
-                // Other fields are ReadOnly
+    
                 int rating = Convert.ToInt32((row.Cells[4].Controls[0] as TextBox).Text);
                 string comment = (row.Cells[5].Controls[0] as TextBox).Text;
 
@@ -528,25 +521,22 @@ namespace OnlineBookStore
 
 
         #endregion
-
-        // ===================================================================
-        // ========== ADDED: New Methods for Add Buttons ==========
-        // ===================================================================
+ 
         #region Add New Data Methods
 
         protected void btnSaveBook_Click(object sender, EventArgs e)
         {
-            // ▼▼▼ ADDED: Server-side validation check ▼▼▼
+          
             Page.Validate("AddBookValidation");
             if (!Page.IsValid)
             {
-                return; // Validators will show messages
+                return;  
             }
-            // ▲▲▲ END Modification ▲▲▲
+          
 
             try
             {
-                // 1. อ่านค่าจาก Modal TextBoxes (We can safely parse now)
+         
                 int bookID = Convert.ToInt32(txtAddBookId.Text.Trim());
                 string isbn = txtAddBookIsbn.Text.Trim();
                 string title = txtAddBookTitle.Text.Trim();
@@ -556,18 +546,18 @@ namespace OnlineBookStore
                 int categoryID = Convert.ToInt32(txtAddBookCatId.Text.Trim());
                 string imageUrl = txtAddBookImageUrl.Text.Trim();
 
-                // 2. ตรวจสอบความถูกต้อง (REMOVED redundant input checks)
-                // Validators now handle: required, int, decimal, range, length
+                // 2. ตรวจสอบความถูกต้อง  
+            
 
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
 
-                    // ▼▼▼ Handle Cover Image URL (This logic is correct) ▼▼▼
+                
                     int? coverID = null; // Use nullable int
                     if (!string.IsNullOrWhiteSpace(imageUrl))
                     {
-                        // Insert into Cover table and get the new ID
+           
                         using (var cmdCover = new SqlCommand("INSERT INTO Cover (CoverUrl) VALUES (@CoverUrl); SELECT SCOPE_IDENTITY();", con))
                         {
                             cmdCover.Parameters.AddWithValue("@CoverUrl", imageUrl);
@@ -581,12 +571,12 @@ namespace OnlineBookStore
                     // --- ▲▲▲ END: New Logic ---
 
                     // 3. ตรวจสอบ Constraints (PK, Unique, FK)
-                    // (This is business logic, so it STAYS)
+            
                     // PK: BookID ต้องไม่ซ้ำ
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Book WHERE BookID=@BookID", con))
                     {
                         cmd.Parameters.AddWithValue("@BookID", bookID);
-                        // MODIFIED: Translated message
+              
                         if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This BookID already exists.", "error"); return; }
                     }
 
@@ -594,7 +584,7 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Book WHERE ISBN=@ISBN", con))
                     {
                         cmd.Parameters.AddWithValue("@ISBN", isbn);
-                        // MODIFIED: Translated message
+          
                         if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This ISBN already exists for another book.", "error"); return; }
                     }
 
@@ -602,7 +592,7 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Publisher WHERE PublisherID=@id", con))
                     {
                         cmd.Parameters.AddWithValue("@id", publisherID);
-                        // MODIFIED: Translated message
+                  
                         if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("This PublisherID was not found.", "error"); return; }
                     }
 
@@ -610,7 +600,7 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM BookCategory WHERE CategoryID=@id", con))
                     {
                         cmd.Parameters.AddWithValue("@id", categoryID);
-                        // MODIFIED: Translated message
+                      
                         if ((int)cmd.ExecuteScalar() == 0) { ShowMessage("This CategoryID was not found.", "error"); return; }
                     }
 
@@ -642,7 +632,7 @@ namespace OnlineBookStore
 
                 // 5. สั่ง Refresh Grid, แสดงข้อความ, ปิด Modal
                 LoadBooks();
-                // MODIFIED: Translated message
+              
                 ShowMessage("Book added successfully!", "success");
                 CloseModal("addBookModal");
                 ClearBookModal();
@@ -655,13 +645,13 @@ namespace OnlineBookStore
 
         protected void btnSaveAuthor_Click(object sender, EventArgs e)
         {
-            // ▼▼▼ ADDED: Server-side validation check ▼▼▼
+  
             Page.Validate("AddAuthorValidation");
             if (!Page.IsValid)
             {
-                return; // Validators will show messages
+                return;  
             }
-            // ▲▲▲ END Modification ▲▲▲
+           
 
             try
             {
@@ -694,7 +684,7 @@ namespace OnlineBookStore
 
                 // 5. Refresh
                 LoadAuthors();
-                // MODIFIED: Translated message
+              
                 ShowMessage("Author added successfully!", "success");
                 CloseModal("addAuthorModal");
                 ClearAuthorModal();
@@ -707,13 +697,13 @@ namespace OnlineBookStore
 
         protected void btnSavePublisher_Click(object sender, EventArgs e)
         {
-            // ▼▼▼ ADDED: Server-side validation check ▼▼▼
+         
             Page.Validate("AddPublisherValidation");
             if (!Page.IsValid)
             {
                 return; // Validators will show messages
             }
-            // ▲▲▲ END Modification ▲▲▲
+           
 
             try
             {
@@ -732,7 +722,7 @@ namespace OnlineBookStore
                     using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Publisher WHERE PublisherID=@PublisherID", con))
                     {
                         cmd.Parameters.AddWithValue("@PublisherID", publisherID);
-                        // MODIFIED: Translated message
+                   
                         if ((int)cmd.ExecuteScalar() > 0) { ShowMessage("This PublisherID already exists.", "error"); return; }
                     }
 
@@ -748,7 +738,7 @@ namespace OnlineBookStore
 
                 // 5. Refresh
                 LoadPublishers();
-                // MODIFIED: Translated message
+          
                 ShowMessage("Publisher added successfully!", "success");
                 CloseModal("addPublisherModal");
                 ClearPublisherModal();
@@ -759,7 +749,7 @@ namespace OnlineBookStore
             }
         }
 
-        // Helpers for clearing modal textboxes
+        
         private void ClearBookModal()
         {
             txtAddBookId.Text = "";
@@ -788,8 +778,8 @@ namespace OnlineBookStore
         }
 
         #endregion
-        // ===================================================================
-        // ===================================================================
+       
+        
 
 
         #region GridView Delete Methods
@@ -802,12 +792,12 @@ namespace OnlineBookStore
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
-                    // Must delete from linking tables first
+                 
                     SqlCommand cmdLink = new SqlCommand("DELETE FROM BookAuthor WHERE BookID=@BookID", con);
                     cmdLink.Parameters.AddWithValue("@BookID", bookID);
                     cmdLink.ExecuteNonQuery();
 
-                    // Must delete from dependent tables first (e.g., OrderDetail, Review)
+                  
                     SqlCommand cmdDetail = new SqlCommand("DELETE FROM OrderDetail WHERE BookID=@BookID", con);
                     cmdDetail.Parameters.AddWithValue("@BookID", bookID);
                     cmdDetail.ExecuteNonQuery();
@@ -815,13 +805,7 @@ namespace OnlineBookStore
                     SqlCommand cmdReview = new SqlCommand("DELETE FROM Review WHERE BookID=@BookID", con);
                     cmdReview.Parameters.AddWithValue("@BookID", bookID);
                     cmdReview.ExecuteNonQuery();
-
-                    // Note: This does not delete the Cover entry, which is fine.
-                    // If we wanted to, we'd have to get the CoverID first, then delete book, then delete cover.
-                    // The current schema sets CoverID to DEFAULT (NULL) on Cover deletion,
-                    // but we are deleting the Book, not the Cover. Orphaned Cover rows are acceptable.
-
-                    // Now delete the book
+ 
                     SqlCommand cmd = new SqlCommand("DELETE FROM Book WHERE BookID=@BookID", con);
                     cmd.Parameters.AddWithValue("@BookID", bookID);
                     cmd.ExecuteNonQuery();
@@ -843,12 +827,12 @@ namespace OnlineBookStore
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
-                    // Must delete from linking table first
+ 
                     SqlCommand cmdLink = new SqlCommand("DELETE FROM BookAuthor WHERE AuthorID=@AuthorID", con);
                     cmdLink.Parameters.AddWithValue("@AuthorID", authorID);
                     cmdLink.ExecuteNonQuery();
 
-                    // Now delete the author
+       
                     SqlCommand cmd = new SqlCommand("DELETE FROM Author WHERE AuthorID=@AuthorID", con);
                     cmd.Parameters.AddWithValue("@AuthorID", authorID);
                     cmd.ExecuteNonQuery();
@@ -870,9 +854,7 @@ namespace OnlineBookStore
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
-                    // NOTE: This will fail if any book still uses this publisher.
-                    // A better approach would be to check first, or set books' PublisherID to NULL.
-                    // For simplicity, we just try to delete.
+      
                     SqlCommand cmd = new SqlCommand("DELETE FROM Publisher WHERE PublisherID=@PublisherID", con);
                     cmd.Parameters.AddWithValue("@PublisherID", publisherID);
                     cmd.ExecuteNonQuery();
@@ -882,7 +864,7 @@ namespace OnlineBookStore
             }
             catch (Exception ex)
             {
-                // MODIFIED: Translated message
+       
                 ShowMessage("Cannot delete publisher. It is still in use by one or more books.", "error");
 
             }
@@ -896,15 +878,12 @@ namespace OnlineBookStore
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
-                    // NOTE: This will fail if any order/review still uses this member.
-                    // You must delete dependent records first.
+      
                     SqlCommand cmdReview = new SqlCommand("DELETE FROM Review WHERE MemberID=@MemberID", con);
                     cmdReview.Parameters.AddWithValue("@MemberID", memberID);
                     cmdReview.ExecuteNonQuery();
 
-                    // This is complex. Deleting orders might not be desirable.
-                    // For now, we'll just show the error if it fails.
-                    // A better way is to set the member to "inactive" instead of deleting.
+    
 
                     SqlCommand cmd = new SqlCommand("DELETE FROM Member WHERE MemberID=@MemberID", con);
                     cmd.Parameters.AddWithValue("@MemberID", memberID);
@@ -915,7 +894,7 @@ namespace OnlineBookStore
             }
             catch (Exception ex)
             {
-                // MODIFIED: Translated message
+      
                 ShowMessage("Cannot delete member. Orders are still associated with this member. You must delete those orders first.", "error");
             }
         }
@@ -928,12 +907,11 @@ namespace OnlineBookStore
                 using (SqlConnection con = new SqlConnection(connStr))
                 {
                     con.Open();
-                    // Must delete from OrderDetail first
+         
                     SqlCommand cmdDetail = new SqlCommand("DELETE FROM OrderDetail WHERE OrderID=@OrderID", con);
                     cmdDetail.Parameters.AddWithValue("@OrderID", orderID);
                     cmdDetail.ExecuteNonQuery();
-
-                    // Now delete the order
+ 
                     SqlCommand cmd = new SqlCommand("DELETE FROM OrderTable WHERE OrderID=@OrderID", con);
                     cmd.Parameters.AddWithValue("@OrderID", orderID);
                     cmd.ExecuteNonQuery();
@@ -979,24 +957,21 @@ namespace OnlineBookStore
         /// <param name="type">'success' or 'error'</param>
         private void ShowMessage(string message, string type)
         {
-            // Cleans the message for JavaScript
+    
             string cleanMessage = message.Replace("'", "\\'").Replace("\r", "\\r").Replace("\n", "\\n");
             string script = $"showMessage('{cleanMessage}', '{type}');";
 
-            // Registers the script to run on the page
-            // We use this.Page as the control so it works from within an UpdatePanel
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowMessage", script, true);
         }
 
-        // ========== ADDED: Helper to close modal from server-side ==========
+      
         /// <summary>
-        /// Registers script to close a Bootstrap modal.
+        /// 
         /// </summary>
         /// <param name="modalId">The ClientID of the modal div.</param>
         private void CloseModal(string modalId)
         {
-            // We need to get the ClientID of the modal, but since we used static IDs in the HTML,
-            // we can just pass the string. If you used runat=server on the modal, you'd use modal.ClientID.
+
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "CloseModal", $"hideModal('{modalId}');", true);
         }
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -1004,7 +979,7 @@ namespace OnlineBookStore
             Session.Clear();
             Response.Redirect("mainpage.aspx");
         }
-        // ===================================================================
+        
 
         #endregion
     }

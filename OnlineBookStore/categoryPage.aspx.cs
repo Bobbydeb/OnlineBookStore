@@ -3,9 +3,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Linq; // [เพิ่ม] สำหรับ Enumerable.Range
-using System.Web.UI.HtmlControls; // [เพิ่ม] สำหรับ HtmlGenericControl
-// [เพิ่ม] Imports ที่จำเป็น
+using System.Linq;  
+using System.Web.UI.HtmlControls;  
+ 
 using System.Diagnostics;
 using System.Web;
 
@@ -14,7 +14,7 @@ namespace OnlineBookStore
 {
     public partial class categoryPage : System.Web.UI.Page
     {
-        // [แก้ไข] เปลี่ยนเป็น private instance method
+  
         private string GetConnectionString()
         {
             return "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
@@ -53,7 +53,7 @@ namespace OnlineBookStore
 
             if (!IsPostBack)
             {
-                // [เพิ่ม] โหลดจำนวนตะกร้า
+                //   โหลดจำนวนตะกร้า
                 LoadCartCount();
                 // 4. โหลดข้อมูล
                 LoadCategoryBooks();
@@ -100,7 +100,7 @@ namespace OnlineBookStore
                     pnlNoBooks.Visible = false;
 
                     // --- Query 3: ดึงหนังสือแบบแบ่งหน้า ---
-                    // [แก้ไข] เพิ่ม PublisherName
+                 
                     string bookQuery = @"
                         SELECT
                             b.BookID,
@@ -174,7 +174,7 @@ namespace OnlineBookStore
                     pnlNoBooks.Visible = true;
                     pnlPager.Visible = false;
                 }
-                // [แก้ไข] ไม่ต้อง con.Close() เพราะใช้ using แล้ว
+                //   ไม่ต้อง con.Close() เพราะใช้ using แล้ว
             }
         }
 
@@ -204,7 +204,7 @@ namespace OnlineBookStore
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
-            Session.Abandon(); // [แก้ไข] ใช้ Abandon
+            Session.Abandon();  
             Response.Redirect("mainpage.aspx");
         }
 
@@ -217,9 +217,9 @@ namespace OnlineBookStore
             }
         }
 
-        // --- [เพิ่ม] โค้ดทั้งหมดจาก mainpage/topSalePage สำหรับตะกร้า ---
+       
 
-        // [เพิ่ม] Event Handler สำหรับปุ่มใน Repeater
+        
         protected void Repeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "AddToCart")
@@ -289,7 +289,7 @@ namespace OnlineBookStore
             }
         }
 
-        // [เพิ่ม] Helper: ค้นหา หรือ สร้าง CartID (Non-Static)
+        
         private int GetOrCreateCartId(int memberId, SqlConnection conn)
         {
             int cartId = 0;
@@ -315,12 +315,12 @@ namespace OnlineBookStore
             return cartId;
         }
 
-        // [เพิ่ม] Helper: ค้นหา CartID (สำหรับ Page_Load, ไม่สร้างใหม่)
+       
         private int GetCartId(int memberId)
         {
             int cartId = 0;
             try
-            { /* ... (เหมือนเดิม) ... */
+            {  
                 using (SqlConnection conn = new SqlConnection(GetConnectionString()))
                 {
                     conn.Open();
@@ -341,12 +341,12 @@ namespace OnlineBookStore
         }
 
 
-        // [เพิ่ม] Helper: ดึงจำนวนสินค้ารวมในตะกร้า (Non-Static)
+         
         private int GetTotalCartQuantity(int cartId)
         {
             int totalQuantity = 0;
             try
-            { /* ... (เหมือนเดิม) ... */
+            {  
                 using (SqlConnection conn = new SqlConnection(GetConnectionString()))
                 {
                     conn.Open();
@@ -366,10 +366,10 @@ namespace OnlineBookStore
             return totalQuantity;
         }
 
-        // [เพิ่ม] เมธอดสำหรับโหลดจำนวนสินค้าในตะกร้า (หลัก)
+ 
         private void LoadCartCount()
         {
-            // ... (เหมือนเดิม) ...
+            
             if (Session["MemberID"] != null)
             {
                 int memberId = Convert.ToInt32(Session["MemberID"]);
@@ -400,6 +400,6 @@ namespace OnlineBookStore
                 cartCount.Attributes["class"] = "cart-count empty";
             }
         }
-        // --- [จบ] โค้ดที่เพิ่ม ---
+      
     }
 }

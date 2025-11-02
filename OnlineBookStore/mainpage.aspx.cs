@@ -2,20 +2,20 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI.WebControls;
-// [เพิ่ม] Imports ที่จำเป็นสำหรับ WebMethod และการเชื่อมต่อ
+ 
 using System.Web;
 // using System.Web.Services; // [ลบ] ไม่จำเป็นแล้ว
 using System.Collections.Generic;
-using System.Diagnostics; // [เพิ่ม] สำหรับ Debug
+using System.Diagnostics;  
 
 namespace OnlineBookStore
 {
     public partial class mainpage : System.Web.UI.Page
     {
-        // [เพิ่ม] Connection String (ควรเก็บใน Web.config แต่เพื่อความง่าย ใช้วิธีนี้ไปก่อน)
+ 
         private static string GetConnectionString()
         {
-            // [แก้ไข] ตรวจสอบ Connection String ของคุณให้ถูกต้อง
+ 
             return "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
         }
 
@@ -26,7 +26,7 @@ namespace OnlineBookStore
             {
                 LoadBooks();
                 LoadTopBooks();
-                // [เพิ่ม] โหลดจำนวนสินค้าในตะกร้าเมื่อหน้าโหลด
+ 
                 LoadCartCount();
             }
 
@@ -42,7 +42,7 @@ namespace OnlineBookStore
             }
         }
 
-        // [เพิ่ม] เมธอดสำหรับโหลดจำนวนสินค้าในตะกร้า
+        //  สำหรับโหลดจำนวนสินค้าในตะกร้า
         private void LoadCartCount()
         {
             if (Session["MemberID"] != null)
@@ -78,8 +78,7 @@ namespace OnlineBookStore
             }
         }
 
-
-        // --- เมธอดที่เพิ่มเข้ามา (คัดลอกจาก myAccountPage.aspx.cs) ---
+         
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
@@ -103,8 +102,7 @@ namespace OnlineBookStore
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                // [แก้ไข] Query ให้ดึงข้อมูล rating และ review count
-                // [แก้ไข 31/10/2568] เพิ่ม PublisherName
+ 
                 string query = @"
                     SELECT TOP 10
                         b.BookID,
@@ -166,8 +164,7 @@ namespace OnlineBookStore
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                // [แก้ไข] Query ให้ดึงข้อมูล rating และ review count
-                // [แก้ไข 31/10/2568] เพิ่ม PublisherName
+ 
                 string query = @"
                     SELECT TOP 10
                         b.BookID,
@@ -228,21 +225,12 @@ namespace OnlineBookStore
         }
 
 
-        // --- [ลบ] WebMethod ทั้งหมด ---
-        /*
-        [WebMethod(EnableSession = true)]
-        public static object AddToCart(int bookId, int quantity)
-        {
-            // ... โค้ดเก่าทั้งหมดถูกลบ ...
-        }
-        */
-
-        // --- [เพิ่ม] Event Handler สำหรับปุ่มใน Repeater ---
+ 
         protected void RepeaterBooks_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "AddToCart")
             {
-                // 1. ตรวจสอบการ Login (ตอนนี้ชัวร์ 100% ว่า Session ไม่ null)
+         
                 if (Session["MemberID"] == null)
                 {
                     // ถ้ายังไม่ Login, ส่งไปหน้า Login (และบอกให้ Login เสร็จแล้วกลับมาหน้านี้)
@@ -252,7 +240,7 @@ namespace OnlineBookStore
 
                 int memberId = Convert.ToInt32(Session["MemberID"]);
                 int bookId = Convert.ToInt32(e.CommandArgument);
-                int quantity = 1; // เราใช้ค่าเริ่มต้น 1 เพราะไม่มี Modal ให้เลือกแล้ว
+                int quantity = 1;  
 
                 Debug.WriteLine($"Repeater AddToCart called: BookID={bookId}, MemberID={memberId}");
 
@@ -264,13 +252,13 @@ namespace OnlineBookStore
                         Debug.WriteLine("Database connection opened.");
 
                         // 2. ค้นหา หรือ สร้าง CartID
-                        int cartId = GetOrCreateCartId(memberId, conn); // [แก้ไข] เรียกเวอร์ชัน Non-Static
+                        int cartId = GetOrCreateCartId(memberId, conn);  
                         Debug.WriteLine($"CartID: {cartId}");
 
                         if (cartId == 0)
                         {
                             Debug.WriteLine("AddToCart Error: Failed to get or create CartID.");
-                            return; // อาจจะแสดงข้อความ Error
+                            return; 
                         }
 
                         // 3. ตรวจสอบว่ามีสินค้านี้ในตะกร้าหรือยัง
@@ -324,37 +312,32 @@ namespace OnlineBookStore
                         }
 
                         // 5. ดึงจำนวนสินค้ารวมในตะกร้า (เพื่ออัปเดต Header)
-                        // เราเรียก LoadCartCount() ด้านนอก try-catch (ใน finally หรือหลัง catch)
+ 
                     }
                 }
                 catch (SqlException sqlEx)
                 {
                     Debug.WriteLine($"SQL Error in AddToCart (Repeater): {sqlEx.Message}\n{sqlEx.StackTrace}");
-                    // คุณอาจจะเพิ่ม Label บนหน้า .aspx เพื่อแสดง Error นี้
+ 
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"General Error in AddToCart (Repeater): {ex.Message}\n{ex.StackTrace}");
-                    // คุณอาจจะเพิ่ม Label บนหน้า .aspx เพื่อแสดง Error นี้
+    
                 }
                 finally
                 {
                     // 6. อัปเดตตัวเลขบนตะกร้า (Header)
-                    // ไม่ว่าจะสำเร็จหรือล้มเหลว ก็ควรอัปเดตตัวเลขให้ถูกต้อง
+      
                     LoadCartCount();
 
-                    // (ทางเลือก) Redirect ไปหน้าตะกร้าเลย
-                    // Response.Redirect("cartPage.aspx");
+ 
                 }
             }
         }
 
 
-        // [ลบ] Helper 'static'
-        // private static int GetOrCreateCartId(int memberId, SqlConnection conn)
-        // ...
-
-        // [เพิ่ม] Helper: ค้นหา CartID ถ้าไม่เจอให้สร้างใหม่ (เวอร์ชัน Non-Static)
+ 
         private int GetOrCreateCartId(int memberId, SqlConnection conn)
         {
             int cartId = 0;
@@ -401,12 +384,11 @@ namespace OnlineBookStore
             return cartId;
         }
 
-        // Helper: ค้นหา CartID (สำหรับ Page_Load, ไม่สร้างใหม่)
-        // [แก้ไข] ทำให้เป็น private instance method เหมือนเดิม
+  
         private int GetCartId(int memberId)
         {
             int cartId = 0;
-            try // [เพิ่ม] Try-catch
+            try  
             {
                 using (SqlConnection conn = new SqlConnection(GetConnectionString()))
                 {
@@ -431,11 +413,8 @@ namespace OnlineBookStore
         }
 
 
-        // [ลบ] Helper 'static'
-        // private static int GetTotalCartQuantity(int cartId, SqlConnection conn)
-        // ...
 
-        // [เพิ่ม] Helper: ดึงจำนวนสินค้ารวมในตะกร้า (เวอร์ชัน Non-Static, ใช้ Connection ใหม่)
+    
         private int GetTotalCartQuantity(int cartId)
         {
             int totalQuantity = 0;

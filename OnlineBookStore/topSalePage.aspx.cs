@@ -12,7 +12,7 @@ namespace OnlineBookStore
 {
     public partial class topSalePage : Page
     {
-        // [แก้ไข] เปลี่ยนเป็น private instance method เหมือน mainpage
+     
         private string GetConnectionString()
         {
             return "Data Source=.\\SQLEXPRESS;Initial Catalog=dbOnlineBookStore;Integrated Security=True";
@@ -20,7 +20,7 @@ namespace OnlineBookStore
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // --- ส่วนตรวจสอบ Login ---
+     
             if (Session["MemberID"] != null)
             {
                 // ถ้า login แล้ว
@@ -35,7 +35,7 @@ namespace OnlineBookStore
                 btnLogout.Visible = false;
                 // [ลบ] isUserLoggedIn.Value = "false";
             }
-            // --- จบส่วนแก้ไข ---
+      
 
             if (!IsPostBack)
             {
@@ -94,7 +94,7 @@ namespace OnlineBookStore
 
             using (SqlConnection conn = new SqlConnection(GetConnectionString())) // [แก้ไข]
             {
-                // [แก้ไข 31/10/2568] เพิ่ม PublisherName
+             
                 string query = @"
                 SELECT TOP 5
                     B.BookID,
@@ -241,7 +241,7 @@ namespace OnlineBookStore
         }
 
 
-        // [เพิ่ม] Helper: ค้นหา หรือ สร้าง CartID (Non-Static)
+     
         private int GetOrCreateCartId(int memberId, SqlConnection conn)
         {
             int cartId = 0;
@@ -266,8 +266,7 @@ namespace OnlineBookStore
             }
             return cartId;
         }
-
-        // [เพิ่ม] Helper: ค้นหา CartID (สำหรับ Page_Load, ไม่สร้างใหม่)
+ 
         private int GetCartId(int memberId)
         {
             int cartId = 0;
@@ -296,7 +295,7 @@ namespace OnlineBookStore
         }
 
 
-        // [เพิ่ม] Helper: ดึงจำนวนสินค้ารวมในตะกร้า (Non-Static)
+     
         private int GetTotalCartQuantity(int cartId)
         {
             int totalQuantity = 0;
@@ -324,7 +323,7 @@ namespace OnlineBookStore
             return totalQuantity;
         }
 
-        // [เพิ่ม] เมธอดสำหรับโหลดจำนวนสินค้าในตะกร้า (หลัก)
+        //  สำหรับโหลดจำนวนสินค้าในตะกร้า (หลัก)
         private void LoadCartCount()
         {
             if (Session["MemberID"] != null)

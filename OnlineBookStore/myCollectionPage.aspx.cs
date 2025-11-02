@@ -184,7 +184,7 @@ namespace OnlineBookStore
             return dt;
         }
 
-        // [ << แก้ไข >> ] LoadMyBooks (ใช้สถานะ 'Completed' และ 'Delivered')
+        //  LoadMyBooks (ใช้สถานะ 'Completed' และ 'Delivered')
         private void LoadMyBooks()
         {
             int memberID = (int)Session["MemberID"];
@@ -285,21 +285,21 @@ namespace OnlineBookStore
             return reviewed;
         }
 
-        // [ << แก้ไข >> ] Helper Method สำหรับเปลี่ยนสีสถานะ (ใช้ภาษาอังกฤษ)
+         
         protected string GetStatusClass(string status)
         {
-            switch (status?.ToLower()) // แปลงเป็นตัวพิมพ์เล็กเพื่อเทียบ
+            switch (status?.ToLower())  
             {
-                case "pending payment": // [ << แก้ไข >> ]
+                case "pending payment":  
                     return "status-yellow";
                 case "pending":
                     return "status-blue";
-                case "shipping": // [ << แก้ไข >> ]
+                case "shipping":  
                     return "status-blue";
-                case "delivered": // [ << แก้ไข >> ]
+                case "delivered":  
                 case "completed":
                     return "status-green";
-                case "cancelled": // [ << แก้ไข >> ]
+                case "cancelled":  
                     return "status-red";
                 default:
                     return "status-gray";
@@ -313,7 +313,7 @@ namespace OnlineBookStore
             Response.Redirect("mainpage.aspx");
         }
 
-        // --- โค้ด Helpers สำหรับตะกร้า (เหมือนเดิม) ---
+      
         private int GetCartId(int memberId)
         {
             int cartId = 0;
@@ -394,6 +394,6 @@ namespace OnlineBookStore
                 cartCount.Attributes["class"] = "cart-count empty";
             }
         }
-        // --- [จบ] โค้ดตะกร้า ---
+        
     }
 }

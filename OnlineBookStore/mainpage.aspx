@@ -6,16 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChaiChaKit Bookstore</title>
-    <!-- Minimalist Font -->
+ 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Feather Icons for UI -->
+  
     <script src="https://unpkg.com/feather-icons"></script>
 
     <style>
-        /* --- [NEW] Modern Red/Black Theme --- */
+         
         
         :root {
             --color-red-deep: #b30000;
@@ -61,7 +60,7 @@
             margin: 0 auto; 
         }
 
-        /* --- Header --- */
+      
         .top-header { 
             background-color: var(--color-white); 
             padding: 1.5rem 0; 
@@ -93,7 +92,7 @@
         .search-input { 
             width: 100%; 
             padding: 12px 20px; 
-            padding-right: 50px; /* Space for button */
+            padding-right: 50px;  
             border: 1px solid var(--color-gray-medium); 
             border-radius: 25px;
             font-size: 1rem; 
@@ -106,7 +105,7 @@
             box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
         }
         
-        /* Updated Button Style */
+        
         .search-button {
             position: absolute;
             right: 6px;
@@ -191,7 +190,7 @@
             display: none;
         }
 
-        /* --- Main Nav --- */
+        
         .main-nav {
             background-color: var(--color-black);
             color: var(--color-white);
@@ -232,7 +231,7 @@
             color: var(--color-white);
         }
 
-        /* Dropdown */
+         
         .main-nav li.dropdown { position: relative; }
         .main-nav .dropdown-content {
             display: none;
@@ -263,7 +262,7 @@
             display: block; 
         }
 
-        /* --- [NEW] Featured Banner --- */
+       
         .featured-banner {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://placehold.co/1600x600/b30000/ffffff?text=Book+Sale);
             background-size: cover;
@@ -328,7 +327,7 @@
             margin: 0.5rem auto 0;
         }
 
-        /* --- [EDITED] Matched book-grid to topSalePage.aspx --- */
+        
         .book-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
@@ -418,7 +417,7 @@
             margin-top: 0.5rem;
         }
 
-        /* --- Add to Cart Button (in Repeater) --- */
+     
         .btn-add-cart {
             background-color: var(--color-red-vibrant);
             color: var(--color-white);
@@ -441,7 +440,7 @@
             cursor: not-allowed;
         }
 
-        /* --- Modal Styles --- */
+      
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -469,7 +468,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             z-index: 1001;
             width: 90%;
-            max-width: 800px; /* Wider modal */
+            max-width: 800px;  
             transform: scale(0.95);
             transition: transform 0.3s ease-out;
             position: relative;
@@ -568,7 +567,7 @@
         }
         .modal-review-summary .stars {
             font-size: 1.2rem;
-            color: #f59e0b; /* Yellow for stars */
+            color: #f59e0b;  
             letter-spacing: 1px;
         }
         .modal-review-summary .stars .no-rating {
@@ -604,7 +603,7 @@
             border-color: var(--color-gray-dark);
         }
 
-        /* Responsive */
+      
         @media (max-width: 900px) {
             .top-header .container {
                 flex-wrap: wrap;
@@ -638,17 +637,17 @@
             }
             .main-nav .dropdown-content {
                 position: static;
-                display: none; /* JS would be needed to toggle this on mobile */
-                background-color: #333; /* Darker sub-menu */
+                display: none;  
+                background-color: #333;  
                 box-shadow: none;
                 border-radius: 0;
                 border-top: none;
             }
             .main-nav li.dropdown:hover .dropdown-content { 
-                display: none; /* Disable hover on mobile */
+                display: none;  
             }
              .main-nav li.dropdown:hover > a { 
-                background-color: var(--color-black); /* Reset hover */
+                background-color: var(--color-black); 
             }
             .main-nav li.dropdown a:hover {
                 background-color: var(--color-red-vibrant);
@@ -663,7 +662,7 @@
                 font-size: 1rem;
             }
             .book-grid {
-                /* [EDITED] Keep responsive breaks consistent */
+              
                 grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
                 gap: 1rem;
             }
@@ -677,7 +676,7 @@
                 gap: 1rem;
             }
             .book-grid {
-                /* [EDITED] Keep responsive breaks consistent */
+                
                 grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
             }
             .book-title {
@@ -716,14 +715,14 @@
                 
                 <div class="search-bar">
                     <asp:TextBox ID="txtSearch" runat="server" placeholder="Search for books, authors..." CssClass="search-input"></asp:TextBox>
-                    <!-- Updated search button to use icon -->
+                  
                     <asp:LinkButton ID="btnSearch" runat="server" OnClick="btnSearch_Click" CssClass="search-button">
                         <i data-feather="search"></i>
                     </asp:LinkButton>
                 </div>
 
                 <div class="header-icons">
-                    <!-- Added CSS classes for styling links as buttons -->
+              
                     <asp:LinkButton ID="btnLogin" runat="server" PostBackUrl="~/loginPage.aspx" CssClass="asp-link">
                         Login  
                     </asp:LinkButton>
@@ -770,7 +769,7 @@
             </div>
         </nav>
 
-        <!-- [NEW] Featured Banner Section -->
+       
         <section class="featured-banner">
             <div class="banner-content">
                 <h1 class="banner-title">Fall Reading Sale</h1>
@@ -838,7 +837,7 @@
                             data-cover="<%# Eval("CoverUrl") %>"
                             data-authors="<%# Eval("Authors") %>"
                             data-edition="<%# Eval("Edition") %>"
-                            data-publisher="<%# Eval("PublisherName") %>" <%-- [เพิ่ม] data-publisher --%>
+                            data-publisher="<%# Eval("PublisherName") %>"  
                             data-category="<%# Eval("CategoryName") %>"
                             data-avg-rating="<%# Eval("AvgRating", "{0:F1}") %>"
                             data-review-count="<%# Eval("ReviewCount") %>">
@@ -871,7 +870,7 @@
             </section>
         </main>
 
-        <!-- [DELETED] Footer section removed as requested -->
+   
 
 
          <!-- Book Detail Modal (Restyled) -->
@@ -887,12 +886,12 @@
                         <div class="modal-book-meta">
                             <span id="modalBookAuthors"></span>
                             <span id="modalBookEdition"></span>
-                            <span id="modalBookPublisher"></span> <%-- [เพิ่ม] Span สำหรับ Publisher --%>
+                            <span id="modalBookPublisher"></span> 
                             <span id="modalBookCategory"></span>
                         </div>
 
                         <div id="modalBookReviews" class="modal-review-summary">
-                            <!-- JS will populate this -->
+                  
                         </div>
 
                         <p id="modalBookPrice" class="modal-book-price">฿0.00</p>
@@ -902,11 +901,11 @@
                 
                 <div class="modal-footer">
                     <button type="button" class="modal-btn-cancel" onclick="closeBookDetailModal()">Close</button>
-                    <!-- Note: Add to cart from modal would require more logic, so it's left out for now. -->
+                  
                 </div>
             </div>
         </div>
-        <!-- [End] Modal -->
+     
 
 
     </form>
